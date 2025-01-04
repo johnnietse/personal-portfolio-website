@@ -164,27 +164,27 @@ footer{
     margin-top: auto; 
 } */
 
-/* Reset and ensure consistent height */
+/* Reset and full height */
 html, body {
     margin: 0;
     padding: 0;
-    height: 100%; /* Full height for the body and HTML */
-    display: flex;
-    flex-direction: column;
+    height: 100%; /* Ensure the page height is 100% of the viewport */
+    overflow-x: hidden; /* Prevent horizontal scroll */
 }
   
-/* Main content area grows to fill available space */
+/* Main content area */
 .main-content {
-    flex: 1; /* Takes up remaining space between header and footer */
+    padding-bottom: 50px; /* Reserve space for the footer to avoid overlap */
 }
   
-/* Footer styles */
+/* Footer fixed at the bottom */
 footer {
-    background-color: #333; /* Example background color */
-    color: white;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%; /* Full width across the screen */
     text-align: center;
     padding: 1rem;
-    flex-shrink: 0; /* Prevents the footer from shrinking */
-    width: 100%; /* Ensures it spans the full width */
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2); /* Optional shadow for effect */
 }
   
