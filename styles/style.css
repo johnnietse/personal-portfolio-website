@@ -164,31 +164,27 @@ footer{
     margin-top: auto; 
 } */
 
-/* Ensure full-page height across all browsers */
+/* Reset and ensure consistent height */
 html, body {
-    height: 100%;
     margin: 0;
+    padding: 0;
+    height: 100%; /* Full height for the body and HTML */
     display: flex;
     flex-direction: column;
 }
   
-/* Main content flex grows to fill available space */
+/* Main content area grows to fill available space */
 .main-content {
-    flex: 1;
+    flex: 1; /* Takes up remaining space between header and footer */
 }
   
 /* Footer styles */
 footer {
-    background-color: #333;
+    background-color: #333; /* Example background color */
     color: white;
     text-align: center;
     padding: 1rem;
-}
-  
-/* Safari-specific fix */
-@supports (-webkit-touch-callout: none) {
-    html, body {
-        min-height: -webkit-fill-available;
-    }
+    flex-shrink: 0; /* Prevents the footer from shrinking */
+    width: 100%; /* Ensures it spans the full width */
 }
   
