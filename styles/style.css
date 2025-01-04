@@ -131,3 +131,8 @@ button{
 a{
     color: var(--clr-light);
 }
+
+
+footer{
+    margin-top: auto; /* Pushes the footer to the bottom */
+}
