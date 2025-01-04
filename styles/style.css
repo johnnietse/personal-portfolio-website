@@ -132,7 +132,12 @@ a{
     color: var(--clr-light);
 }
 
-
+/* Hide footer on mobile devices */
+@media (max-width: 813px) { /* Adjust the width as needed for your mobile breakpoint */
+    footer {
+      display: none;
+    }
+}
 
 /* html, body {
     height: 100%;
