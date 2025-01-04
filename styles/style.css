@@ -163,28 +163,3 @@ body {
 footer{
     margin-top: auto; 
 } */
-
-/* Reset and full height */
-html, body {
-    margin: 0;
-    padding: 0;
-    height: 100%; /* Ensure the page height is 100% of the viewport */
-    overflow-x: hidden; /* Prevent horizontal scroll */
-}
-  
-/* Main content area */
-.main-content {
-    padding-bottom: 50px; /* Reserve space for the footer to avoid overlap */
-}
-  
-/* Footer fixed at the bottom */
-footer {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%; /* Full width across the screen */
-    text-align: center;
-    padding: 1rem;
-    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2); /* Optional shadow for effect */
-}
-  
