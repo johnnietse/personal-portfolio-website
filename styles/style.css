@@ -1,0 +1,133 @@
+:root{
+    --clr-blue200: #bfdbfe;
+    --clr-blue700: #1d4ed8;
+    --clr-light: #f1f5f9;
+    --clr-dark: #0c0a09;
+    --clr-slate400: #94a3b8;
+    --clr-slate500: #64748b;
+    --clr-slate600: #475569;
+    --clr-slate800: #1e293b;
+    --clr-teal: #5eead4;
+    --clr-cyan: #22d3ee;
+    --clr-darkblue: #213555;
+
+    /*sizes*/
+    --size-xxs: 0.5rem ;
+    --size-xs: 0.75rem;
+    --size-sm: 0.875rem;
+    --size-base: 1rem;
+    --size-lg: 1.125rem;
+    --size-xl: 1.25rem;
+    --size-2xl: 1.5rem;
+    --size-3xl: 1.875rem;
+    --size-4xl: 2.25rem;
+    --size-5xl: 3rem;
+    --size-6xl: 3.75rem;
+    --size-7xl: 4.5rem;
+    --size-8xl: 6rem;
+    --size-9xl: 8rem;
+    --size-10xl: 10rem;
+}
+
+*{
+    margin: 0;
+    line-height: calc(1em + 0.5rem);
+}
+
+html{
+    scroll-behavior: smooth;
+}
+
+body{
+    font-family: 'Satoshi', sans-serif;
+    background-color: var(--clr-light);
+    color: var(--clr-dark);
+}
+
+.bg{
+    position: relative;
+    width: 100%;
+}
+
+.bubbles{
+    position: relative;
+    display: flex;
+}
+
+.bubbles span{
+    position: relative;
+    width: 30px;
+    height: 30px;
+    background: #5eead4;
+    margin: 0 27.5px;
+    border-radius: 50%;
+    box-shadow: 0 0 0 5px #5eead444, 0 0 15px #5eead4, 0 0 50px #5eead4;
+    animation: animate 15s linear infinite;
+    animation-duration: calc(200s / var(--i));
+}
+
+.bubbles span:nth-child(even){
+    background: #22d3ee;
+    box-shadow: 0 0 0 10px #22d3ee44, 0 0 30px #22d3ee, 0 0 100px #22d3ee;
+}
+
+@keyframes animate{
+    0%{
+        transform: translateY(100vh) scale(0);
+    }
+
+    100%{
+        transform: translateY(-10vh) scale(1);
+    }
+}
+
+
+@-moz-keyframes animate {
+    /* Firefox */
+    0% {
+        transform: translateY(100vh) scale(0);
+    }
+    100% {
+        transform: translateY(-10vh) scale(1);
+    }
+}
+
+
+@-webkit-keyframes animate {
+    /* Safari and Chrome */
+    0% {
+        transform: translateY(100vh) scale(0);
+    }
+    100% {
+        transform: translateY(-10vh) scale(1);
+    }
+}
+
+@-o-keyframes animate {
+    /* Opera */
+    0% {
+        transform: translateY(100vh) scale(0);
+    }
+    100% {
+        transform: translateY(-10vh) scale(1);
+    }
+}
+
+img, picture, video, canvas, svg{
+    display: block;
+    max-width: 100%;
+    user-select: none;
+}
+
+button{
+    display: inline-block;
+    padding: 0;
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: inherit;
+}
+
+a{
+    color: var(--clr-light);
+}

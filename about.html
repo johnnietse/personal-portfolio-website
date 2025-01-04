@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Cache Control Meta Tags -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+
+    <link href="https://api.fontshare.com/v2/css?f[]=satoshi@1,900,700,500,301,701,300,501,401,901,400,2&display=swap" rel="stylesheet">
+    <title>Dev server</title>
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+
+    <script type="text/javascript">
+      document.addEventListener("DOMContentLoaded", function () {
+        // Define mapping for each link ID to the corresponding page
+        const linkMapping = {
+          "header__link_1": "/index.html",
+          "header__link_2": "/about.html",
+          "header__link_3": "/project.html",
+          "header__link_4": "/index.html#herocontact",
+
+          "mobile-nav__link_1": "/index.html",
+          "mobile-nav__link_2": "/about.html",
+          "mobile-nav__link_3": "/project.html",
+          "mobile-nav__link_4": "/index.html#herocontact",
+
+        };
+
+        // Attach click events to each link
+        Object.keys(linkMapping).forEach(linkId => {
+          const linkElement = document.getElementById(linkId);
+          if (linkElement) {
+            linkElement.addEventListener("click", function (event) {
+              event.preventDefault(); // Prevent default anchor behavior
+              window.location.href = linkMapping[linkId]; // Redirect to the mapped page
+            });
+          }
+        });
+      });
+    </script>
+
+  </head>
+
+  <body>
+        
+       <header class="header container" data-aos="fade-down" data-aos-duration="1000">
+          <nav>
+            <ul class="header__menu">
+              <li>
+                <a class="header__link_1" id="header__link_1" href="/index.html" data-aos="fade-right" data-aos-delay="100">Home</a>
+              </li>
+        
+              <li>
+                <a class="header__link_2" id="header__link_2" href="/about.html" data-aos="fade-right" data-aos-delay="200">About</a>
+              </li>
+        
+              <li>
+                  <a class="header__link_3" id="header__link_3" href="/project.html" data-aos="fade-right" data-aos-delay="300">Projects</a>      
+              </li>
+        
+              <li>
+                  <a class="header__link_4" id="header__link_4" href="/index.html#herocontact" data-aos="fade-right" data-aos-delay="400">Contact</a>    
+              </li>
+                
+              <li>
+                  <a class="header__downloadResume btn" href="/Resume_Queen's_University_(forpersonalportfoliowebsite).pdf" target="_blank" rel="noopener noreferrer" data-aos="zoom-in" data-aos-delay="500">Download Resume</a>
+              </li>
+    
+            </ul>
+    
+            <button class="header__bars" data-aos="zoom-in" data-aos-delay="600">
+    
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12H12m-8.25 5.25h16.5" />
+              </svg>
+               
+            </button> 
+    
+          </nav>
+    
+        </header>
+
+        <!-- Mobile Navigation -->
+
+        <div class="mobile-nav" data-aos="fade-up">
+          <nav>
+            <ul class="mobile-nav_menu">
+              <li data-aos="fade-down" data-aos-delay="100">
+                <a class="mobile-nav__link_1" id="mobile-nav__link_1" href="/index.html">Home</a>
+              </li>
+
+              <br> 
+
+              <li data-aos="fade-down" data-aos-delay="200">
+                <a class="mobile-nav__link_2" id="mobile-nav__link_2" href="/about.html">About</a>
+              </li>
+              
+              <br>
+
+              <li data-aos="fade-down" data-aos-delay="300">
+                <a class="mobile-nav__link_3" id="mobile-nav__link_3" href="/project.html">Projects</a>
+              </li>
+              
+              <br>
+
+              <li data-aos="fade-down" data-aos-delay="400">
+                <a class="mobile-nav__link_4" id="mobile-nav__link_4" href="/index.html#herocontact">Contact</a>
+              </li>
+              
+              <br>
+
+              <li>
+                <a class="mobile-nav__btn btn" href="/Resume_Queen's_University_(forpersonalportfoliowebsite).pdf" target="_blank" rel="noopener noreferrer">Download Resume</a>
+              </li>
+
+            </ul>
+
+          </nav>
+
+        </div>
+
+        <!-- End of Mobile Navigation -->
+
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+
+        <div class="abt-container">    
+          <div class="leftprofile IMAGE" data-aos="fade-right" data-aos-duration="1000">
+            <div class="imgBx">
+              <img src="public/profilephoto.png" alt="profilephoto">
+            </div>
+
+            <div class="floral" data-aos="zoom-in" data-aos-delay="200">
+              <img src="public/4.png" alt="">
+            </div>
+          </div>
+
+          <div class="heroabout" data-aos="fade-up" data-aos-duration="1000">
+            <h1 class="about__title" data-aos="zoom-in" data-aos-delay="100">About</h1>
+            <br>
+            <p class="about__description" data-aos="fade-up" data-aos-delay="200">
+              Hello! I'm Johnnie. I'm a third-year Computer Engineering student at Queen's University with a strong passion for mobile app development, web development, and high-performance computing (HPC). I’m particularly interested in building user-centric mobile apps using modern architectural patterns like MVVM and Clean Architecture. I enjoy optimizing app performance while ensuring a seamless and engaging experience for users.
+            </p>
+            <br>
+            <p class="about__description" data-aos="fade-up" data-aos-delay="300">
+              In web development, I’m focused on creating scalable, secure full-stack applications using library like React.js, runtime environment like Node.js, and query language like GraphQL. I'm especially motivated to explore cloud services like AWS and Azure to enhance application performance and scalability.
+            </p>
+            <br>
+            <p class="about__description" data-aos="fade-up" data-aos-delay="400">
+              With HPC, I’m passionate about optimizing algorithms for parallel and distributed computing to maximize efficiency in large-scale data processing and scientific simulations. I'm excited to dive deeper into frameworks like MPI, CUDA, and OpenMP as I continue learning.
+            </p>
+            <br>
+            <p class="about__description" data-aos="fade-up" data-aos-delay="500"> 
+              Throughout my projects, I’m committed to integrating EDII-AS principles, ensuring my work is inclusive, equitable, and accessible to all users. Feel free to check out my work!  
+            </p>
+          </div>
+
+        </div>
+
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+
+        <div class="container" data-aos="fade-up" data-aos-duration="1000">
+            <h2 class="abt__title" data-aos="zoom-in" data-aos-delay="100"><strong>Languages, Frameworks, and Libraries</strong></h2>
+            
+            <br>
+
+            <div class="icon-grid" data-aos="zoom-in" data-aos-duration="1000">  
+              <button>
+                <img src="public/icons8-html.png" alt="HTML">
+                <label class="btn-label">&nbsp;HTML</label>
+              </button>
+              
+              <button>
+                <img src="public/icons8-css3.png" alt="CSS">
+                <label class="btn-label">&nbsp;CSS</label>
+              </button>
+
+              <button>
+                <img src="public/icons8-javascript.png" alt="JavaScript">
+                <label class="btn-label">&nbsp;JavaScript</label>
+              </button>
+
+              <button>
+                <img src="public/icons8-c-programming.png" alt="C">
+                <label class="btn-label">&nbsp;C</label>
+              </button>
+
+              <button>
+                <img src="public/icons8-c.png" alt="C++">
+                <label class="btn-label">&nbsp;C++</label>
+              </button>
+
+              <button>
+                <img src="public/icons8-java.png" alt="Java">
+                <label class="btn-label">&nbsp;Java</label>
+              </button>
+
+              <button>
+                <img src="public/Kotlin_Icon.png" alt="Kotlin">
+                <label class="btn-label">&nbsp;Kotlin</label>
+              </button>
+
+              <button>
+                <img src="public/icons8-python.png" alt="Python">
+                <label class="btn-label">&nbsp;Python</label>
+              </button>
+
+              <button>
+                <img src="public/PHP-logo.png" alt="PHP">
+                <label class="btn-label">&nbsp;PHP</label>
+              </button>
+              
+              <button>
+                <img src="public/sql.png" alt="SQL">
+                <label class="btn-label">&nbsp;SQL</label>
+              </button>
+
+              <button>
+                <img src="public/icons8-r-project.png" alt="R">
+                <label class="btn-label">&nbsp;R</label>
+              </button>
+
+              <button>
+                <img src="public/icons8-arduino.png" alt="Arduino">
+                <label class="btn-label">&nbsp;Arduino</label>
+              </button>
+
+              <button>
+                <img src="public/react-logo.png" alt="React.js">
+                <label class="btn-label">&nbsp;React.js</label>
+              </button>
+
+              <button>
+                <img src="public/icons8-nodejs.png" alt="Node.js">
+                <label class="btn-label">&nbsp;Node.js</label>
+              </button>
+
+              <button>
+                <img src="public/Bootstrap.png" alt="Bootstrap">
+                <label class="btn-label">&nbsp;Bootstrap</label>
+              </button>
+
+              <button>
+                <img src="public/jquery.png" alt="jQuery">
+                <label class="btn-label">&nbsp;jQuery</label>
+              </button>
+
+              <button>
+                <img src="public/Sass.png" alt="SASS">
+                <label class="btn-label">&nbsp;SASS</label>
+              </button>
+
+              <button>
+                <img src="public/mongodb.png" alt="MongoDB">
+                <label class="btn-label">&nbsp;MongoDB</label>
+              </button>
+
+              <button>
+                <img src="public/mongooseodm.png" alt="Mongoose ODM">
+                <label class="btn-label">&nbsp;Mongoose ODM</label>
+              </button>
+
+              <button>
+                <img src="public/VHDL.png" alt="VHDL">
+                <label class="btn-label">&nbsp;VHDL</label>
+              </button>
+
+              <button>
+                <img src="public/icons8-latex.png" alt="LATEX">
+                <label class="btn-label">&nbsp;LATEX</label>
+              </button>
+
+              <button>
+                <img src="public/icons8-bash.png" alt="Bash">
+                <label class="btn-label">&nbsp;Bash</label>
+              </button>
+
+              <button>
+                <img src="public/terminal.png" alt="Shell Scripting">
+                <label class="btn-label">&nbsp;Shell Scripting</label>
+              </button>
+
+              <button>
+                <img src="public/asmlang.png" alt="Assembly Language">
+                <label class="btn-label">&nbsp;Assembly Language</label>
+              </button>
+
+              <button>
+                <img src="public/icons8-git.png" alt="Git">
+                <label class="btn-label">&nbsp;Git</label>
+              </button>
+              
+              <button>
+                <img src="public/icons8-flutter.png" alt="Flutter">
+                <label class="btn-label">&nbsp;Flutter</label>
+              </button>
+
+              <button>
+                <img src="public/icons8-npm.png" alt="NPM">
+                <label class="btn-label">&nbsp;NPM</label>
+              </button>
+
+              <button>
+                <img src="public/Matplotlib.png" alt="Matplotlib">
+                <label class="btn-label">&nbsp;Matplotlib</label>
+              </button>
+
+              <button>
+                <img src="public/seaborn.png" alt="Seaborn">
+                <label class="btn-label">&nbsp;Seaborn</label>
+              </button>
+
+              <button>
+                <img src="public/OpenCV.png" alt="OpenCV">
+                <label class="btn-label">&nbsp;OpenCV</label>
+              </button>
+
+              <button>
+                <img src="public/SCIPY.png" alt="SciPy">
+                <label class="btn-label">&nbsp;SciPy</label>
+              </button>
+
+              <button>
+                <img src="public/Tkinter.jpeg" alt="Tkinter">
+                <label class="btn-label">&nbsp;Tkinter</label>
+              </button>
+
+            </div>
+            
+            <br>
+            <br>
+
+            <div class="icon-grid2" data-aos="zoom-in" data-aos-duration="1000">
+
+              <button>
+                <img src="public/Scikit_learn.png" alt="Scikit-learn">
+                <label class="btn-label">&nbsp;Scikit-learn</label>
+              </button>
+
+              <button>
+                <img src="public/NumPy.png" alt="NumPy">
+                <label class="btn-label">&nbsp;Numpy</label>
+              </button>
+
+              <button>
+                <img src="public/Pandas.png" alt="Pandas">
+                <label class="btn-label">&nbsp;Pandas</label>
+              </button>
+
+              <button>
+                <img src="public/Django_logo.png" alt="Django">
+                <label class="btn-label">&nbsp;Django</label>
+              </button>
+
+            </div>
+
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+
+            <h2 class="abt__title" data-aos="zoom-in" data-aos-delay="100"><strong>Other Tools</strong></h2>
+            
+            <br>
+
+            <div class="icon-grid" data-aos="zoom-in" data-aos-duration="1000">
+              <button>
+                <img src="public/microsoft-365.png" alt="Microsoft 365">
+                <label class="btn-label">&nbsp;Microsoft 365</label>
+              </button>
+              
+              <button>
+                <img src="public/New_Power_BI.png" alt="Microsoft Power BI">
+                <label class="btn-label">&nbsp;Microsoft Power BI</label>
+              </button>
+              
+              <button>
+                <img src="public/Adobe_Photoshop.png" alt="Adobe Photoshop">
+                <label class="btn-label">&nbsp;Adobe Photoshop</label>
+              </button>
+              
+              <button>
+                <img src="public/Adobe_Premiere_Pro.png" alt="Adobe Premiere Pro">
+                <label class="btn-label">&nbsp;Adobe Premiere Pro</label>
+              </button>
+              
+              <button>
+                <img src="public/DaVinci_Resolve_17_logo.png" alt="DaVinci Resolve">
+                <label class="btn-label">&nbsp;DaVinci Resolve</label>
+              </button>
+              
+              <button>
+                <img src="public/Adobe_Illustrator.png" alt="Adobe Illustrator">
+                <label class="btn-label">&nbsp;Adobe Illustrator</label>
+              </button>
+              
+              <button>
+                <img src="public/Adobe_Animate.png" alt="Adobe Animate">
+                <label class="btn-label">&nbsp;Adobe Animate</label>
+              </button>
+              
+              <button>
+                <img src="public/Adobe_InCopy.png" alt="Adobe InCopy">
+                <label class="btn-label">&nbsp;Adobe InCopy</label>
+              </button>
+              
+              <button>
+                <img src="public/Adobe_InDesign.png" alt="Adobe InDesign">
+                <label class="btn-label">&nbsp;Adobe InDesign</label>
+              </button>
+              
+              <button>
+                <img src="public/Adobe_Express.png" alt="Adobe Express">
+                <label class="btn-label">&nbsp;Adobe Express</label>
+              </button>
+              
+              <button>
+                <img src="public/icons8-canva.png" alt="Canva">
+                <label class="btn-label">&nbsp;Canva</label>
+              </button>
+              
+              <button>
+                <img src="public/Figma-logo.png" alt="Figma">
+                <label class="btn-label">&nbsp;Figma</label>
+              </button>
+              
+              <button>
+                <img src="public/Fritzing_icon.png" alt="Fritzing">
+                <label class="btn-label">&nbsp;Fritzing</label>
+              </button>
+              
+              <button>
+                <img src="public/KiCad_logo_square.png" alt="KiCAD">
+                <label class="btn-label">&nbsp;KiCAD</label>
+              </button>
+              
+              <button>
+                <img src="public/LTSpice.jpeg" alt="LTSpice">
+                <label class="btn-label">&nbsp;LTSpice</label>
+              </button>
+              
+              <button>
+                <img src="public/CPUlator-logo.png" alt="CPUlator">
+                <label class="btn-label">&nbsp;CPUlator</label>
+              </button>
+              
+              <button>
+                <img src="public/Oracle_SQL_Developer.png" alt="Oracle SQL Developer">
+                <label class="btn-label">&nbsp;Oracle SQL Developer</label>
+              </button>
+              
+              <button>
+                <img src="public/android-studio-icon.png" alt="Android Studio">
+                <label class="btn-label">&nbsp;Android Studio</label>
+              </button>
+              
+              <button>
+                <img src="public/Visual_Studio_Code.png" alt="VS Code">
+                <label class="btn-label">&nbsp;VS Code</label>
+              </button>
+              
+              <button>
+                <img src="public/Intel_quartus_prime.png" alt="Intel Quartus Prime">
+                <label class="btn-label">&nbsp;Intel Quartus Prime</label>
+              </button>
+              
+              <button>
+                <img src="public/modelsim.png" alt="Intel ModelSim">
+                <label class="btn-label">&nbsp;Intel ModelSim</label>
+              </button>
+              
+              <button>
+                <img src="public/github.png" alt="Github">
+                <label class="btn-label">&nbsp;Github</label>
+              </button>
+              
+              <button>
+                <img src="public/Autodesk.png" alt="Autodesk">
+                <label class="btn-label">&nbsp;Autodesk</label>
+              </button>
+              
+              <button>
+                <img src="public/solidworks.png" alt="SolidWorks">
+                <label class="btn-label">&nbsp;SolidWorks</label>
+              </button>
+              
+              <button>
+                <img src="public/JetBrains-logo.png" alt="JetBrains Suite">
+                <label class="btn-label">&nbsp;JetBrains Suite</label>
+              </button>
+              
+              <button>
+                <img src="public/jupyter.png" alt="Jupyter">
+                <label class="btn-label">&nbsp;Jupyter</label>
+              </button>
+              
+            </div>
+
+            <br>
+
+            <div class="icon-grid4" data-aos="zoom-in" data-aos-duration="1000">
+              <button>
+                <img src="public/MySQL.png" alt="MySQL">
+                <label class="btn-label">&nbsp;MySQL</label>
+              </button>
+              
+              <button>
+                <img src="public/mysql_workbench.png" alt="MySQL Workbench">
+                <label class="btn-label">&nbsp;MySQL Workbench</label>
+              </button>
+
+            </div>
+            
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+
+            <h2 class="abt__title" data-aos="zoom-in" data-aos-delay="100"><strong>Other Databases and Cloud</strong></h2>
+            
+            <br>
+
+            <div class="icon-grid" data-aos="zoom-in" data-aos-duration="1000">
+
+              <button>
+                <img src="public/sap_s4hana.png" alt="SAP S/4HANA Cloud">
+                <label class="btn-label">&nbsp;SAP S/4HANA Cloud</label>
+              </button>
+              
+              <button>
+                <img src="public/Oracle_database.png" alt="ORACLE Database">
+                <label class="btn-label">&nbsp;ORACLE Database</label>
+              </button>
+
+            </div>
+
+            <br>
+
+            <div class="icon-grid3" data-aos="zoom-in" data-aos-duration="1000">
+
+              <button>
+                <img src="public/Database-mysql.png" alt="MySQL Database">
+                <label class="btn-label">&nbsp;MySQL Database</label>
+              </button>
+
+            </div>
+
+        </div>
+        
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+
+        <footer data-aos="fade-up" data-aos-duration="1000">  
+          <div class="row">
+            <div class="col">
+              <p class="copyright">© Johnnie Tse 2024. All rights reserved.
+              </p>
+            </div>
+          </div>
+        </footer>
+
+  </body>
+
+  <script>
+    AOS.init();
+  </script>
+
+  <script type="module" src="./src/main.js"></script>    
+
+</html>
