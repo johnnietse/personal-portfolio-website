@@ -131,7 +131,7 @@ button{
 a{
     color: var(--clr-light);
 }
-
+/* 
 body, html {
     height: 100%;
     margin: 0;
@@ -147,5 +147,5 @@ body {
 }
 
 footer{
-    margin-top: auto; /* Pushes the footer to the bottom */
-}
+    margin-top: auto; 
+} */
