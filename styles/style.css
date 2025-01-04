@@ -132,19 +132,19 @@ a{
     color: var(--clr-light);
 }
 
-html, body {
+/* html, body {
     height: 100%;
     margin: 0;
     display: flex;
     flex-direction: column;
-    min-height: -webkit-fill-available; /* Safari-specific fix */
+    min-height: -webkit-fill-available; 
 }
   
 .main-content {
     flex: 1;
-    min-height: -webkit-fill-available; /* Safari-specific fix */
+    min-height: -webkit-fill-available; 
 }
-  
+   */
 /* 
 body, html {
     height: 100%;
@@ -163,3 +163,32 @@ body {
 footer{
     margin-top: auto; 
 } */
+
+/* Ensure full-page height across all browsers */
+html, body {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+  
+/* Main content flex grows to fill available space */
+.main-content {
+    flex: 1;
+}
+  
+/* Footer styles */
+footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 1rem;
+}
+  
+/* Safari-specific fix */
+@supports (-webkit-touch-callout: none) {
+    html, body {
+        min-height: -webkit-fill-available;
+    }
+}
+  
