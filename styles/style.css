@@ -132,9 +132,7 @@ a{
     color: var(--clr-light);
 }
 
-footer {
-    margin-top: auto; /* Push the footer to the bottom when content is short */
-}
+
 
 /* html, body {
     height: 100%;
