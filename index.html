@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <link href="https://api.fontshare.com/v2/css?f[]=satoshi@1,900,700,500,301,701,300,501,401,901,400,2&display=swap" rel="stylesheet">
+    <title>Dev server</title>
+
+    <!-- Cache Control Meta Tags -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+
+    <meta name="description" content="My Portfolio website" />
+    <meta name="keywords" content="web design, html, css, js" />
+
+    <script type="text/javascript">
+
+      function redirectToInstagram() {
+        var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+        var isIOS = /iPad|iPhone|iPod/.test(userAgent) && !window.MSStream;
+        var isAndroid = /android/i.test(userAgent);
+        var instagramUrl = "https://www.instagram.com/jt__boi/";
+  
+        if (isIOS) {
+          var iOS_url = "instagram://user?username=jt__boi";
+          window.location.href = iOS_url;
+  
+          setTimeout(function() {
+            window.location.href = instagramUrl;
+          }, 500);
+        } else if (isAndroid) {
+          var android_url = "intent://instagram.com/_u/jt__boi/#Intent;package=com.instagram.android;scheme=https;end";
+          window.location.href = android_url;
+  
+          setTimeout(function() {
+            window.location.href = instagramUrl;
+          }, 500);
+        } else {
+          // Redirect to Instagram web version for other platforms
+          window.location.href = instagramUrl;
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        // Define mapping for each link ID to the corresponding page
+        const linkMapping = {
+          "header__link_2": "/about.html",
+          "header__link_3": "/project.html",
+          "header__link_4": "/index.html#herocontact",
+
+          "mobile-nav__link_1": "/index.html",
+          "mobile-nav__link_2": "/about.html",
+          "mobile-nav__link_3": "/project.html",
+          "mobile-nav__link_4": "/index.html#herocontact",
+        };
+
+        // Attach click events to each link
+        Object.keys(linkMapping).forEach(linkId => {
+          const linkElement = document.getElementById(linkId);
+          if (linkElement) {
+            linkElement.addEventListener("click", function (event) {
+              event.preventDefault(); // Prevent default anchor behavior
+              window.location.href = linkMapping[linkId]; // Redirect to the mapped page
+            });
+          }
+        });
+      });
+
+    </script>
+
+  </head>
+
+  <body>
+
+    <div class="bg">
+    
+      <div class="bubbles">
+        <span style="--i:11"></span>
+        <span style="--i:12"></span>
+        <span style="--i:16"></span>
+        <span style="--i:17"></span>
+        <span style="--i:21"></span>
+        <span style="--i:20"></span>
+        <span style="--i:15"></span>
+        <span style="--i:31"></span>
+        <span style="--i:27"></span>
+        <span style="--i:25"></span>
+        <span style="--i:15"></span>
+        <span style="--i:28"></span>
+        <span style="--i:17"></span>
+        <span style="--i:19"></span>
+        <span style="--i:23"></span>
+        <span style="--i:15"></span>
+        <span style="--i:22"></span>
+        <span style="--i:18"></span>
+        <span style="--i:29"></span>
+        <span style="--i:30"></span>
+        <span style="--i:11"></span>
+        <span style="--i:12"></span>
+        <span style="--i:16"></span>
+        <span style="--i:17"></span>
+        <span style="--i:21"></span>
+        <span style="--i:20"></span>
+        <span style="--i:15"></span>
+        <span style="--i:31"></span>
+        <span style="--i:27"></span>
+        <span style="--i:25"></span>
+        <span style="--i:15"></span>
+        <span style="--i:28"></span>
+        <span style="--i:17"></span>
+        <span style="--i:19"></span>
+        <span style="--i:23"></span>
+        <span style="--i:15"></span>
+        <span style="--i:22"></span>
+        <span style="--i:18"></span>
+        <span style="--i:29"></span>
+        <span style="--i:30"></span>
+        <span style="--i:11"></span>
+        <span style="--i:12"></span>
+        <span style="--i:16"></span>
+        <span style="--i:17"></span>
+        <span style="--i:21"></span>
+        <span style="--i:20"></span>
+        <span style="--i:15"></span>
+        <span style="--i:31"></span>
+        <span style="--i:27"></span>
+        <span style="--i:25"></span>
+        <span style="--i:15"></span>
+        <span style="--i:28"></span>
+        <span style="--i:17"></span>
+        <span style="--i:19"></span>
+        <span style="--i:23"></span>
+        <span style="--i:15"></span>
+        <span style="--i:22"></span>
+        <span style="--i:18"></span>
+        <span style="--i:29"></span>
+        <span style="--i:30"></span>
+        <span style="--i:11"></span>
+        <span style="--i:12"></span>
+        <span style="--i:16"></span>
+        <span style="--i:17"></span>
+        <span style="--i:21"></span>
+        <span style="--i:20"></span>
+        <span style="--i:15"></span>
+        <span style="--i:31"></span>
+        <span style="--i:27"></span>
+        <span style="--i:25"></span>
+        <span style="--i:15"></span>
+        <span style="--i:28"></span>
+      </div>
+    
+    </div>
+    
+    <header class="header container" data-aos="fade-down">
+      
+      <nav>
+       
+        <ul class="header__menu">
+
+          <li data-aos="fade-up" data-aos-delay="100">
+            <a class="header__link_2" id="header__link_2" href="/about.html">About</a>
+          </li>
+
+          <li data-aos="fade-up" data-aos-delay="200">
+            <a class="header__link_3" id="header__link_3" href="/project.html">Projects</a>
+          </li>
+
+          <li data-aos="fade-up" data-aos-delay="300">
+            <a class="header__link_4" id="header__link_4" href="/index.html#herocontact">Contact</a>
+          </li>
+
+          <li data-aos="fade-up" data-aos-delay="400">
+            <a class="header__downloadResume btn" href="/Resume_Queen's_University_(forpersonalportfoliowebsite).pdf" target="_blank" rel="noopener noreferrer">Download Resume</a>
+          </li>
+
+        </ul>
+
+        <button class="header__bars" data-aos="zoom-in" data-aos-delay="600">
+
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12H12m-8.25 5.25h16.5" />
+          </svg>
+          
+        </button> 
+
+      </nav>
+   
+    </header>
+
+
+    <!-- Mobile Navigation -->
+
+    <div class="mobile-nav" data-aos="fade-up">
+
+      <nav>
+
+        <ul class="mobile-nav_menu">
+          <li data-aos="fade-down" data-aos-delay="100">
+            <a class="mobile-nav__link_1" id="mobile-nav__link_1" href="/index.html">Home</a>
+          </li>
+
+          <br> 
+
+          <li data-aos="fade-down" data-aos-delay="200">
+            <a class="mobile-nav__link_2" id="mobile-nav__link_2" href="/about.html">About</a>
+          </li>
+          
+          <br>
+
+          <li data-aos="fade-down" data-aos-delay="300">
+            <a class="mobile-nav__link_3" id="mobile-nav__link_3" href="/project.html">Projects</a>
+          </li>
+          
+          <br>
+
+          <li data-aos="fade-down" data-aos-delay="400">
+            <a class="mobile-nav__link_4" id="mobile-nav__link_4" href="/index.html#herocontact">Contact</a>
+          </li>
+          
+          <br>
+
+          <li>
+            <a class="mobile-nav__btn btn" href="/Resume_Queen's_University_(forpersonalportfoliowebsite).pdf" target="_blank" rel="noopener noreferrer">Download Resume</a>
+          </li>
+
+        </ul>
+   
+      </nav>
+   
+    </div>
+
+    <!-- End of Mobile Navigation -->
+
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>   
+    <br>   
+    <br>   
+    <br>   
+    <br>   
+    <br>   
+    <br>
+    <br>   
+    <br>   
+    <br>   
+    <br>   
+    <br>   
+    <br>   
+    <br>
+    <br>
+    
+    <main>
+
+      <section id="hero" class="hero container section">
+
+        <div class="hero__content" data-aos="zoom-in">
+          
+          <h3 class="hero__descriptionTwo">
+            HELLO, I'M
+          </h3>
+
+          <h4 class="hero__descriptionThree" data-aos="fade-right" data-aos-delay="200">
+            <strong>Johnnie</strong>
+          </h4>
+
+          <h5 class="hero__descriptionFour" data-aos="fade-left" data-aos-delay="400">
+            <strong>Tse.</strong>
+          </h5>
+
+          <p class="hero__descriptionFive" data-aos="fade-up" data-aos-delay="600">
+            <i><strong>Computer Engineering Student</strong> </i>
+          </p>
+
+          <p class="hero__descriptionSixth" data-aos="fade-up" data-aos-delay="800">
+            <a href="https://www.queensu.ca/">@ Queen's University</a>
+          </p>
+
+        </div>
+
+        <br>
+
+        <div class="herobuttoncontainter">
+
+          <p class="hero__btn btn2" data-aos="flip-left" data-aos-delay="200">
+            <a href="https://www.linkedin.com/in/johnnie-tse/">
+
+              <svg height="100%" stroke-miterlimit="10" style="fill-rule:nonzero;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;" version="1.1" viewBox="0 0 1024 1024" width="100%" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:vectornator="http://vectornator.io" xmlns:xlink="http://www.w3.org/1999/xlink">
+                <defs/>
+                <g id="圖層1" vectornator:layerName="圖層1">
+                <path d="M293.673 798.152L730.327 798.152C760.469 798.152 784.908 772.527 784.908 740.921L784.908 430.212L784.908 283.079C784.908 251.473 760.469 225.848 730.327 225.848L293.673 225.848C263.531 225.848 239.092 251.473 239.092 283.079L239.092 740.921C239.092 772.527 263.531 798.152 293.673 798.152Z" fill="#f1f5f9" fill-rule="nonzero" opacity="1" stroke="#f1f5f9" stroke-linecap="round" stroke-linejoin="round" stroke-width="10.2249" vectornator:layerName="path"/>
+                </g>
+                <g id="圖層2" vectornator:layerName="圖層2">
+                <path d="M320.964 433.308L402.837 433.308L402.837 621.238L402.837 705.152L320.964 705.152L320.964 433.308Z" fill="#150b14" fill-rule="nonzero" opacity="1" stroke="#150b14" stroke-linecap="round" stroke-linejoin="round" stroke-width="10.2249" vectornator:layerName="path 1"/>
+                <path d="M361.9 390.386L361.9 390.386C337.339 390.386 320.964 374.175 320.964 354.145C320.964 334.114 337.339 318.848 361.9 318.848C386.462 318.848 401.813 334.114 402.837 354.145C402.837 374.175 387.486 390.386 361.9 390.386Z" fill="#150b14" fill-rule="nonzero" opacity="1" stroke="#150b14" stroke-linecap="round" stroke-linejoin="round" stroke-width="10.2249" vectornator:layerName="path 2"/>
+                <path d="M703.036 705.152L621.163 705.152C621.163 705.152 621.163 572.707 621.163 562.077C621.163 533.461 607.518 504.846 573.404 504.231C539.591 503.601 525.645 533.461 525.645 562.077C525.645 575.082 525.645 705.152 525.645 705.152L443.773 705.152L443.773 433.308L525.645 433.308L525.645 469.95C525.645 469.95 551.981 433.308 604.966 433.308C659.07 433.308 703.036 472.311 703.036 551.503L703.036 705.152Z" fill="#150b14" fill-rule="nonzero" opacity="1" stroke="#150b14" stroke-linecap="round" stroke-linejoin="round" stroke-width="10.2249" vectornator:layerName="path 3"/>
+                </g>
+              </svg>
+                                
+            </a>
+
+          </p>
+
+
+          <p class="hero__btn btn2" data-aos="flip-right" data-aos-delay="400">
+            <a href="mailto: johnnietse994@gmail.com?subject=Your+Subject&body=Your+Content">
+
+              <svg height="100%" stroke-miterlimit="10" style="fill-rule:nonzero;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;" version="1.1" viewBox="0 0 1024 1024" width="100%" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:vectornator="http://vectornator.io" xmlns:xlink="http://www.w3.org/1999/xlink">
+                <defs/>
+                <g id="圖層2" vectornator:layerName="圖層2">
+                <path d="M230.128 293.495L793.872 293.495L793.872 730.505L230.128 730.505L230.128 293.495Z" fill="#f1f5f9" fill-opacity="0.900522" fill-rule="nonzero" opacity="1" stroke="#f1f5f9" stroke-linecap="butt" stroke-linejoin="round" stroke-width="10" vectornator:layerName="矩形 1"/>
+                </g>
+                <g id="圖層1" vectornator:layerName="圖層1">
+                <path d="M512 512L682.192 409.563C680.196 393.246 665.951 380.545 648.481 380.545L375.519 380.545C358.049 380.545 343.804 393.246 341.808 409.563L512 512Z" fill="#150b14" fill-rule="nonzero" opacity="1" stroke="#f1f5f9" stroke-linecap="butt" stroke-linejoin="round" stroke-width="10" vectornator:layerName="path"/>
+                <path d="M502.958 539.425L341.399 442.181L341.399 610.592C341.399 628.749 356.667 643.455 375.519 643.455L648.481 643.455C667.333 643.455 682.601 628.749 682.601 610.592L682.601 442.181L521.042 539.425C515.514 542.744 508.486 542.744 502.958 539.425Z" fill="#150b14" fill-rule="nonzero" opacity="1" stroke="#f1f5f9" stroke-linecap="butt" stroke-linejoin="round" stroke-width="10" vectornator:layerName="path 1"/>
+                </g>
+              </svg>
+
+            </a>
+
+          </p>
+
+          
+          <button onclick="redirectToInstagram()" data-aos="flip-up" data-aos-delay="600">
+            <p class="hero__btn btn2">
+
+              <svg height="100%" stroke-miterlimit="10" style="fill-rule:nonzero;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;" version="1.1" viewBox="0 0 1024 1024" width="100%" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:vectornator="http://vectornator.io" xmlns:xlink="http://www.w3.org/1999/xlink">
+                <defs/>
+                <g id="圖層1" vectornator:layerName="圖層1">
+                <path d="M408.927 755.041L615.073 755.041C690.97 755.041 752.504 692.858 752.504 616.161L752.504 407.839C752.504 331.142 690.97 268.959 615.073 268.959L408.927 268.959C333.03 268.959 271.496 331.142 271.496 407.839L271.496 616.161C271.496 692.858 333.03 755.041 408.927 755.041Z" fill="#150b14" fill-rule="nonzero" opacity="1" stroke="#f1f5f9" stroke-linecap="butt" stroke-linejoin="miter" stroke-width="60.9879" vectornator:layerName="path"/>
+                <path d="M512 396.266C448.749 396.266 397.474 448.082 397.474 512C397.474 575.918 448.749 627.734 512 627.734C575.251 627.734 626.526 575.918 626.526 512C626.526 448.082 575.251 396.266 512 396.266Z" fill="#150b14" fill-rule="nonzero" opacity="1" stroke="#f1f5f9" stroke-linecap="butt" stroke-linejoin="miter" stroke-width="41.0947" vectornator:layerName="path 1"/>
+                <path d="M649.431 349.972C636.781 349.972 626.526 360.336 626.526 373.119C626.526 385.903 636.781 396.266 649.431 396.266C662.081 396.266 672.336 385.903 672.336 373.119C672.336 360.336 662.081 349.972 649.431 349.972Z" fill="#150b14" fill-rule="nonzero" opacity="1" stroke="#f1f5f9" stroke-linecap="butt" stroke-linejoin="miter" stroke-width="6.67954" vectornator:layerName="path 2"/>
+                </g>
+              </svg>
+
+            </p>
+
+          </button>
+
+
+          <p class="hero__btn btn2" data-aos="flip-down" data-aos-delay="800">
+            <a href="https://github.com/johnnietse">
+
+              <svg height="100%" stroke-miterlimit="10" style="fill-rule:nonzero;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;" version="1.1" viewBox="0 0 1024 1024" width="100%" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:vectornator="http://vectornator.io" xmlns:xlink="http://www.w3.org/1999/xlink">
+                <defs/>
+                <g id="圖層1" vectornator:layerName="圖層1"/>
+                <g id="圖層1-拷貝" vectornator:layerName="圖層1 拷貝">
+                <path d="M512.912 246.905C373.466 246.905 260.422 367.208 260.422 515.609C260.422 664.01 373.466 784.313 512.912 784.313C652.358 784.313 765.402 664.01 765.402 515.609C765.402 367.208 652.358 246.905 512.912 246.905Z" fill="#150b14" fill-rule="nonzero" opacity="1" stroke="none" vectornator:layerName="path"/>
+                <path d="M482.514 241.588C361.437 255.322 264.049 356.953 250.889 480.559C237.728 609.659 308.795 725.025 416.711 768.973C424.607 771.72 432.504 766.227 432.504 755.239L432.504 711.291C432.504 711.291 421.975 714.037 408.815 714.037C371.965 714.037 356.173 681.076 353.541 661.848C350.909 650.861 345.644 642.621 337.748 634.38C329.852 631.633 327.22 631.633 327.22 628.887C327.22 623.393 335.116 623.393 337.748 623.393C353.541 623.393 366.701 642.621 371.965 650.861C385.126 672.835 400.918 678.329 408.815 678.329C419.343 678.329 427.239 675.582 432.504 672.835C435.136 653.608 443.032 634.38 458.825 623.393C398.286 609.659 353.541 573.951 353.541 513.521C353.541 483.306 366.701 453.091 385.126 431.117C382.494 425.623 379.862 411.889 379.862 392.662C379.862 381.675 379.862 365.194 387.758 348.713C387.758 348.713 424.607 348.713 461.457 384.421C474.617 378.928 493.042 376.181 511.467 376.181C529.891 376.181 548.316 378.928 564.109 384.421C598.326 348.713 637.808 348.713 637.808 348.713C643.072 365.194 643.072 381.675 643.072 392.662C643.072 414.636 640.44 425.623 637.808 431.117C656.232 453.091 669.393 480.559 669.393 513.521C669.393 573.951 624.647 609.659 564.109 623.393C579.901 637.127 590.43 661.848 590.43 686.569L590.43 757.986C590.43 766.227 598.326 774.467 608.855 771.72C706.242 730.518 774.677 631.633 774.677 516.268C774.677 351.46 640.44 222.36 482.514 241.588Z" fill="#f1f5f9" fill-rule="nonzero" opacity="1" stroke="none" vectornator:layerName="path 1"/>
+                </g>
+              </svg>
+                
+            </a>
+
+          </p>
+
+        </div>
+
+        <br>   
+        <br>   
+        <br>   
+        <br>   
+        <br>   
+        <br>   
+        <br>   
+        <br>   
+        <br>   
+        <br>   
+        <br>   
+        <br>   
+        <br>
+        <br>   
+        <br>   
+        <br>   
+        <br>   
+        <br>   
+        <br>   
+        <br>
+        <br>   
+        <br>   
+        <br>   
+        <br>   
+        <br>   
+        <br>
+        <br>
+        <br>   
+        <br>   
+        <br>   
+        <br>   
+        <br>   
+        <br>   
+        <br>
+        
+        <div class="herocontact" id="herocontact" data-aos="fade-up" data-aos-duration="1500">
+          <h1 class="contact__title">Contact Me</h1>
+             
+          <br>
+          
+          <p class="contact__description" data-aos="fade-left" data-aos-duration="1500">
+            I'm always excited to discuss technology, mobile and web development, HPC, or anything else you’d like to share—let’s connect! 🤝
+          </p>
+          
+          <br>
+
+          <p class="contact__description" data-aos="fade-left" data-aos-duration="1500">
+            Reach out using the contact information below or drop me a message in the text box!          
+          </p>
+
+        </div>
+
+        <br>
+        
+        <div class="herobuttoncontainter">
+          <p class="hero__btn btn2" data-aos="flip-left" data-aos-delay="200">
+
+            <a href="https://www.linkedin.com/in/johnnie-tse/">
+
+              <svg height="100%" stroke-miterlimit="10" style="fill-rule:nonzero;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;" version="1.1" viewBox="0 0 1024 1024" width="100%" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:vectornator="http://vectornator.io" xmlns:xlink="http://www.w3.org/1999/xlink">
+                <defs/>
+                <g id="圖層1" vectornator:layerName="圖層1">
+                <path d="M293.673 798.152L730.327 798.152C760.469 798.152 784.908 772.527 784.908 740.921L784.908 430.212L784.908 283.079C784.908 251.473 760.469 225.848 730.327 225.848L293.673 225.848C263.531 225.848 239.092 251.473 239.092 283.079L239.092 740.921C239.092 772.527 263.531 798.152 293.673 798.152Z" fill="#f1f5f9" fill-rule="nonzero" opacity="1" stroke="#f1f5f9" stroke-linecap="round" stroke-linejoin="round" stroke-width="10.2249" vectornator:layerName="path"/>
+                </g>
+                <g id="圖層2" vectornator:layerName="圖層2">
+                <path d="M320.964 433.308L402.837 433.308L402.837 621.238L402.837 705.152L320.964 705.152L320.964 433.308Z" fill="#150b14" fill-rule="nonzero" opacity="1" stroke="#150b14" stroke-linecap="round" stroke-linejoin="round" stroke-width="10.2249" vectornator:layerName="path 1"/>
+                <path d="M361.9 390.386L361.9 390.386C337.339 390.386 320.964 374.175 320.964 354.145C320.964 334.114 337.339 318.848 361.9 318.848C386.462 318.848 401.813 334.114 402.837 354.145C402.837 374.175 387.486 390.386 361.9 390.386Z" fill="#150b14" fill-rule="nonzero" opacity="1" stroke="#150b14" stroke-linecap="round" stroke-linejoin="round" stroke-width="10.2249" vectornator:layerName="path 2"/>
+                <path d="M703.036 705.152L621.163 705.152C621.163 705.152 621.163 572.707 621.163 562.077C621.163 533.461 607.518 504.846 573.404 504.231C539.591 503.601 525.645 533.461 525.645 562.077C525.645 575.082 525.645 705.152 525.645 705.152L443.773 705.152L443.773 433.308L525.645 433.308L525.645 469.95C525.645 469.95 551.981 433.308 604.966 433.308C659.07 433.308 703.036 472.311 703.036 551.503L703.036 705.152Z" fill="#150b14" fill-rule="nonzero" opacity="1" stroke="#150b14" stroke-linecap="round" stroke-linejoin="round" stroke-width="10.2249" vectornator:layerName="path 3"/>
+                </g>
+              </svg>
+                  
+            </a>
+
+          </p>
+
+
+          <p class="hero__btn btn2" data-aos="flip-right" data-aos-delay="400">
+            <a href="mailto: johnnietse994@gmail.com?subject=Your+Subject&body=Your+Content">
+
+              <svg height="100%" stroke-miterlimit="10" style="fill-rule:nonzero;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;" version="1.1" viewBox="0 0 1024 1024" width="100%" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:vectornator="http://vectornator.io" xmlns:xlink="http://www.w3.org/1999/xlink">
+                <defs/>
+                <g id="圖層2" vectornator:layerName="圖層2">
+                <path d="M230.128 293.495L793.872 293.495L793.872 730.505L230.128 730.505L230.128 293.495Z" fill="#f1f5f9" fill-opacity="0.900522" fill-rule="nonzero" opacity="1" stroke="#f1f5f9" stroke-linecap="butt" stroke-linejoin="round" stroke-width="10" vectornator:layerName="矩形 1"/>
+                </g>
+                <g id="圖層1" vectornator:layerName="圖層1">
+                <path d="M512 512L682.192 409.563C680.196 393.246 665.951 380.545 648.481 380.545L375.519 380.545C358.049 380.545 343.804 393.246 341.808 409.563L512 512Z" fill="#150b14" fill-rule="nonzero" opacity="1" stroke="#f1f5f9" stroke-linecap="butt" stroke-linejoin="round" stroke-width="10" vectornator:layerName="path"/>
+                <path d="M502.958 539.425L341.399 442.181L341.399 610.592C341.399 628.749 356.667 643.455 375.519 643.455L648.481 643.455C667.333 643.455 682.601 628.749 682.601 610.592L682.601 442.181L521.042 539.425C515.514 542.744 508.486 542.744 502.958 539.425Z" fill="#150b14" fill-rule="nonzero" opacity="1" stroke="#f1f5f9" stroke-linecap="butt" stroke-linejoin="round" stroke-width="10" vectornator:layerName="path 1"/>
+                </g>
+              </svg>
+
+            </a>
+
+          </p>
+
+          
+          <button onclick="redirectToInstagram()" data-aos="flip-up" data-aos-delay="600">
+            <p class="hero__btn btn2">
+
+              <svg height="100%" stroke-miterlimit="10" style="fill-rule:nonzero;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;" version="1.1" viewBox="0 0 1024 1024" width="100%" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:vectornator="http://vectornator.io" xmlns:xlink="http://www.w3.org/1999/xlink">
+                <defs/>
+                <g id="圖層1" vectornator:layerName="圖層1">
+                <path d="M408.927 755.041L615.073 755.041C690.97 755.041 752.504 692.858 752.504 616.161L752.504 407.839C752.504 331.142 690.97 268.959 615.073 268.959L408.927 268.959C333.03 268.959 271.496 331.142 271.496 407.839L271.496 616.161C271.496 692.858 333.03 755.041 408.927 755.041Z" fill="#150b14" fill-rule="nonzero" opacity="1" stroke="#f1f5f9" stroke-linecap="butt" stroke-linejoin="miter" stroke-width="60.9879" vectornator:layerName="path"/>
+                <path d="M512 396.266C448.749 396.266 397.474 448.082 397.474 512C397.474 575.918 448.749 627.734 512 627.734C575.251 627.734 626.526 575.918 626.526 512C626.526 448.082 575.251 396.266 512 396.266Z" fill="#150b14" fill-rule="nonzero" opacity="1" stroke="#f1f5f9" stroke-linecap="butt" stroke-linejoin="miter" stroke-width="41.0947" vectornator:layerName="path 1"/>
+                <path d="M649.431 349.972C636.781 349.972 626.526 360.336 626.526 373.119C626.526 385.903 636.781 396.266 649.431 396.266C662.081 396.266 672.336 385.903 672.336 373.119C672.336 360.336 662.081 349.972 649.431 349.972Z" fill="#150b14" fill-rule="nonzero" opacity="1" stroke="#f1f5f9" stroke-linecap="butt" stroke-linejoin="miter" stroke-width="6.67954" vectornator:layerName="path 2"/>
+                </g>
+              </svg>
+
+            </p>
+
+          </button>
+
+
+          <p class="hero__btn btn2" data-aos="flip-down" data-aos-delay="800">
+            <a href="https://github.com/johnnietse">
+
+              <svg height="100%" stroke-miterlimit="10" style="fill-rule:nonzero;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;" version="1.1" viewBox="0 0 1024 1024" width="100%" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:vectornator="http://vectornator.io" xmlns:xlink="http://www.w3.org/1999/xlink">
+                <defs/>
+                <g id="圖層1" vectornator:layerName="圖層1"/>
+                <g id="圖層1-拷貝" vectornator:layerName="圖層1 拷貝">
+                <path d="M512.912 246.905C373.466 246.905 260.422 367.208 260.422 515.609C260.422 664.01 373.466 784.313 512.912 784.313C652.358 784.313 765.402 664.01 765.402 515.609C765.402 367.208 652.358 246.905 512.912 246.905Z" fill="#150b14" fill-rule="nonzero" opacity="1" stroke="none" vectornator:layerName="path"/>
+                <path d="M482.514 241.588C361.437 255.322 264.049 356.953 250.889 480.559C237.728 609.659 308.795 725.025 416.711 768.973C424.607 771.72 432.504 766.227 432.504 755.239L432.504 711.291C432.504 711.291 421.975 714.037 408.815 714.037C371.965 714.037 356.173 681.076 353.541 661.848C350.909 650.861 345.644 642.621 337.748 634.38C329.852 631.633 327.22 631.633 327.22 628.887C327.22 623.393 335.116 623.393 337.748 623.393C353.541 623.393 366.701 642.621 371.965 650.861C385.126 672.835 400.918 678.329 408.815 678.329C419.343 678.329 427.239 675.582 432.504 672.835C435.136 653.608 443.032 634.38 458.825 623.393C398.286 609.659 353.541 573.951 353.541 513.521C353.541 483.306 366.701 453.091 385.126 431.117C382.494 425.623 379.862 411.889 379.862 392.662C379.862 381.675 379.862 365.194 387.758 348.713C387.758 348.713 424.607 348.713 461.457 384.421C474.617 378.928 493.042 376.181 511.467 376.181C529.891 376.181 548.316 378.928 564.109 384.421C598.326 348.713 637.808 348.713 637.808 348.713C643.072 365.194 643.072 381.675 643.072 392.662C643.072 414.636 640.44 425.623 637.808 431.117C656.232 453.091 669.393 480.559 669.393 513.521C669.393 573.951 624.647 609.659 564.109 623.393C579.901 637.127 590.43 661.848 590.43 686.569L590.43 757.986C590.43 766.227 598.326 774.467 608.855 771.72C706.242 730.518 774.677 631.633 774.677 516.268C774.677 351.46 640.44 222.36 482.514 241.588Z" fill="#f1f5f9" fill-rule="nonzero" opacity="1" stroke="none" vectornator:layerName="path 1"/>
+                </g>
+              </svg>
+                
+            </a>
+
+          </p>
+
+        </div>
+
+        <br>   
+        <br>   
+        <br>   
+        <br>   
+        <br>   
+        <br>   
+        <br>
+        <br>   
+        <br>   
+        <br>   
+
+        <div class="contact-container" data-aos="fade-up" data-aos-duration="1000">
+          <form action="https://api.web3forms.com/submit" method="POST" class="contact-left" data-aos="zoom-in" data-aos-duration="1200">
+
+            <div class="contact-left-title" data-aos="fade-down" data-aos-duration="800">
+              <h1>Get in touch</h1>
+              <hr>
+            </div>
+
+            <input type="hidden" name="access_key" value="9667b268-56d2-448c-9bc9-b0a4d2de19e2">
+
+            <input type="text" id="name" name="name" placeholder="Your Name" class="contact-inputs" autocomplete="off" required data-aos="fade-right" data-aos-duration="1000" required>
+            <input type="email" id="email" name="email" placeholder="Your Email" class="contact-inputs" autocomplete="off" required data-aos="fade-right" data-aos-duration="1200" required>
+            <textarea name="content" id="content" placeholder="Your Message" class="contact-inputs" autocomplete="off" required data-aos="fade-right" data-aos-duration="1400" required></textarea>
+            <button type="submit" name="submit" data-aos="fade-up" data-aos-duration="1500">Submit<img src="images\profile\arrow_icon.png" alt=""></button>
+          
+          </form>
+
+        </div> 
+
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+
+      </section>
+    
+    </main>
+
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    
+    <footer data-aos="fade-up" data-aos-duration="2000">  
+      <div class="row">
+        <div class="col">
+          <p class="copyright">© Johnnie Tse 2024. All rights reserved.
+          </p>
+        </div>
+      </div>
+    </footer>
+    
+  </body>
+
+  <script>
+    AOS.init();
+  </script>
+  
+  <script type="module" src="./src/main.js"></script>
+
+</html>
