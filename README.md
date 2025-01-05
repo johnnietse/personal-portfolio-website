@@ -118,3 +118,122 @@ To ensure the best usability, please make sure to request the mobile website by 
 For devices other than mobile devices and tablets, it is perfectly fine to use the desktop version of the website. The desktop version is optimized for larger screens, providing the best experience for users with laptops and desktops.
 
 Thank you for visiting, and enjoy your experience!
+
+---
+
+# Portfolio Website Setup Guide
+
+This guide walks you through setting up a development environment for creating a modern portfolio website. Follow the steps carefully to ensure your environment is configured correctly.
+
+---
+
+## Prerequisites
+
+### Install Required Tools
+1. **Node.js**:
+   - Visit [Node.js](https://nodejs.org/en) and download the LTS version.
+
+2. **Git and Git Bash**:
+   - Visit [Git SCM](https://git-scm.com/) and click "Download for Windows."
+
+3. **Windows Terminal (for Windows users)**:
+   - Open Microsoft Store, search for "Windows Terminal," and install it.
+   - Configure Git Bash in Windows Terminal:
+     1. Open Windows Terminal and click the dropdown arrow next to the tab.
+     2. Select **Settings**.
+     3. Add a new profile and name it "Git Bash."
+     4. For the command line, browse to:
+        `C:\Program Files\Git\bin\bash.exe`
+     5. Set the starting directory to your desired location.
+     6. For the icon, navigate to `C:\Program Files\Git\mingw64\share\git` and select the `git-for-windows.ico` file.
+     7. Save the settings, set the default profile to "Git Bash," and close the interface.
+   - To confirm the setup, open Windows Terminal and check for a tab labeled "MINGW64."
+
+---
+
+## Guides on Setting Up the Development Environment (if you want to build a personal portfolio website like I did)
+
+We will use [Vite](https://vitejs.dev/) for its modern features and speed.
+
+### Steps:
+1. **Visit the Vite Website**:
+   - Go to the [Vite documentation](https://vitejs.dev/guide/) and review its features, such as:
+     - **NPM Dependency Resolving and Pre-Bundling**: Allows seamless module imports.
+     - **Hot Module Replacement**: Provides faster live-server functionality.
+     - **CSS Code Splitting**: Optimizes builds with advanced CSS handling.
+
+2. **Create Your Project**:
+   - Open Windows Terminal (or your preferred terminal) and navigate to your desired directory using `pwd`.
+   - Run the following command:
+     ```bash
+     npm create vite@latest
+     ```
+   - Follow the prompts:
+     - **Project Name**: Enter your project name.
+     - **Framework**: Choose `Vanilla`.
+     - **Variant**: Select `JavaScript`.
+
+3. **Initialize the Project**:
+   ```bash
+   cd <your-project-name>
+   npm install
+   ```
+
+4. **Run the Development Server**:
+   ```bash
+   npm run dev
+   ```
+   - Open the generated URL in your browser to preview your project.
+
+5. **Open Your Project in VS Code** (optional but recommended):
+   ```bash
+   code .
+   ```
+
+---
+
+## Additional Setup
+
+### Normalize CSS:
+1. Go to the [Modern Normalize GitHub Repository](https://github.com/sindresorhus/modern-normalize).
+2. Open `modern-normalize.css` and click **Raw**.
+3. Copy the code and paste it into a new file named `modern-normalize.css` in your project.
+4. Import the CSS into `main.js`:
+   ```javascript
+   import './modern-normalize.css';
+   ```
+   - Place this import at the top for proper cascading priority.
+
+### Base CSS Setup:
+- Define variables for:
+  - Colors
+  - Sizes
+- Create utility classes for reusable styles (e.g., buttons, containers, spacings).
+
+---
+
+## Key Commands
+- Start the development server:
+  ```bash
+  npm run dev
+  ```
+- Stop the server:
+  - Press `Ctrl + C`.
+- Build the project for deployment:
+  ```bash
+  npm run build
+  ```
+- Preview the build:
+  ```bash
+  npm run preview
+  ```
+
+---
+
+## Notes:
+- Vite handles CSS imports in JavaScript instead of HTML. Ensure your CSS is imported in `main.js`.
+- Use the provided hot module replacement for instant updates in your browser during development.
+
+---
+
+You are now ready to start building your portfolio website. Happy coding!
