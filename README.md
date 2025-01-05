@@ -102,3 +102,19 @@ The website is deployed using Vercel for ease of use and scalability. Follow the
 - **JavaScript**: Interactivity and dynamic content management.
 - **AOS Library**: Smooth animations on scroll.
 - **Vite**: Fast and optimized development/build tool.
+
+
+
+# Mobile Usability Notice
+
+## For Mobile Devices and Tablets
+
+For an optimal browsing experience, it is highly recommended that you access the mobile version of this website on mobile devices and tablets. Requesting the desktop version on smaller screens may lead to a suboptimal user experience.
+
+To ensure the best usability, please make sure to request the mobile website by default. The mobile version is designed to be responsive and user-friendly, offering quicker load times, better navigation, and a layout tailored for smaller screens.
+
+## For Other Devices
+
+For devices other than mobile devices and tablets, it is perfectly fine to use the desktop version of the website. The desktop version is optimized for larger screens, providing the best experience for users with laptops and desktops.
+
+Thank you for visiting, and enjoy your experience!
