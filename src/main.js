@@ -22,9 +22,11 @@ document.addEventListener("DOMContentLoaded", function () {
     const footer = document.querySelector("footer");
   
     // Check for ARM-based or mobile devices using userAgentData if available
-    const isARM = navigator.userAgentData
-      ? navigator.userAgentData.platform.toLowerCase().includes("arm")
-      : /arm|aarch64/i.test(navigator.userAgent);
+    // const isARM = navigator.userAgentData
+    //   ? navigator.userAgentData.platform.toLowerCase().includes("arm")
+    //   : /arm|aarch64/i.test(navigator.userAgent);
+    const isARM = (navigator.userAgentData && /arm|aarch64/i.test(navigator.userAgentData.platform));
+
   
     // Check for mobile user agents
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
