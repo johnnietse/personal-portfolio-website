@@ -105,15 +105,15 @@ The website is deployed using Vercel for ease of use and scalability. Follow the
 
 
 
-# Mobile Usability Notice
+## Mobile Usability Notice
 
-## For Mobile Devices and Tablets
+### For Mobile Devices and Tablets
 
 For an optimal browsing experience, it is highly recommended that you access the mobile version of this website on mobile devices and tablets. Requesting the desktop version on smaller screens may lead to a suboptimal user experience.
 
 To ensure the best usability, please make sure to request the mobile website by default. The mobile version is designed to be responsive and user-friendly, offering quicker load times, better navigation, and a layout tailored for smaller screens.
 
-## For Other Devices
+### For Other Devices
 
 For devices other than mobile devices and tablets, it is perfectly fine to use the desktop version of the website. The desktop version is optimized for larger screens, providing the best experience for users with laptops and desktops.
 
@@ -121,15 +121,15 @@ Thank you for visiting, and enjoy your experience!
 
 ---
 
-# Portfolio Website Setup Guide
+## Portfolio Website Setup Guide
 
 This guide walks you through setting up a development environment for creating a modern portfolio website. Follow the steps carefully to ensure your environment is configured correctly.
 
 ---
 
-## Prerequisites
+### Prerequisites
 
-### Install Required Tools
+#### Install Required Tools
 1. **Node.js**:
    - Visit [Node.js](https://nodejs.org/en) and download the LTS version.
 
@@ -151,11 +151,11 @@ This guide walks you through setting up a development environment for creating a
 
 ---
 
-## Guides on Setting Up the Development Environment (if you want to build a personal portfolio website like I did)
+### Guides on Setting Up the Development Environment (if you want to build a personal portfolio website like I did)
 
 We will use [Vite](https://vitejs.dev/) for its modern features and speed.
 
-### Steps:
+#### Steps:
 1. **Visit the Vite Website**:
    - Go to the [Vite documentation](https://vitejs.dev/guide/) and review its features, such as:
      - **NPM Dependency Resolving and Pre-Bundling**: Allows seamless module imports.
@@ -192,9 +192,9 @@ We will use [Vite](https://vitejs.dev/) for its modern features and speed.
 
 ---
 
-## Additional Setup
+### Additional Setup
 
-### Normalize CSS:
+#### Normalize CSS:
 1. Go to the [Modern Normalize GitHub Repository](https://github.com/sindresorhus/modern-normalize).
 2. Open `modern-normalize.css` and click **Raw**.
 3. Copy the code and paste it into a new file named `modern-normalize.css` in your project.
@@ -204,7 +204,7 @@ We will use [Vite](https://vitejs.dev/) for its modern features and speed.
    ```
    - Place this import at the top for proper cascading priority.
 
-### Base CSS Setup:
+#### Base CSS Setup:
 - Define variables for:
   - Colors
   - Sizes
@@ -212,7 +212,7 @@ We will use [Vite](https://vitejs.dev/) for its modern features and speed.
 
 ---
 
-## Key Commands
+### Key Commands
 - Start the development server:
   ```bash
   npm run dev
@@ -230,7 +230,7 @@ We will use [Vite](https://vitejs.dev/) for its modern features and speed.
 
 ---
 
-## Notes:
+### Notes:
 - Vite handles CSS imports in JavaScript instead of HTML. Ensure your CSS is imported in `main.js`.
 - Use the provided hot module replacement for instant updates in your browser during development.
 
