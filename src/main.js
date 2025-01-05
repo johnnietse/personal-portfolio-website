@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const isMobile = /iPhone|iPad|iPod|Android|armv/i.test(navigator.userAgent) || isARM;
   
     if (isMobile && footer) {
-      footer.style.display = "none";
+      footer.style.visibility = "hidden";
     }
 });
   
