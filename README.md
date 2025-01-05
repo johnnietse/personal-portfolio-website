@@ -52,6 +52,27 @@ This is the repository for my personal portfolio website. It showcases my projec
 3. **mobile-nav.js**:
    - Manages the behavior of the mobile navigation menu, enhancing usability on smaller screens.
 
+### Vite Configuration
+
+**vite.config.js**:
+   - Configures Vite for building the website.
+   - Specifies Rollup options to define multiple input points for the build process:
+     ```javascript
+     import { defineConfig } from 'vite';
+
+     export default defineConfig({
+       build: {
+         rollupOptions: {
+           input: {
+             main: './index.html',
+             about: './about.html',
+             project: './project.html',
+           },
+         },
+       },
+     });
+     ```
+     
 ## How to Use
 
 1. Clone the repository:
@@ -70,6 +91,7 @@ This is the repository for my personal portfolio website. It showcases my projec
 - **CSS3**: Modern styling, animations, and responsiveness.
 - **JavaScript**: Interactivity and dynamic content management.
 - **AOS Library**: Smooth animations on scroll.
+- **Vite**: Fast and optimized development/build tool.
 
 ---
 
