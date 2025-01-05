@@ -87,7 +87,7 @@ The website is deployed using Vercel for ease of use and scalability. Follow the
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/portfolio.git
+   git clone https://github.com/repositoryusername/portfolio.git
    ```
 2. Navigate to the project directory:
    ```bash
