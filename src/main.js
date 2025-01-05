@@ -17,3 +17,15 @@ document.addEventListener("DOMContentLoaded", function () {
         once: true,     // Whether animation should happen only once
     });
 });
+
+document.addEventListener("DOMContentLoaded", function () {
+    const footer = document.querySelector("footer");
+  
+    // Check for iOS or Android user agent
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  
+    if (isMobile && footer) {
+      footer.style.visibility = "hidden";
+    }
+});
+  
