@@ -18,18 +18,19 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
-
 document.addEventListener("DOMContentLoaded", function () {
     const footer = document.querySelector("footer");
   
-    // Detect ARM-based devices using navigator properties
-    const isARM = navigator.platform && /arm|aarch64/i.test(navigator.platform);
+    // Check for ARM-based or mobile devices using userAgentData if available
+    const isARM = navigator.userAgentData
+      ? navigator.userAgentData.platform.toLowerCase().includes("arm")
+      : /arm|aarch64/i.test(navigator.userAgent);
   
-    // Check for mobile user agents or ARM-based platform
-    const isMobile = /iPhone|iPad|iPod|Android|armv/i.test(navigator.userAgent) || isARM;
+    // Check for mobile user agents
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
   
-    if (isMobile && footer) {
-      footer.style.visibility = "hidden";
+    if ((isMobile || isARM) && footer) {
+      footer.style.display = "none";
     }
 });
   
