@@ -72,6 +72,17 @@ This is the repository for my personal portfolio website. It showcases my projec
        },
      });
      ```
+
+## Deployment
+
+The website is deployed using Vercel for ease of use and scalability. Follow these steps to deploy your own version:
+
+1. Sign up or log in to [Vercel](https://vercel.com/).
+2. Link your GitHub repository to Vercel.
+3. Configure the deployment settings if necessary (Vercel automatically detects Vite projects).
+4. Deploy the project by clicking the "Deploy" button.
+5. Your website will be live, and you will receive a custom URL.
+
      
 ## How to Use
 
