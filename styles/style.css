@@ -133,7 +133,7 @@ a{
 }
 
 /* Hide footer on mobile devices */
-@media (max-width: 813px) { /* Adjust the width as needed for your mobile breakpoint */
+@media (max-width: 1070px) { /* Adjust the width as needed for your mobile breakpoint */
     footer {
       display: none;
     }
