@@ -15,7 +15,6 @@ This is the repository for my personal portfolio website. It showcases my projec
 
 1. **index.html**: 
    - The main entry point of the website.
-   - Contains sections such as the header, hero section, projects, about, and footer.
    - Utilizes semantic HTML for better accessibility and SEO.
 
 2. **projects.html**: 
