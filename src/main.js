@@ -29,7 +29,15 @@ document.addEventListener("DOMContentLoaded", function () {
     // Check for mobile user agents
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
   
-    if ((isMobile || isARM) && footer) {
+    // Function to detect if a mobile device requested the desktop version
+    const isDesktopRequested = () => {
+        // Check if the user agent includes desktop OS identifiers or if the user agent data indicates a desktop request
+        return window.navigator.userAgent.includes("Macintosh") ||
+            window.navigator.userAgent.includes("Windows") ||
+            (navigator.userAgentData && navigator.userAgentData.mobile === false);
+    };
+  
+    if (((isMobile) || (isMobile && isDesktopRequested()) || (isARM) || (isARM && isDesktopRequested())) && footer) {
       footer.style.display = "none";
     }
 });
