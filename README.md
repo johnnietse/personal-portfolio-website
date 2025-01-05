@@ -94,6 +94,11 @@ This is the repository for my personal portfolio website. It showcases my projec
 - **Vite**: Fast and optimized development/build tool.
 
 ---
+## License
+
+This project is licensed under the MIT License. See the `LICENSE` file for more details.
+
+---
 
 Feel free to explore and customize the repository to create your own portfolio site!
 
