@@ -2,12 +2,16 @@
 
 This is the repository for my personal portfolio website. It showcases my projects, skills, and a brief introduction about me. The site is designed with modern web development practices, utilizing HTML, CSS, and JavaScript.
 
+---
+
 ## Features
 
 - **Responsive Design**: Fully responsive for an optimal user experience across devices.
 - **Interactive Animations**: Uses AOS (Animate On Scroll) library for smooth scroll animations.
 - **Mobile-Friendly Navigation**: Includes a mobile navigation menu for better usability.
 - **Custom Footer Behavior**: The footer dynamically adjusts visibility based on the user's device type.
+
+---
 
 ## File Structure
 
@@ -72,6 +76,7 @@ This is the repository for my personal portfolio website. It showcases my projec
      });
      ```
 
+---
 ## Deployment
 
 The website is deployed using Vercel for ease of use and scalability. Follow these steps to deploy your own version:
@@ -82,7 +87,7 @@ The website is deployed using Vercel for ease of use and scalability. Follow the
 4. Deploy the project by clicking the "Deploy" button.
 5. Your website will be live, and you will receive a custom URL.
 
-     
+---     
 ## How to Use
 
 1. Clone the repository:
@@ -95,6 +100,7 @@ The website is deployed using Vercel for ease of use and scalability. Follow the
    ```
 3. Open `index.html` in your browser to view the site locally.
 
+---
 ## Technologies Used
 
 - **HTML5**: Semantic and accessible structure.
@@ -104,7 +110,7 @@ The website is deployed using Vercel for ease of use and scalability. Follow the
 - **Vite**: Fast and optimized development/build tool.
 
 
-
+---
 ## Mobile Usability Notice
 
 ### For Mobile Devices and Tablets
@@ -120,7 +126,6 @@ For devices other than mobile devices and tablets, it is perfectly fine to use t
 Thank you for visiting, and enjoy your experience!
 
 ---
-
 ## Portfolio Website Setup Guide
 
 This guide walks you through setting up a development environment for creating a modern portfolio website. Follow the steps carefully to ensure your environment is configured correctly.
