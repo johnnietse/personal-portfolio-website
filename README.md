@@ -90,15 +90,25 @@ The website is deployed using Vercel for ease of use and scalability. Follow the
 ---     
 ## How to Use
 
+**Before cloning the repository, change your working directory to the folder where you want the project to be saved:**
+
+Navigate to the directory where you want to store the project:
+```bash
+cd /path/to/your/directory
+```
+
 1. Clone the repository:
    ```bash
-   git clone https://github.com/repositoryusername/portfolio.git
+   git clone https://github.com/johnnietse/personal_portfolio_website.git
    ```
 2. Navigate to the project directory:
    ```bash
-   cd portfolio
+   cd personal_portfolio_website
    ```
-3. Open `index.html` in your browser to view the site locally.
+3. Run the following command in your terminal to set up a server and view the site locally on your machine:
+   ```bash
+   npm run dev
+   ```
 
 ---
 ## Technologies Used

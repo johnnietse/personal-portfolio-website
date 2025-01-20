@@ -114,7 +114,9 @@
         'image3 content3'
         'content4 image4'
         'image5 content5'
-        'content6 image6';
+        'content6 image6'
+        'image7 content7'
+        'content8 image8';
       place-items: center;
     }
   
@@ -141,6 +143,14 @@
     .work__image6 {
       grid-area: image6;
     }
+
+    .work__image7 {
+      grid-area: image7;
+    }
+
+    .work__image8 {
+      grid-area: image8;
+    }
   
     .work__content1 {
       grid-area: content1;
@@ -164,6 +174,14 @@
   
     .work__content6 {
       grid-area: content6;
+    }
+
+    .work__content7 {
+      grid-area: content7;
+    }
+
+    .work__content8 {
+      grid-area: content8;
     }
   
     .work__project {
