@@ -105,7 +105,10 @@ cd /path/to/your/directory
    ```bash
    cd portfolio
    ```
-3. Open `index.html` in your browser to view the site locally.
+3. Run this in your terminal to set up a server that allows you to view the site locally on your local machine:
+   ```bash
+   npm run dev
+   ```
 
 ---
 ## Technologies Used
