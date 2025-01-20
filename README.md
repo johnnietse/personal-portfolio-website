@@ -103,9 +103,9 @@ cd /path/to/your/directory
    ```
 2. Navigate to the project directory:
    ```bash
-   cd portfolio
+   cd personal_portfolio_website
    ```
-3. Run this in your terminal to set up a server that allows you to view the site locally on your local machine:
+3. Run the following command in your terminal to set up a server and view the site locally on your machine:
    ```bash
    npm run dev
    ```
