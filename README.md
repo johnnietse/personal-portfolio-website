@@ -252,3 +252,14 @@ We will use [Vite](https://vitejs.dev/) for its modern features and speed.
 ---
 
 You are now ready to start building your portfolio website. Happy coding!
+
+
+## 📸 Screenshots 
+![Screenshot (718)](https://github.com/user-attachments/assets/ee67b277-e627-41d6-ae60-f271d47b49d9)
+![Screenshot (719)](https://github.com/user-attachments/assets/0b2fd5ef-0232-43f9-9fd1-bfa282452b2e)
+![Screenshot (720)](https://github.com/user-attachments/assets/1bf0e728-40ba-4c07-a368-232fbaee3dd9)
+![Screenshot (721)](https://github.com/user-attachments/assets/fa3694f3-cff6-49ea-8a46-9b2cd397a88e)
+![Screenshot (722)](https://github.com/user-attachments/assets/424fa08a-2d3c-44fc-962f-30dd689787e8)
+![Screenshot (723)](https://github.com/user-attachments/assets/c3e3abf7-d890-4e39-947b-c5bfdc56502c)
+![Screenshot (724)](https://github.com/user-attachments/assets/6b45d5a5-fff1-4a2b-b28f-19fa335567df)
+
