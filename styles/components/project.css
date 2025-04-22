@@ -116,7 +116,10 @@
         'image5 content5'
         'content6 image6'
         'image7 content7'
-        'content8 image8';
+        'content8 image8'
+        'image9 content9'
+        'content10 image10';
+
       place-items: center;
     }
   
@@ -151,6 +154,14 @@
     .work__image8 {
       grid-area: image8;
     }
+
+    .work__image9 {
+      grid-area: image9;
+    }
+
+    .work__image10 {
+      grid-area: image10;
+    }
   
     .work__content1 {
       grid-area: content1;
@@ -182,6 +193,14 @@
 
     .work__content8 {
       grid-area: content8;
+    }
+
+    .work__content9 {
+      grid-area: content9;
+    }
+
+    .work__content10 {
+      grid-area: content10;
     }
   
     .work__project {
