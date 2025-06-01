@@ -60,21 +60,21 @@ This is the repository for my personal portfolio website. It showcases my projec
 **vite.config.js**:
    - Configures Vite for building the website.
    - Specifies Rollup options to define multiple input points for the build process:
-     ```javascript
-     import { defineConfig } from 'vite';
-
-     export default defineConfig({
-       build: {
-         rollupOptions: {
-           input: {
-             main: './index.html',
-             about: './about.html',
-             project: './project.html',
-           },
+   ```javascript
+   import { defineConfig } from 'vite';
+   
+   export default defineConfig({
+     build: {
+       rollupOptions: {
+         input: {
+           main: './index.html',
+           about: './about.html',
+           project: './project.html',
          },
        },
-     });
-     ```
+     },
+   });
+   ```
 
 ---
 ## Deployment
