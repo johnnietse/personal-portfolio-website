@@ -214,9 +214,9 @@ We will use [Vite](https://vitejs.dev/) for its modern features and speed.
 2. Open `modern-normalize.css` and click **Raw**.
 3. Copy the code and paste it into a new file named `modern-normalize.css` in your project.
 4. Import the CSS into `main.js`:
-   ```javascript
-   import './modern-normalize.css';
-   ```
+```javascript
+import './modern-normalize.css';
+```
    - Place this import at the top for proper cascading priority.
 
 #### Base CSS Setup:
