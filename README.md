@@ -98,17 +98,17 @@ cd /path/to/your/directory
 ```
 
 1. Clone the repository:
-   ```bash
-   git clone https://github.com/johnnietse/personal_portfolio_website.git
-   ```
+```bash
+git clone https://github.com/johnnietse/personal_portfolio_website.git
+```
 2. Navigate to the project directory:
-   ```bash
-   cd personal_portfolio_website
-   ```
+```bash
+cd personal_portfolio_website
+```
 3. Run the following command in your terminal to set up a server and view the site locally on your machine:
-   ```bash
-   npm run dev
-   ```
+```bash
+npm run dev
+```
 
 ---
 ## Technologies Used
@@ -180,9 +180,9 @@ We will use [Vite](https://vitejs.dev/) for its modern features and speed.
 2. **Create Your Project**:
    - Open Windows Terminal (or your preferred terminal) and navigate to your desired directory using `pwd`.
    - Run the following command:
-     ```bash
-     npm create vite@latest
-     ```
+   ```bash
+   npm create vite@latest
+   ```
    - Follow the prompts:
      - **Project Name**: Enter your project name.
      - **Framework**: Choose `Vanilla`.
@@ -229,19 +229,19 @@ We will use [Vite](https://vitejs.dev/) for its modern features and speed.
 
 ### Key Commands
 - Start the development server:
-  ```bash
-  npm run dev
-  ```
+```bash
+npm run dev
+```
 - Stop the server:
   - Press `Ctrl + C`.
 - Build the project for deployment:
-  ```bash
-  npm run build
-  ```
+```bash
+npm run build
+```
 - Preview the build:
-  ```bash
-  npm run preview
-  ```
+```bash
+npm run preview
+```
 
 ---
 
