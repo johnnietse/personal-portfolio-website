@@ -1,6 +1,10 @@
 "use client";
 
 import Image from 'next/image';
+import {
+    Code2, Database, Terminal, Server, Bot, Shield,
+    Cpu, Cloud, Layout, Workflow, GitBranch, TerminalSquare, LayoutTemplate, Container
+} from 'lucide-react';
 
 export default function About() {
     const experiences = [
@@ -12,7 +16,7 @@ export default function About() {
                 "Contributed to LeaderWorkerSet (LWS), a Kubernetes SIG Apps–associated open-source project for managing groups of pods as a single unit of replication, designed for AI/ML inference workloads such as multi-host LLM serving.",
                 "Worked on controller-level fixes in the Go codebase for SIG Apps (LWS) & SIG Cluster Lifecycle (kubespray)."
             ],
-            skills: ["Go", "Kubernetes", "Linux", "Docker", "Open Source Contribution"]
+            skills: ["Go", "Kubernetes", "Linux", "Docker", "Algorithms"]
         },
         {
             company: "Deel",
@@ -108,7 +112,7 @@ export default function About() {
                 "Designed real-time tracking dashboards in Power BI and flagged $150K+ in potential overruns on 6 active projects in SAP S/4HANA.",
                 "Proposed and prototyped a Power Automate + SharePoint Dataverse workflow to streamline data collection, improving turnaround time by 20%."
             ],
-            skills: ["SAP S/4HANA", "Microsoft Power BI", "Power Automate", "Financial Modeling", "Data Analytics"]
+            skills: ["SAP S/4HANA", "Microsoft Power BI", "Power Automate", "Financial Modeling"]
         },
         {
             company: "Engineering Society of Queen's University",
@@ -123,10 +127,23 @@ export default function About() {
         }
     ];
 
-    const renderSkill = (img, label) => (
-        <div className="skill-tag">
-            <img src={img} alt={label} />
-            <span>{label}</span>
+    const education = [
+        {
+            institution: "Queen's University",
+            degree: "Bachelor of Applied Science in Computer Engineering",
+            date: "Sep 2022 - May 2026",
+            details: [
+                "Dean's Scholar in Engineering (2022, 2023, 2024)",
+                "Major in High-Performance Computing and Artificial Intelligence",
+                "Key Coursework: Parallel Processing (MPI/OpenMP), Operating Systems, Microprocessor Systems (Assembly/C), Advanced Machine Learning, Computer Vision."
+            ]
+        }
+    ];
+
+    const renderSkillItem = (icon, label) => (
+        <div className="skill-tag" style={{ gap: '0.8rem', padding: '0.6rem 1rem' }}>
+            {typeof icon === 'string' ? <img src={icon} alt={label} style={{ width: '20px', height: '20px' }} /> : icon}
+            <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{label}</span>
         </div>
     );
 
@@ -142,7 +159,7 @@ export default function About() {
                 </div>
 
                 <div style={{ flex: '2', minWidth: '300px', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                    <h1 className="title" style={{ fontSize: '3rem', marginBottom: '0' }} data-aos="zoom-in" data-aos-delay="100">About Me.</h1>
+                    <h1 className="title" style={{ fontSize: '3.5rem', marginBottom: '0' }} data-aos="zoom-in" data-aos-delay="100">About Me.</h1>
                     <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem', lineHeight: '1.7' }} data-aos="fade-up" data-aos-delay="200">
                         Hello! I'm Johnnie. I'm a Computer Engineering student at Queen's University with a strong passion for scalable backends, Kubernetes ecosystems, modern high-performance web applications, and autonomous embedded systems (HPC & ROS2). I focus heavily on contributing to monumental open-source architectures while pushing modern scalable limits.
                     </p>
@@ -155,10 +172,41 @@ export default function About() {
                 </div>
             </div>
 
+            {/* EDUCATION TIMELINE SECTION */}
+            <h2 className="title" style={{ fontSize: '2.5rem', marginTop: '4rem', textAlign: 'center' }} data-aos="zoom-in">Education & Accolades</h2>
+            <p className="subtitle" style={{ margin: '0 auto 3rem auto', textAlign: 'center' }} data-aos="fade-up" data-aos-delay="100">
+                My extensive academic background intersecting Hardware and Software Engineering limits.
+            </p>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem', margin: '0 auto 6rem auto', maxWidth: '800px' }}>
+                {education.map((edu, idx) => (
+                    <div className="glass-card" key={idx} data-aos="fade-up" style={{ padding: '2.5rem', display: 'flex', flexDirection: 'column', gap: '1rem', borderLeft: '4px solid var(--accent-light)' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem' }}>
+                            <h3 style={{ fontSize: '1.6rem', color: 'var(--text-primary)', margin: 0, fontWeight: 800 }}>{edu.institution}</h3>
+                            <span style={{ fontSize: '0.95rem', color: 'var(--accent-color)', fontWeight: 600 }}>{edu.date}</span>
+                        </div>
+                        <h4 style={{ fontSize: '1.2rem', color: 'var(--text-secondary)', fontWeight: 600, margin: 0 }}>{edu.degree}</h4>
+                        <ul style={{ marginLeft: '1.5rem', color: 'var(--text-secondary)', fontSize: '1rem', lineHeight: '1.7', marginTop: '0.5rem' }}>
+                            {edu.details.map((detail, i) => <li key={i}>{detail}</li>)}
+                        </ul>
+                    </div>
+                ))}
+                {/* Special Open Source Card */}
+                <div className="glass-card" data-aos="fade-up" data-aos-delay="100" style={{ padding: '2.5rem', display: 'flex', flexDirection: 'column', gap: '1rem', borderLeft: '4px solid #f28b25' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem' }}>
+                        <h3 style={{ fontSize: '1.6rem', color: 'var(--text-primary)', margin: 0, fontWeight: 800 }}>Open Source Committer</h3>
+                    </div>
+                    <ul style={{ marginLeft: '1.5rem', color: 'var(--text-secondary)', fontSize: '1rem', lineHeight: '1.7' }}>
+                        <li><strong>Apache Airflow Core/AWS Contributor:</strong> Merged critical updates securely to AWS Lambda & Batch Executors into the top-20 global OSS.</li>
+                        <li><strong>Kubernetes Official Contributor:</strong> Successfully patched controller vulnerabilities and node scheduling logic heavily across LWS and Kubespray.</li>
+                    </ul>
+                </div>
+            </div>
+
             {/* EXPERIENCE SECTION */}
             <h2 className="title" style={{ fontSize: '2.5rem', marginTop: '2rem', textAlign: 'center' }} data-aos="zoom-in">Experience</h2>
             <p className="subtitle" style={{ margin: '0 auto 3rem auto', textAlign: 'center' }} data-aos="fade-up" data-aos-delay="100">
-                My professional journey engineering open-source architectures, robust scalable platforms, and advanced high-performance solutions.
+                My professional journey dynamically engineering globally-scaled architectures and hardware.
             </p>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem', marginBottom: '6rem' }}>
@@ -194,85 +242,65 @@ export default function About() {
                 ))}
             </div>
 
-            {/* SKILLS SECTION */}
-            <h2 className="title" style={{ fontSize: '2.5rem', textAlign: 'center' }} data-aos="zoom-in" data-aos-delay="100">Technical Arsenal</h2>
+            {/* ADVANCED SKILLS SECTION */}
+            <h2 className="title" style={{ fontSize: '2.5rem', textAlign: 'center' }} data-aos="zoom-in" data-aos-delay="100">Advanced Technical Arsenal</h2>
             <p className="subtitle" style={{ margin: '0 auto 3rem auto', textAlign: 'center' }} data-aos="fade-up" data-aos-delay="200">
-                A comprehensive overview of the tools, languages, and frameworks that power my workflows.
+                A precise overview of the cloud architectures, languages, and hardware frameworks that power my systems.
             </p>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '3rem', margin: '0 auto' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem', margin: '0 auto' }}>
 
                 <div className="glass-card" data-aos="fade-up">
-                    <h3 style={{ fontSize: '1.4rem', fontWeight: 600, marginBottom: '1.5rem', color: 'var(--accent-color)' }}>Languages, Frameworks, and Libraries</h3>
-                    <div className="skills-grid">
-                        {renderSkill('/icons8-html.png', 'HTML')}
-                        {renderSkill('/icons8-css3.png', 'CSS')}
-                        {renderSkill('/icons8-javascript.png', 'JavaScript')}
-                        {renderSkill('/icons8-c-programming.png', 'C')}
-                        {renderSkill('/icons8-c.png', 'C++')}
-                        {renderSkill('/icons8-java.png', 'Java')}
-                        {renderSkill('/Kotlin_Icon.png', 'Kotlin')}
-                        {renderSkill('/icons8-python.png', 'Python')}
-                        {renderSkill('/PHP-logo.png', 'PHP')}
-                        {renderSkill('/sql.png', 'SQL')}
-                        {renderSkill('/icons8-r-project.png', 'R')}
-                        {renderSkill('/icons8-arduino.png', 'Arduino')}
-                        {renderSkill('/react-logo.png', 'React.js')}
-                        {renderSkill('/icons8-nodejs.png', 'Node.js')}
-                        {renderSkill('/Bootstrap.png', 'Bootstrap')}
-                        {renderSkill('/jquery.png', 'jQuery')}
-                        {renderSkill('/Sass.png', 'SASS')}
-                        {renderSkill('/mongodb.png', 'MongoDB')}
-                        {renderSkill('/VHDL.png', 'VHDL')}
-                        {renderSkill('/icons8-latex.png', 'LATEX')}
-                        {renderSkill('/icons8-bash.png', 'Bash')}
-                        {renderSkill('/terminal.png', 'Shell Scripting')}
-                        {renderSkill('/asmlang.png', 'Assembly Language')}
-                        {renderSkill('/icons8-git.png', 'Git')}
-                        {renderSkill('/icons8-flutter.png', 'Flutter')}
-                        {renderSkill('/icons8-npm.png', 'NPM')}
-                        {renderSkill('/Matplotlib.png', 'Matplotlib')}
-                        {renderSkill('/seaborn.png', 'Seaborn')}
-                        {renderSkill('/OpenCV.png', 'OpenCV')}
-                        {renderSkill('/SCIPY.png', 'SciPy')}
-                        {renderSkill('/Tkinter.jpeg', 'Tkinter')}
-                        {renderSkill('/Scikit_learn.png', 'Scikit-learn')}
-                        {renderSkill('/NumPy.png', 'NumPy')}
-                        {renderSkill('/Pandas.png', 'Pandas')}
-                        {renderSkill('/Django_logo.png', 'Django')}
+                    <h3 style={{ fontSize: '1.3rem', fontWeight: 600, marginBottom: '1.5rem', color: 'var(--accent-color)' }}>Languages & Frameworks</h3>
+                    <div className="skills-grid" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))' }}>
+                        {renderSkillItem('/icons8-c.png', 'C++ / C')}
+                        {renderSkillItem(<TerminalSquare size={20} color="#38bdf8" />, 'Go (Golang)')}
+                        {renderSkillItem('/icons8-python.png', 'Python')}
+                        {renderSkillItem('/react-logo.png', 'React.js')}
+                        {renderSkillItem(<LayoutTemplate size={20} color="#e6edf3" />, 'Next.js 15')}
+                        {renderSkillItem('/icons8-nodejs.png', 'Node.js')}
+                        {renderSkillItem('/icons8-java.png', 'Java')}
+                        {renderSkillItem('/Kotlin_Icon.png', 'Kotlin')}
+                        {renderSkillItem('/icons8-bash.png', 'Bash')}
+                        {renderSkillItem('/icons8-javascript.png', 'JavaScript')}
+                        {renderSkillItem('/icons8-html.png', 'HTML & CSS')}
+                        {renderSkillItem(<Database size={20} color="#b392f0" />, 'Prisma ORM')}
                     </div>
                 </div>
 
                 <div className="glass-card" data-aos="fade-up" data-aos-delay="100">
-                    <h3 style={{ fontSize: '1.4rem', fontWeight: 600, marginBottom: '1.5rem', color: 'var(--accent-color)' }}>Developer Tools & Workflows</h3>
-                    <div className="skills-grid">
-                        {renderSkill('/microsoft-365.png', 'Microsoft 365')}
-                        {renderSkill('/New_Power_BI.png', 'Microsoft Power BI')}
-                        {renderSkill('/Adobe_Photoshop.png', 'Adobe Photoshop')}
-                        {renderSkill('/icons8-canva.png', 'Canva')}
-                        {renderSkill('/Figma-logo.png', 'Figma')}
-                        {renderSkill('/Fritzing_icon.png', 'Fritzing')}
-                        {renderSkill('/KiCad_logo_square.png', 'KiCAD')}
-                        {renderSkill('/LTSpice.jpeg', 'LTSpice')}
-                        {renderSkill('/Oracle_SQL_Developer.png', 'Oracle SQL Developer')}
-                        {renderSkill('/android-studio-icon.png', 'Android Studio')}
-                        {renderSkill('/Visual_Studio_Code.png', 'VS Code')}
-                        {renderSkill('/Intel_quartus_prime.png', 'Intel Quartus Prime')}
-                        {renderSkill('/github.png', 'Github')}
-                        {renderSkill('/solidworks.png', 'SolidWorks')}
-                        {renderSkill('/JetBrains-logo.png', 'JetBrains Suite')}
-                        {renderSkill('/jupyter.png', 'Jupyter')}
-                        {renderSkill('/MySQL.png', 'MySQL')}
-                        {renderSkill('/mysql_workbench.png', 'MySQL Workbench')}
+                    <h3 style={{ fontSize: '1.3rem', fontWeight: 600, marginBottom: '1.5rem', color: 'var(--accent-color)' }}>DevOps & Cloud Systems</h3>
+                    <div className="skills-grid" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))' }}>
+                        {renderSkillItem(<Container size={20} color="#326ce5" />, 'Kubernetes')}
+                        {renderSkillItem(<Server size={20} color="#2496ed" />, 'Docker')}
+                        {renderSkillItem(<Cloud size={20} color="#ff9900" />, 'AWS')}
+                        {renderSkillItem(<GitBranch size={20} color="#f05032" />, 'CI/CD Pipelines')}
+                        {renderSkillItem(<Terminal size={20} color="#e6edf3" />, 'Linux Admin')}
+                        {renderSkillItem(<Cpu size={20} color="#ff3333" />, 'HPC & MPI')}
+                        {renderSkillItem(<Database size={20} color="#3ecf8e" />, 'Supabase')}
+                        {renderSkillItem('/mongodb.png', 'MongoDB')}
+                        {renderSkillItem('/mysql_workbench.png', 'MySQL / SQL')}
+                        {renderSkillItem('/sap_s4hana.png', 'SAP S/4HANA')}
+                        {renderSkillItem('/github.png', 'Git / GitHub')}
+                        {renderSkillItem(<Workflow size={20} color="#7cb342" />, 'Zephyr RTOS')}
                     </div>
                 </div>
 
-                <div className="glass-card" data-aos="fade-up" data-aos-delay="200">
-                    <h3 style={{ fontSize: '1.4rem', fontWeight: 600, marginBottom: '1.5rem', color: 'var(--accent-color)' }}>Databases and Cloud Architectures</h3>
-                    <div className="skills-grid">
-                        {renderSkill('/sap_s4hana.png', 'SAP S/4HANA Cloud')}
-                        {renderSkill('/Oracle_database.png', 'ORACLE Database')}
-                        {renderSkill('/Database-mysql.png', 'MySQL Database')}
+                <div className="glass-card" data-aos="fade-up" data-aos-delay="200" style={{ gridColumn: '1 / -1' }}>
+                    <h3 style={{ fontSize: '1.3rem', fontWeight: 600, marginBottom: '1.5rem', color: 'var(--accent-color)' }}>Artificial Intelligence & Embedded Hardware</h3>
+                    <div className="skills-grid" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))' }}>
+                        {renderSkillItem(<Bot size={20} color="#ff6b6b" />, 'PyTorch')}
+                        {renderSkillItem('/Scikit_learn.png', 'Scikit-learn')}
+                        {renderSkillItem(<Database size={20} color="#3b82f6" />, 'Vector DB (RAG)')}
+                        {renderSkillItem('/OpenCV.png', 'OpenCV')}
+                        {renderSkillItem(<Code2 size={20} color="#fff" />, 'LangChain / AI SDK')}
+                        {renderSkillItem('/NumPy.png', 'NumPy & Pandas')}
+                        {renderSkillItem('/icons8-arduino.png', 'Arduino & CAN')}
+                        {renderSkillItem(<Microchip size={20} color="#4ade80" />, 'KiCAD / PCB Design')}
+                        {renderSkillItem('/solidworks.png', 'SolidWorks')}
+                        {renderSkillItem(<Terminal size={20} color="#1abc9c" />, 'ROS2')}
+                        {renderSkillItem('/LTSpice.jpeg', 'LTSpice')}
+                        {renderSkillItem('/asmlang.png', 'Assembly')}
                     </div>
                 </div>
 
