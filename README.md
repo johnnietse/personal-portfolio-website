@@ -1,266 +1,36 @@
-# Personal Portfolio Website
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-This is the repository for my personal portfolio website. It showcases my projects, skills, and a brief introduction about me. The site is designed with modern web development practices, utilizing HTML, CSS, and JavaScript.
+## Getting Started
 
----
+First, run the development server:
 
-## Features
-
-- **Responsive Design**: Fully responsive for an optimal user experience across devices.
-- **Interactive Animations**: Uses AOS (Animate On Scroll) library for smooth scroll animations.
-- **Mobile-Friendly Navigation**: Includes a mobile navigation menu for better usability.
-- **Custom Footer Behavior**: The footer dynamically adjusts visibility based on the user's device type.
-
----
-
-## File Structure
-
-### HTML Files
-
-1. **index.html**: 
-   - The main entry point of the website.
-   - Utilizes semantic HTML for better accessibility and SEO.
-
-2. **projects.html**: 
-   - Dedicated page to showcase detailed descriptions and images of my projects.
-
-3. **about.html**: 
-   - Provides an in-depth view of my background, skills, and experiences.
-
-4. **contact.html**: 
-   - A contact form and links to my social media platforms for easy communication.
-
-### CSS Files
-
-- **modern-normalize.css**: Ensures consistent styling across browsers by resetting default styles.
-- **style.css**: Contains global styles and general layout rules.
-- **components/**
-  - `header.css`: Styles for the header section.
-  - `hero.css`: Styles for the hero section, including the main introduction.
-  - `project.css`: Styling for project cards and the project showcase.
-  - `about.css`: Styles for the "About Me" section.
-  - `mobile-nav.css`: Styling specific to the mobile navigation menu.
-
-- **utils.css**: Utility classes for common styling patterns (e.g., margins, paddings, colors).
-
-### JavaScript Files
-
-1. **main.js**:
-   - Imports styles and initializes key features.
-   - Handles animations with AOS and includes logic for device-specific footer visibility.
-
-2. **redirect.js**: 
-   - Provides functionality for redirecting to different pages or sections.
-
-3. **mobile-nav.js**:
-   - Manages the behavior of the mobile navigation menu, enhancing usability on smaller screens.
-
-### Vite Configuration
-
-**vite.config.js**:
-   - Configures Vite for building the website.
-   - Specifies Rollup options to define multiple input points for the build process:
-   ```javascript
-   import { defineConfig } from 'vite';
-   
-   export default defineConfig({
-     build: {
-       rollupOptions: {
-         input: {
-           main: './index.html',
-           about: './about.html',
-           project: './project.html',
-         },
-       },
-     },
-   });
-   ```
-
----
-## Deployment
-
-The website is deployed using Vercel for ease of use and scalability. Follow these steps to deploy your own version:
-
-1. Sign up or log in to [Vercel](https://vercel.com/).
-2. Link your GitHub repository to Vercel.
-3. Configure the deployment settings if necessary (Vercel automatically detects Vite projects).
-4. Deploy the project by clicking the "Deploy" button.
-5. Your website will be live, and you will receive a custom URL.
-
----     
-## How to Use
-
-**Before cloning the repository, change your working directory to the folder where you want the project to be saved:**
-
-Navigate to the directory where you want to store the project:
-```bash
-cd /path/to/your/directory
-```
-
-1. Clone the repository:
-```bash
-git clone https://github.com/johnnietse/personal_portfolio_website.git
-```
-2. Navigate to the project directory:
-```bash
-cd personal_portfolio_website
-```
-3. Run the following command in your terminal to set up a server and view the site locally on your machine:
 ```bash
 npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
 ```
 
----
-## Technologies Used
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-- **HTML5**: Semantic and accessible structure.
-- **CSS3**: Modern styling, animations, and responsiveness.
-- **JavaScript**: Interactivity and dynamic content management.
-- **AOS Library**: Smooth animations on scroll.
-- **Vite**: Fast and optimized development/build tool.
+You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
 
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
----
-## Mobile Usability Notice
+## Learn More
 
-### For Mobile Devices and Tablets
+To learn more about Next.js, take a look at the following resources:
 
-For an optimal browsing experience, it is highly recommended that you access the mobile version of this website on mobile devices and tablets. Requesting the desktop version on smaller screens may lead to a suboptimal user experience.
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-To ensure the best usability, please make sure to request the mobile website by default. The mobile version is designed to be responsive and user-friendly, offering quicker load times, better navigation, and a layout tailored for smaller screens.
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-### For Other Devices
+## Deploy on Vercel
 
-For devices other than mobile devices and tablets, it is perfectly fine to use the desktop version of the website. The desktop version is optimized for larger screens, providing the best experience for users with laptops and desktops.
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-Thank you for visiting, and enjoy your experience!
-
----
-## Portfolio Website Setup Guide
-
-This guide walks you through setting up a development environment for creating a modern portfolio website. Follow the steps carefully to ensure your environment is configured correctly.
-
-
-
-### Prerequisites
-
-#### Install Required Tools
-1. **Node.js**:
-   - Visit [Node.js](https://nodejs.org/en) and download the LTS version.
-
-2. **Git and Git Bash**:
-   - Visit [Git SCM](https://git-scm.com/) and click "Download for Windows."
-
-3. **Windows Terminal (for Windows users)**:
-   - Open Microsoft Store, search for "Windows Terminal," and install it.
-   - Configure Git Bash in Windows Terminal:
-     1. Open Windows Terminal and click the dropdown arrow next to the tab.
-     2. Select **Settings**.
-     3. Add a new profile and name it "Git Bash."
-     4. For the command line, browse to:
-        `C:\Program Files\Git\bin\bash.exe`
-     5. Set the starting directory to your desired location.
-     6. For the icon, navigate to `C:\Program Files\Git\mingw64\share\git` and select the `git-for-windows.ico` file.
-     7. Save the settings, set the default profile to "Git Bash," and close the interface.
-   - To confirm the setup, open Windows Terminal and check for a tab labeled "MINGW64."
-
----
-
-### Guides on Setting Up the Development Environment (if you want to build a personal portfolio website like I did)
-
-We will use [Vite](https://vitejs.dev/) for its modern features and speed.
-
-#### Steps:
-1. **Visit the Vite Website**:
-   - Go to the [Vite documentation](https://vitejs.dev/guide/) and review its features, such as:
-     - **NPM Dependency Resolving and Pre-Bundling**: Allows seamless module imports.
-     - **Hot Module Replacement**: Provides faster live-server functionality.
-     - **CSS Code Splitting**: Optimizes builds with advanced CSS handling.
-
-2. **Create Your Project**:
-   - Open Windows Terminal (or your preferred terminal) and navigate to your desired directory using `pwd`.
-   - Run the following command:
-   ```bash
-   npm create vite@latest
-   ```
-   - Follow the prompts:
-     - **Project Name**: Enter your project name.
-     - **Framework**: Choose `Vanilla`.
-     - **Variant**: Select `JavaScript`.
-
-3. **Initialize the Project**:
-   ```bash
-   cd <your-project-name>
-   npm install
-   ```
-
-4. **Run the Development Server**:
-   ```bash
-   npm run dev
-   ```
-   - Open the generated URL in your browser to preview your project.
-
-5. **Open Your Project in VS Code** (optional but recommended):
-   ```bash
-   code .
-   ```
-
----
-
-### Additional Setup
-
-#### Normalize CSS:
-1. Go to the [Modern Normalize GitHub Repository](https://github.com/sindresorhus/modern-normalize).
-2. Open `modern-normalize.css` and click **Raw**.
-3. Copy the code and paste it into a new file named `modern-normalize.css` in your project.
-4. Import the CSS into `main.js`:
-```javascript
-import './modern-normalize.css';
-```
-   - Place this import at the top for proper cascading priority.
-
-#### Base CSS Setup:
-- Define variables for:
-  - Colors
-  - Sizes
-- Create utility classes for reusable styles (e.g., buttons, containers, spacings).
-
----
-
-### Key Commands
-- Start the development server:
-```bash
-npm run dev
-```
-- Stop the server:
-  - Press `Ctrl + C`.
-- Build the project for deployment:
-```bash
-npm run build
-```
-- Preview the build:
-```bash
-npm run preview
-```
-
----
-
-### Notes:
-- Vite handles CSS imports in JavaScript instead of HTML. Ensure your CSS is imported in `main.js`.
-- Use the provided hot module replacement for instant updates in your browser during development.
-
----
-
-You are now ready to start building your portfolio website. Happy coding!
-
----
-
-## 📸 Screenshots 
-![Screenshot (718)](https://github.com/user-attachments/assets/ee67b277-e627-41d6-ae60-f271d47b49d9)
-![Screenshot (719)](https://github.com/user-attachments/assets/0b2fd5ef-0232-43f9-9fd1-bfa282452b2e)
-![Screenshot (720)](https://github.com/user-attachments/assets/1bf0e728-40ba-4c07-a368-232fbaee3dd9)
-![Screenshot (721)](https://github.com/user-attachments/assets/fa3694f3-cff6-49ea-8a46-9b2cd397a88e)
-![Screenshot (722)](https://github.com/user-attachments/assets/424fa08a-2d3c-44fc-962f-30dd689787e8)
-![Screenshot (723)](https://github.com/user-attachments/assets/c3e3abf7-d890-4e39-947b-c5bfdc56502c)
-![Screenshot (724)](https://github.com/user-attachments/assets/6b45d5a5-fff1-4a2b-b28f-19fa335567df)
-
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
