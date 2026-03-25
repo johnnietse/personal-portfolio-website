@@ -60,10 +60,9 @@ export default function PhysicsSandbox() {
 
     const lowSpec = isLowSpec || isMobile;
 
-    if (!isMounted || !features.physics) return null;
-
     // Dynamic Anti-Gravity Trigger Vector state
     const [gravity, setGravity] = useState([0, -9.81, 0]);
+
     // Generate fewer shapes for legacy devices
     const shapes = useMemo(() => {
         const types = ['box', 'sphere', 'cylinder'];
@@ -90,6 +89,8 @@ export default function PhysicsSandbox() {
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
     }, [isMounted]);
+
+    if (!isMounted || !features.physics) return null;
 
     // This Canvas is completely removed from document flow, acting as a global structural wrapper
     return (

@@ -43,10 +43,13 @@ const IronManHUD = () => {
             }));
             requestAnimationFrame(lerp);
         };
-        setIsMounted(true);
         const animationId = requestAnimationFrame(lerp);
         return () => cancelAnimationFrame(animationId);
     }, [mousePos]);
+
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
 
     if (!isMounted || !features.hud || !isVisible) return null;
 
