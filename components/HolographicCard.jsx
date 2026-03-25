@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useRef, useState } from 'react';
+import { usePerformance } from './PerformanceManager';
 
 /**
  * HolographicCard completely wraps standard DOM logic in a dynamic perspective matrix.
@@ -9,13 +10,16 @@ import React, { useRef, useState } from 'react';
  * synergizes with the 3D Solar System WebGL render directly behind it.
  */
 export default function HolographicCard({ children, className = "", style = {}, ...props }) {
+    const { isLowSpec, isMobile } = usePerformance();
+    const lowSpec = isLowSpec || isMobile;
+
     const cardRef = useRef(null);
     const [rotation, setRotation] = useState({ x: 0, y: 0 });
     const [glare, setGlare] = useState({ x: 50, y: 50, opacity: 0 });
     const [isHovered, setIsHovered] = useState(false);
 
     const handleMouseMove = (e) => {
-        if (!cardRef.current) return;
+        if (!cardRef.current || lowSpec) return;
         const rect = cardRef.current.getBoundingClientRect();
         const width = rect.width;
         const height = rect.height;
@@ -50,7 +54,7 @@ export default function HolographicCard({ children, className = "", style = {}, 
             style={{
                 ...style,
                 // Execute native CSS hardware acceleration tracking the physical rotations
-                transform: `perspective(1000px) rotateX(${rotation.x}deg) rotateY(${rotation.y}deg) scale3d(${isHovered ? 1.01 : 1}, ${isHovered ? 1.01 : 1}, 1)`,
+                transform: lowSpec ? 'none' : `perspective(1000px) rotateX(${rotation.x}deg) rotateY(${rotation.y}deg) scale3d(${isHovered ? 1.01 : 1}, ${isHovered ? 1.01 : 1}, 1)`,
                 transition: isHovered ? 'transform 0.1s ease-out' : 'transform 0.5s ease-out',
                 position: 'relative',
                 overflow: 'hidden',
@@ -63,15 +67,17 @@ export default function HolographicCard({ children, className = "", style = {}, 
             {...props}
         >
             {/* Dynamic Glare Overlay rendering independent linear/radial gradient calculations */}
-            <div
-                style={{
-                    position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none',
-                    background: `radial-gradient(circle at ${glare.x}% ${glare.y}%, rgba(255,255,255,${glare.opacity}) 0%, rgba(255,255,255,0) 60%)`,
-                    transition: 'opacity 0.5s ease-out',
-                    opacity: glare.opacity ? 1 : 0,
-                    zIndex: 10
-                }}
-            />
+            {!lowSpec && (
+                <div
+                    style={{
+                        position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none',
+                        background: `radial-gradient(circle at ${glare.x}% ${glare.y}%, rgba(255,255,255,${glare.opacity}) 0%, rgba(255,255,255,0) 60%)`,
+                        transition: 'opacity 0.5s ease-out',
+                        opacity: glare.opacity ? 1 : 0,
+                        zIndex: 10
+                    }}
+                />
+            )}
             {children}
         </div>
     );

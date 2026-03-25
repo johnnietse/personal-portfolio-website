@@ -3,6 +3,7 @@
 import { useRef, useMemo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Html, Float } from '@react-three/drei';
+import { usePerformance } from './PerformanceManager';
 
 // Orbital mechanics representing high-end engineering skills natively hovering in WebGL Spherical coordinates
 const SkillNode = ({ img, label, radius, angle, speed, index }) => {
@@ -37,8 +38,11 @@ const SkillNode = ({ img, label, radius, angle, speed, index }) => {
 };
 
 export default function SkillConstellation() {
+    const { isLowSpec, isMobile } = usePerformance();
+    const lowSpec = isLowSpec || isMobile;
+
     // Array of critical top-level technical skills extracted natively from the engineering matrix
-    const skills = useMemo(() => [
+    const allSkills = useMemo(() => [
         { img: '/nextjs.png', label: 'Next.js 15' },
         { img: '/react-logo.png', label: 'React.js' },
         { img: '/kubernetes.png', label: 'Kubernetes' },
@@ -65,6 +69,22 @@ export default function SkillConstellation() {
         { img: '/Grafana.svg', label: 'Grafana' }
     ], []);
 
+    // Filter to only core skills for low-spec devices to save on HTML transform layers
+    const skills = useMemo(() => {
+        if (!lowSpec) return allSkills;
+        // Selection of 8 extremely diverse core pillars
+        return [
+            allSkills[0], // Next.js
+            allSkills[2], // K8s
+            allSkills[4], // Python
+            allSkills[5], // C++
+            allSkills[7], // ROS2
+            allSkills[9], // OpenMPI
+            allSkills[11], // PyTorch
+            allSkills[16], // Linux
+        ];
+    }, [lowSpec, allSkills]);
+
     return (
         <Canvas camera={{ position: [0, 5, 25], fov: 50 }} style={{ cursor: 'grab', background: 'radial-gradient(circle at center, rgba(15, 23, 42, 0.2) 0%, transparent 100%)' }}>
             <ambientLight intensity={1.5} />
@@ -73,7 +93,7 @@ export default function SkillConstellation() {
             <Float speed={1.5} rotationIntensity={0.5} floatIntensity={0.5}>
                 {/* Central Core representing computational mind */}
                 <mesh>
-                    <icosahedronGeometry args={[2.5, 2]} />
+                    <icosahedronGeometry args={[2.5, lowSpec ? 0 : 2]} />
                     <meshPhysicalMaterial color="#0ea5e9" wireframe={true} emissive="#0284c7" emissiveIntensity={0.8} />
                 </mesh>
 

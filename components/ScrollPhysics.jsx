@@ -4,6 +4,7 @@ import { useMemo, useState, useEffect } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { Physics, useBox, useSphere, useCylinder, usePlane } from '@react-three/cannon';
 import * as THREE from 'three';
+import { usePerformance } from './PerformanceManager';
 
 // Invisible boundary planes tracking viewport bounds (Floor and Walls)
 function Wall({ position, rotation }) {
@@ -24,32 +25,44 @@ function BouncingShape({ position, type, color, scale }) {
         [ref, api] = useCylinder(() => ({ mass: 1, position, rotation: [Math.random(), Math.random(), Math.random()], args: [scale * 0.5, scale * 0.5, scale, 16], restitution: 0.6, friction: 0.2 }));
     }
 
+    const { isLowSpec, isMobile } = usePerformance();
+    const lowSpec = isLowSpec || isMobile;
+
     return (
         <mesh ref={ref} onClick={() => api.velocity.set((Math.random() - 0.5) * 15, 15 + Math.random() * 10, (Math.random() - 0.5) * 15)}>
             {type === 'box' && <boxGeometry args={[scale, scale, scale]} />}
-            {type === 'sphere' && <icosahedronGeometry args={[scale * 0.75, 2]} />}
-            {type === 'cylinder' && <torusGeometry args={[scale * 0.5, scale * 0.2, 16, 32]} />}
+            {type === 'sphere' && <icosahedronGeometry args={[scale * 0.75, lowSpec ? 1 : 2]} />}
+            {type === 'cylinder' && <torusGeometry args={[scale * 0.5, scale * 0.2, lowSpec ? 8 : 16, lowSpec ? 16 : 32]} />}
 
-            <meshPhysicalMaterial
-                color={color}
-                metalness={0.7}
-                roughness={0.2}
-                clearcoat={1.0}
-                transmission={0.4}
-                thickness={2.0}
-            />
+            {lowSpec ? (
+                <meshStandardMaterial color={color} metalness={0.6} roughness={0.4} />
+            ) : (
+                <meshPhysicalMaterial
+                    color={color}
+                    metalness={0.7}
+                    roughness={0.2}
+                    clearcoat={1.0}
+                    transmission={0.4}
+                    thickness={2.0}
+                />
+            )}
         </mesh>
     );
 }
 
 export default function PhysicsSandbox() {
+    const { isLowSpec, isMobile } = usePerformance();
+    const lowSpec = isLowSpec || isMobile;
+
     // Dynamic Anti-Gravity Trigger Vector state
     const [gravity, setGravity] = useState([0, -9.81, 0]);
-    // Generate exactly 50 procedural geometries to flood the screen deterministically
+    // Generate fewer shapes for legacy devices
     const shapes = useMemo(() => {
         const types = ['box', 'sphere', 'cylinder'];
         const colors = ['#0ea5e9', '#22c55e', '#ef4444', '#f59e0b', '#8b5cf6', '#ec4899'];
-        return Array.from({ length: 50 }).map((_, i) => ({
+        const count = lowSpec ? 15 : 50;
+
+        return Array.from({ length: count }).map((_, i) => ({
             id: i,
             type: types[i % types.length],
             color: colors[i % colors.length],
@@ -57,7 +70,7 @@ export default function PhysicsSandbox() {
             // Spawning array high above the Y axis using specific trigonometric indexing instead of randoms
             position: [Math.sin(i * 1.5) * 5, 10 + (i * 0.5), Math.cos(i * 1.2) * 2]
         }));
-    }, []);
+    }, [lowSpec]);
 
     // Track viewport bounds so the walls prevent objects from falling out of frame
     const [aspect, setAspect] = useState(1);

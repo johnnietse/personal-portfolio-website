@@ -15,39 +15,50 @@ export default function SkillTicker() {
         <div style={{
             width: '100vw',
             overflow: 'hidden',
-            background: 'rgba(11, 15, 25, 0.95)',
-            borderTop: '1px solid rgba(88, 166, 255, 0.2)',
-            borderBottom: '1px solid rgba(88, 166, 255, 0.2)',
-            padding: '18px 0',
+            background: 'rgba(11, 15, 25, 0.4)',
+            backdropFilter: 'blur(12px)',
+            borderTop: '1px solid rgba(88, 166, 255, 0.1)',
+            borderBottom: '1px solid rgba(88, 166, 255, 0.1)',
+            padding: '12px 0',
             position: 'relative',
-            // Position globally flush across the DOM margin barriers
             left: '50%',
             right: '50%',
             marginLeft: '-50vw',
             marginRight: '-50vw',
-            zIndex: 50
-        }}>
-            <div style={{ display: 'flex', width: 'max-content', animation: 'scrollTicker 35s linear infinite' }}>
+            zIndex: 50,
+            transition: 'all 0.4s ease',
+            boxShadow: '0 4px 30px rgba(0, 0, 0, 0.1)'
+        }}
+            className="skill-ticker-container"
+        >
+            <div style={{ display: 'flex', width: 'max-content', animation: 'scrollTicker 45s linear infinite' }}>
                 {duplicatedTech.map((tech, i) => (
                     <span key={i} style={{
-                        margin: '0 2.5rem',
-                        color: 'var(--text-secondary)',
-                        fontWeight: 800,
-                        fontSize: '1.2rem',
-                        letterSpacing: '0.15em',
+                        margin: '0 3rem',
+                        color: 'rgba(136, 153, 166, 0.6)',
+                        fontWeight: 600,
+                        fontSize: '0.9rem',
+                        letterSpacing: '0.2em',
                         whiteSpace: 'nowrap',
-                        textTransform: 'uppercase'
+                        textTransform: 'uppercase',
+                        fontFamily: '"Orbitron", "Inter", sans-serif'
                     }}>
                         {tech}
                     </span>
                 ))}
             </div>
 
-            {/* CSS Hardware-accelerated transformation wrapping tracking strictly -33.33% maintaining buffer 1 */}
             <style jsx>{`
                 @keyframes scrollTicker {
                     0% { transform: translate3d(0, 0, 0); }
                     100% { transform: translate3d(-33.33%, 0, 0); }
+                }
+                .skill-ticker-container:hover {
+                    background: rgba(11, 15, 25, 0.7) !important;
+                    backdrop-filter: blur(16px) !important;
+                }
+                .skill-ticker-container:hover span {
+                    color: rgba(88, 166, 255, 0.8) !important;
                 }
             `}</style>
         </div>

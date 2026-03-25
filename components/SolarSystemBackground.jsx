@@ -4,6 +4,7 @@ import { useRef, useMemo, useState, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Float, Stars, Html } from '@react-three/drei';
 import * as THREE from 'three';
+import { usePerformance } from './PerformanceManager';
 
 // 2500-Node Deterministic Procedural GPU Asteroid Belt
 const AsteroidBelt = ({ count = 2500, radius = 28, width = 6 }) => {
@@ -93,7 +94,7 @@ const PlanetNode = ({ name, size, radius, speed, angle, color, hasRing, ringColo
                 onPointerOut={(e) => { setHover(false); document.body.style.cursor = 'auto'; }}
             >
                 <mesh>
-                    <sphereGeometry args={[size, 64, 64]} />
+                    <sphereGeometry args={[size, radius > 30 ? 32 : 64, radius > 30 ? 32 : 64]} />
                     {/* Raw physical materials intercepting the intense PointLight simulating the Sun */}
                     <meshStandardMaterial color={color} roughness={0.7} metalness={0.2} emissive={hovered ? color : '#000000'} emissiveIntensity={0.2} />
                 </mesh>
@@ -124,8 +125,11 @@ const PlanetNode = ({ name, size, radius, speed, angle, color, hasRing, ringColo
 };
 
 export default function SolarSystemBackground() {
+    const { isLowSpec, isMobile } = usePerformance();
     const [isMounted, setIsMounted] = useState(false);
     useEffect(() => { setIsMounted(true); }, []);
+
+    const lowSpec = isLowSpec || isMobile;
 
     // Exact mapping of the 8 canonical celestial bodies natively simulating our physical Universe visually behind the DOM
     const planets = useMemo(() => [
@@ -148,19 +152,19 @@ export default function SolarSystemBackground() {
                 <ambientLight intensity={0.15} />
 
                 {/* The Core Sun emitting native physical PointLight radiating geometrically into space */}
-                <Float speed={1.5} rotationIntensity={0} floatIntensity={0.2}>
+                <Float speed={lowSpec ? 0.5 : 1.5} rotationIntensity={0} floatIntensity={lowSpec ? 0.1 : 0.2}>
                     <mesh>
-                        <sphereGeometry args={[4, 64, 64]} />
+                        <sphereGeometry args={[4, lowSpec ? 32 : 64, lowSpec ? 32 : 64]} />
                         <meshBasicMaterial color="#fcd34d" />
                     </mesh>
-                    <pointLight position={[0, 0, 0]} intensity={250} distance={400} color="#fef08a" decay={1.5} />
+                    <pointLight position={[0, 0, 0]} intensity={lowSpec ? 150 : 250} distance={400} color="#fef08a" decay={1.5} />
                 </Float>
 
-                {/* Massive 2500 GPU-bound physics simulation operating strictly between Mars and Jupiter bounds */}
-                <AsteroidBelt count={2500} radius={28} width={5} />
+                {/* Massive GPU-bound physics simulation operating strictly between Mars and Jupiter bounds */}
+                <AsteroidBelt count={lowSpec ? 400 : 2500} radius={28} width={5} />
 
                 {/* Deep-Space Matrix tracing exactly behind the user producing pure cosmic parallax referencing */}
-                <Stars radius={150} depth={100} count={8000} factor={6} saturation={0} fade speed={1} />
+                <Stars radius={150} depth={100} count={lowSpec ? 2000 : 8000} factor={lowSpec ? 4 : 6} saturation={0} fade speed={1} />
 
                 <group>
                     {planets.map((planet, index) => (

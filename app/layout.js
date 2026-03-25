@@ -5,6 +5,7 @@ import ScrollPhysics from "@/components/ScrollPhysics";
 import BlackHoleCursor from "@/components/BlackHoleCursor";
 import PerformanceHUD from "@/components/PerformanceHUD";
 import IronManHUD from "@/components/IronManHUD";
+import { PerformanceProvider } from "@/components/PerformanceManager";
 import "./globals.css";
 import "aos/dist/aos.css";
 
@@ -20,14 +21,16 @@ export default function RootLayout({ children }) {
         <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet" />
       </head>
       <body suppressHydrationWarning>
-        <AOSSetup />
-        <Navigation />
-        <ParticleBackground />
-        <ScrollPhysics />
-        <BlackHoleCursor />
-        <PerformanceHUD />
-        <IronManHUD />
-        {children}
+        <PerformanceProvider>
+          <AOSSetup />
+          <Navigation />
+          <ParticleBackground />
+          <ScrollPhysics />
+          <BlackHoleCursor />
+          <PerformanceHUD />
+          <IronManHUD />
+          {children}
+        </PerformanceProvider>
       </body>
     </html>
   );

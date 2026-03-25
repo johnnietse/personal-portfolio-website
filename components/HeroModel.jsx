@@ -3,15 +3,18 @@
 import { useRef } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Icosahedron, Float, MeshDistortMaterial } from '@react-three/drei';
+import { usePerformance } from './PerformanceManager';
 
 const AbstractShape = () => {
+    const { isLowSpec, isMobile } = usePerformance();
+    const lowSpec = isLowSpec || isMobile;
     const meshRef = useRef();
 
     // Slow autonomous rotation 
     useFrame((state, delta) => {
         if (meshRef.current) {
-            meshRef.current.rotation.x += delta * 0.2;
-            meshRef.current.rotation.y += delta * 0.3;
+            meshRef.current.rotation.x += delta * (lowSpec ? 0.1 : 0.2);
+            meshRef.current.rotation.y += delta * (lowSpec ? 0.15 : 0.3);
         }
     });
 
@@ -28,12 +31,12 @@ const AbstractShape = () => {
             </Icosahedron>
 
             {/* Inner Distorting Glass Core */}
-            <Icosahedron args={[1.5, 4]}>
+            <Icosahedron args={[1.5, lowSpec ? 2 : 4]}>
                 <MeshDistortMaterial
                     color="#0ea5e9"
                     attach="material"
-                    distort={0.4}
-                    speed={2}
+                    distort={lowSpec ? 0.2 : 0.4}
+                    speed={lowSpec ? 1 : 2}
                     roughness={0.2}
                     metalness={0.8}
                     transparent
