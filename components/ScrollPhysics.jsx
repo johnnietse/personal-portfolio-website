@@ -51,8 +51,16 @@ function BouncingShape({ position, type, color, scale }) {
 }
 
 export default function PhysicsSandbox() {
-    const { isLowSpec, isMobile } = usePerformance();
+    const { isLowSpec, isMobile, features } = usePerformance();
+    const [isMounted, setIsMounted] = useState(false);
+
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
+
     const lowSpec = isLowSpec || isMobile;
+
+    if (!isMounted || !features.physics) return null;
 
     // Dynamic Anti-Gravity Trigger Vector state
     const [gravity, setGravity] = useState([0, -9.81, 0]);
@@ -76,11 +84,12 @@ export default function PhysicsSandbox() {
     const [aspect, setAspect] = useState(1);
 
     useEffect(() => {
+        if (!isMounted) return;
         const handleResize = () => setAspect(window.innerWidth / window.innerHeight);
         handleResize(); // Initial setup
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
-    }, []);
+    }, [isMounted]);
 
     // This Canvas is completely removed from document flow, acting as a global structural wrapper
     return (

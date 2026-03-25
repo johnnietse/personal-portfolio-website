@@ -125,7 +125,7 @@ const PlanetNode = ({ name, size, radius, speed, angle, color, hasRing, ringColo
 };
 
 export default function SolarSystemBackground() {
-    const { isLowSpec, isMobile } = usePerformance();
+    const { isLowSpec, isMobile, features } = usePerformance();
     const [isMounted, setIsMounted] = useState(false);
     useEffect(() => { setIsMounted(true); }, []);
 
@@ -143,7 +143,7 @@ export default function SolarSystemBackground() {
         { name: 'Neptune', size: 1.1, radius: 80, speed: 0.0005, angle: 5.5, color: '#274687' },
     ], []);
 
-    if (!isMounted) return null; // Hydration safety check
+    if (!isMounted || !features.stars) return null; // Hydration & Opt-in safety check
 
     return (
         <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', zIndex: 0, pointerEvents: 'auto' }}>

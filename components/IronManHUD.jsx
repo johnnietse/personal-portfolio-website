@@ -4,14 +4,13 @@ import React, { useState, useEffect, useRef } from 'react';
 import { usePerformance } from './PerformanceManager';
 
 const IronManHUD = () => {
-    const { isMobile } = usePerformance();
+    const { isMobile, features } = usePerformance();
     const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
     const [lerpPos, setLerpPos] = useState({ x: 0, y: 0 });
     const [scanData, setScanData] = useState({ target: "NONE", status: "SEARCHING..." });
     const [isVisible, setIsVisible] = useState(true);
 
-    // Completely disable HUD on mobile as mouse-tracking interactions don't apply
-    if (isMobile) return null;
+    const [isMounted, setIsMounted] = useState(false);
 
     // Mouse Tracking with Lerp for high-tech "lag" effect
     useEffect(() => {
@@ -44,11 +43,12 @@ const IronManHUD = () => {
             }));
             requestAnimationFrame(lerp);
         };
+        setIsMounted(true);
         const animationId = requestAnimationFrame(lerp);
         return () => cancelAnimationFrame(animationId);
     }, [mousePos]);
 
-    if (!isVisible) return null;
+    if (!isMounted || !features.hud || !isVisible) return null;
 
     return (
         <div className="fixed inset-0 pointer-events-none z-[9998] overflow-hidden select-none" style={{ fontFamily: '"Orbitron", "Inter", sans-serif' }}>
@@ -79,7 +79,7 @@ const IronManHUD = () => {
 
                     {/* Scanning Text next to reticle */}
                     <text x="75" y="45" fill="#38bdf8" fontSize="4" opacity="0.6">TRK_{Math.floor(lerpPos.x)}_{Math.floor(lerpPos.y)}</text>
-                    <text x="75" y="55" fill="#38bdf8" fontSize="4" opacity="0.6">ALT_FLT_{Math.floor(Math.sin(Date.now() / 1000) * 100)}</text>
+                    <text x="75" y="55" fill="#38bdf8" fontSize="4" opacity="0.6">ALT_FLT_{isMounted ? Math.floor(Math.sin(Date.now() / 1000) * 100) : 0}</text>
                 </svg>
             </div>
 
@@ -98,7 +98,7 @@ const IronManHUD = () => {
                 </div>
                 {/* Random Binary Stream */}
                 <div className="mt-4 opacity-30 text-[8px] text-[#38bdf8] leading-none overflow-hidden h-12 font-mono">
-                    {Array.from({ length: 4 }).map((_, i) => (
+                    {isMounted && Array.from({ length: 4 }).map((_, i) => (
                         <div key={i} className="whitespace-nowrap">
                             {Math.random().toString(2).substring(2, 30)}
                             {Math.random().toString(2).substring(2, 30)}

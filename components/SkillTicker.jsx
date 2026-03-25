@@ -11,6 +11,13 @@ const technologies = [
 const duplicatedTech = [...technologies, ...technologies, ...technologies];
 
 export default function SkillTicker() {
+    const [isMounted, setIsMounted] = React.useState(false);
+    React.useEffect(() => {
+        setIsMounted(true);
+    }, []);
+
+    if (!isMounted) return null;
+
     return (
         <div style={{
             width: '100vw',
@@ -59,6 +66,7 @@ export default function SkillTicker() {
                 }
                 .skill-ticker-container:hover span {
                     color: rgba(88, 166, 255, 0.8) !important;
+                    backdrop-filter: blur(16px) !important;
                 }
             `}</style>
         </div>

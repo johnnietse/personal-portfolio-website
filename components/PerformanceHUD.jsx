@@ -8,6 +8,7 @@ export default function PerformanceHUD() {
     const { isLowSpec, toggleLowSpec, isMobile } = usePerformance();
     const [fps, setFps] = useState(60);
     const [showWarning, setShowWarning] = useState(false);
+    const [isMounted, setIsMounted] = useState(false);
     const framesRef = useRef(0);
     const lastTimeRef = useRef(performance.now());
 
@@ -35,9 +36,12 @@ export default function PerformanceHUD() {
             animationFrameId = requestAnimationFrame(updateFps);
         };
 
+        setIsMounted(true);
         animationFrameId = requestAnimationFrame(updateFps);
         return () => cancelAnimationFrame(animationFrameId);
     }, [isLowSpec]);
+
+    if (!isMounted) return null;
 
     return (
         <>
