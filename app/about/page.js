@@ -1,6 +1,8 @@
 "use client";
 
 import Image from 'next/image';
+import SolarSystemBackground from '@/components/SolarSystemBackground';
+import HolographicCard from '@/components/HolographicCard';
 
 export default function About() {
     const experiences = [
@@ -203,10 +205,11 @@ export default function About() {
     );
 
     return (
-        <main className="section container" style={{ paddingTop: '8rem' }}>
+        <main className="section container" style={{ paddingTop: '8rem', position: 'relative' }}>
+            <SolarSystemBackground />
 
             {/* HERO ABOUT SECTION */}
-            <div className="glass-card" data-aos="fade-up" data-aos-duration="1000" style={{ display: 'flex', flexWrap: 'wrap', gap: '3rem', alignItems: 'center', marginBottom: '4rem' }}>
+            <HolographicCard data-aos="fade-up" data-aos-duration="1000" style={{ display: 'flex', flexWrap: 'wrap', gap: '3rem', alignItems: 'center', marginBottom: '4rem' }}>
                 <div style={{ flex: '1', minWidth: '300px', display: 'flex', justifyContent: 'center' }}>
                     <div style={{ position: 'relative', width: '320px', height: '320px', padding: '10px', borderRadius: '50%', background: 'linear-gradient(135deg, rgba(88, 166, 255, 0.4) 0%, rgba(30, 41, 59, 0) 100%)' }}>
                         <img src="/profilephoto.png" alt="Johnnie Tse" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%', border: '4px solid var(--surface-color)' }} />
@@ -225,7 +228,7 @@ export default function About() {
                         Beyond the web, I architect C++ automotive applications for autonomous embedded systems via Controller Area Networks (CAN) and ROS2, while co-heading the Queen's HPC organization dictating high-performance compute architecture methodologies (MPI, Thread Networking, OpenMP, GPU scaling) for global Student Cluster Competitions.
                     </p>
                 </div>
-            </div>
+            </HolographicCard>
 
             {/* EXPERIENCE SECTION */}
             <h2 className="title" style={{ fontSize: '2.5rem', marginTop: '2rem', textAlign: 'center' }} data-aos="zoom-in">Experience</h2>
@@ -235,7 +238,7 @@ export default function About() {
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem', marginBottom: '6rem' }}>
                 {experiences.map((exp, idx) => (
-                    <div className="glass-card" key={idx} data-aos="fade-up" data-aos-delay={(idx % 3) * 100} style={{ padding: '2.5rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                    <HolographicCard key={idx} data-aos="fade-up" data-aos-delay={(idx % 3) * 100} style={{ padding: '2.5rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
 
                         <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
                             {exp.logo && (
@@ -271,7 +274,7 @@ export default function About() {
                                 </span>
                             ))}
                         </div>
-                    </div>
+                    </HolographicCard>
                 ))}
             </div>
 
@@ -283,7 +286,7 @@ export default function About() {
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem', marginBottom: '6rem' }}>
                 {education.map((edu, idx) => (
-                    <div className="glass-card" key={`edu-${idx}`} data-aos="fade-up" data-aos-delay={(idx % 3) * 100} style={{ padding: '2.5rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                    <HolographicCard key={`edu-${idx}`} data-aos="fade-up" data-aos-delay={(idx % 3) * 100} style={{ padding: '2.5rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
 
                         <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
                             {edu.logo && (
@@ -322,12 +325,12 @@ export default function About() {
                             ))}
                         </div>
 
-                    </div>
+                    </HolographicCard>
                 ))}
 
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1.5rem' }}>
                     {certifications.map((cert, idx) => (
-                        <div className="glass-card" key={`cert-${idx}`} data-aos="fade-up" style={{ padding: '1.5rem', display: 'flex', alignItems: 'center', gap: '1.5rem', flex: '1 1 300px' }}>
+                        <HolographicCard key={`cert-${idx}`} data-aos="fade-up" style={{ padding: '1.5rem', display: 'flex', alignItems: 'center', gap: '1.5rem', flex: '1 1 300px' }}>
                             <div style={{ width: '50px', height: '50px', borderRadius: '8px', background: 'transparent', display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '2px' }}>
                                 <img src={cert.logo} alt={`${cert.issuer} Logo`} style={{ width: '100%', height: '100%', objectFit: 'contain' }} onError={(e) => { e.target.style.display = 'none'; }} />
                             </div>
@@ -335,7 +338,7 @@ export default function About() {
                                 <h4 style={{ fontSize: '1.1rem', color: 'var(--text-primary)', margin: '0 0 0.2rem 0', fontWeight: 600 }}>{cert.name}</h4>
                                 <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', margin: 0 }}>{cert.issuer} • {cert.date}</p>
                             </div>
-                        </div>
+                        </HolographicCard>
                     ))}
                 </div>
             </div>
@@ -348,22 +351,26 @@ export default function About() {
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '3rem', margin: '0 auto' }}>
 
-                <div className="glass-card" data-aos="fade-up">
+                {/* 1. Languages, Frameworks, and Libraries */}
+                <HolographicCard data-aos="fade-up">
                     <h3 style={{ fontSize: '1.4rem', fontWeight: 600, marginBottom: '1.5rem', color: 'var(--accent-color)' }}>Languages, Frameworks, and Libraries</h3>
                     <div className="skills-grid">
-                        {renderSkill('/icons8-html.png', 'HTML')}
+                        {renderSkill('/icons8-html.png', 'HTML5')}
                         {renderSkill('/icons8-css3.png', 'CSS')}
-                        {renderSkill('/icons8-javascript.png', 'JavaScript')}
+                        {renderSkill('/icons8-javascript.png', 'JavaScript (JS)')}
                         {renderSkill('/typescript.svg', 'TypeScript 5.8')}
-                        {renderSkill('/react-logo.png', 'React.js')}
+                        {renderSkill('/react-logo.png', 'React.js & React Native')}
                         {renderSkill('/nextjs.png', 'Next.js')}
+                        {renderSkill('/expo.svg', 'Expo')}
                         {renderSkill('/icons8-nodejs.png', 'Node.js')}
                         {renderSkill('/express.png', 'Express.js')}
                         {renderSkill('/icons8-python.png', 'Python')}
                         {renderSkill('/icons8-c-programming.png', 'C')}
-                        {renderSkill('/icons8-c.png', 'C++')}
+                        {renderSkill('/icons8-c.png', 'C++ & Embedded C++')}
                         {renderSkill('/icons8-java.png', 'Java')}
                         {renderSkill('/Kotlin_Icon.png', 'Kotlin')}
+                        {renderSkill('/go.svg', 'Go')}
+                        {renderSkill('/perl.svg', 'Perl')}
                         {renderSkill('/icons8-r-project.png', 'R')}
                         {renderSkill('/sql.png', 'SQL')}
                         {renderSkill('/mongodb.png', 'MongoDB')}
@@ -371,85 +378,175 @@ export default function About() {
                         {renderSkill('/Database-mysql.png', 'MySQL')}
                         {renderSkill('/postgresql.svg', 'PostgreSQL')}
                         {renderSkill('/Django_logo.png', 'Django')}
+                        {renderSkill('/flask.svg', 'Flask')}
                         {renderSkill('/fastapi.png', 'FastAPI')}
+                        {renderSkill('/springboot.svg', 'Spring Boot')}
                         {renderSkill('/google-gemini.svg', 'Google Gemini')}
-                        {renderSkill('/icons8-python.png', 'LangChain')}
-                        {renderSkill('/icons8-python.png', 'LangGraph')}
-                        {renderSkill('/pinecone.svg', 'Pinecone (RAG)')}
+                        {renderSkill('/langchain.svg', 'LangChain')}
+                        {renderSkill('/langgraph.svg', 'LangGraph')}
+                        {renderSkill('/pinecone.svg', 'Pinecone')}
+                        {renderSkill('/chromadb.svg', 'ChromaDB')}
                         {renderSkill('/Scikit_learn.png', 'scikit-learn')}
                         {renderSkill('/pytorch.svg', 'PyTorch')}
-                        {renderSkill('/Pandas.png', 'Pandas')}
+                        {renderSkill('/tensorflow.svg', 'TensorFlow & Lite')}
+                        {renderSkill('/huggingface.svg', 'Hugging Face')}
+                        {renderSkill('/llama.svg', 'LLaMA & CTransformers')}
+                        {renderSkill('/Pandas.png', 'pandas')}
                         {renderSkill('/NumPy.png', 'NumPy')}
                         {renderSkill('/Matplotlib.png', 'Matplotlib')}
                         {renderSkill('/seaborn.png', 'Seaborn')}
                         {renderSkill('/OpenCV.png', 'OpenCV')}
-                        {renderSkill('/OpenCV.png', 'CVZone')}
-                        {renderSkill('/asmlang.png', 'ROS2')}
-                        {renderSkill('/VHDL.png', 'VHDL/Verilog')}
+                        {renderSkill('/cvzone.webp', 'CVZone')}
+                        {renderSkill('/asmlang.png', 'Assembly language')}
+                        {renderSkill('/ros_logo.svg', 'ROS2')}
+                        {renderSkill('/VHDL.png', 'VHDL')}
+                        {renderSkill('/SystemVerilog.svg', 'SystemVerilog/Verilog')}
                         {renderSkill('/icons8-latex.png', 'LaTeX')}
                         {renderSkill('/icons8-bash.png', 'Bash/Shell')}
-                        {renderSkill('/vite.svg', 'Framer Motion')}
-                        {renderSkill('/vite.svg', 'GSAP')}
-                        {renderSkill('/vite.svg', 'Three.js')}
+                        {renderSkill('/framer_motion.png', 'Framer Motion')}
+                        {renderSkill('/gsap.png', 'GSAP')}
+                        {renderSkill('/Three.js.svg', 'Three.js')}
                         {renderSkill('/react-logo.png', 'Context API')}
                         {renderSkill('/redux.svg', 'Redux')}
                         {renderSkill('/selenium.svg', 'Selenium')}
-                        {renderSkill('/icons8-python.png', 'BeautifulSoup4')}
+                        {renderSkill('/beautiful_soup.png', 'BeautifulSoup')}
                         {renderSkill('/jest.png', 'Jest')}
-                        {renderSkill('/github.png', 'Supertest')}
-                        {renderSkill('/terminal.png', 'OpenMPI / OpenMP')}
+                        {renderSkill('/supertest.png', 'Supertest')}
+                        {renderSkill('/open-mpi-logo.png', 'OpenMPI')}
+                        {renderSkill('/openmp.png', 'OpenMP')}
+                        {renderSkill('/sqlite.svg', 'Room Database')}
+                        {renderSkill('/icons8-java.png', 'Retrofit')}
+                        {renderSkill('/jetpackcompose.svg', 'Android Jetpack Compose')}
                     </div>
-                </div>
+                </HolographicCard>
 
-                <div className="glass-card" data-aos="fade-up" data-aos-delay="100">
+                {/* 2. Developer Tools & Workflows */}
+                <HolographicCard data-aos="fade-up" data-aos-delay="100">
                     <h3 style={{ fontSize: '1.4rem', fontWeight: 600, marginBottom: '1.5rem', color: 'var(--accent-color)' }}>Developer Tools & Workflows</h3>
                     <div className="skills-grid">
-                        {renderSkill('/kubernetes.png', 'Kubernetes')}
+                        {renderSkill('/kubernetes.png', 'Kubernetes (SIG-Apps)')}
                         {renderSkill('/kubernetes.png', 'LeaderWorkerSet (LWS)')}
-                        {renderSkill('/icons8-git.png', 'Docker & Helm')}
-                        {renderSkill('/github.png', 'GitHub Actions')}
+                        {renderSkill('/kubernetes.png', 'Kubespray & SIG Cluster Lifecycle')}
+                        {renderSkill('/docker-mark-ocean-blue.svg', 'Docker')}
+                        {renderSkill('/helm.svg', 'Helm')}
+                        {renderSkill('/openshift.svg', 'OpenShift Kubernetes')}
+                        {renderSkill('/github.png', 'GitHub Actions CI/CD')}
                         {renderSkill('/icons8-git.png', 'GitLab CI')}
                         {renderSkill('/bitbucket.svg', 'Bitbucket')}
-                        {renderSkill('/jira.svg', 'Jira')}
-                        {renderSkill('/icons8-git.png', 'Ansible')}
-                        {renderSkill('/icons8-git.png', 'Terraform')}
+                        {renderSkill('/jira.svg', 'Jira (Scrum)')}
+                        {renderSkill('/confluence.svg', 'Confluence')}
+                        {renderSkill('/jenkins.svg', 'Jenkins')}
+                        {renderSkill('/vscode-ansible.png', 'Ansible')}
+                        {renderSkill('/Terraform_Logo.svg', 'Terraform')}
+                        {renderSkill('/vmware.svg', 'VMware')}
                         {renderSkill('/Visual_Studio_Code.png', 'VS Code')}
-                        {renderSkill('/terminal.png', 'Vim')}
+                        {renderSkill('/Vimlogo.svg', 'Vim')}
                         {renderSkill('/JetBrains-logo.png', 'JetBrains Suite')}
                         {renderSkill('/android-studio-icon.png', 'Android Studio')}
                         {renderSkill('/solidworks.png', 'SolidWorks')}
                         {renderSkill('/Figma-logo.png', 'Figma')}
                         {renderSkill('/Fritzing_icon.png', 'Fritzing')}
                         {renderSkill('/KiCad_logo_square.png', 'KiCad')}
-                        {renderSkill('/LTSpice.jpeg', 'LTSpice')}
-                        {renderSkill('/Intel_quartus_prime.png', 'Intel Quartus Prime')}
+                        {renderSkill('/LTSpice.jpeg', 'LTspice')}
+                        {renderSkill('/Intel_quartus_prime.png', 'Intel Quartus Prime, Quartus II, ModelSim')}
                         {renderSkill('/jupyter.png', 'Jupyter')}
+                        {renderSkill('/grafana.svg', 'Grafana')}
+                        {renderSkill('/postman.svg', 'Postman')}
                         {renderSkill('/mysql_workbench.png', 'MySQL Workbench')}
-                        {renderSkill('/terminal.png', 'Slurm & Bash')}
-                        {renderSkill('/terminal.png', 'Zephyr RTOS')}
-                        {renderSkill('/terminal.png', 'CAN / ISO-TP')}
-                        {renderSkill('/terminal.png', 'ISO 26262 (ASIL-D)')}
-                        {renderSkill('/github.png', 'Google Lighthouse')}
-                        {renderSkill('/github.png', 'WCAG 2.1 AA')}
-                        {renderSkill('/terminal.png', 'Agile / Scrum / SDLC')}
-                    </div>
-                </div>
+                        {renderSkill('/Slurm_logo.svg', 'Slurm & Bash')}
+                        {renderSkill('/zephyr_rtos.svg', 'Zephyr RTOS')}
+                        {renderSkill('/CAN_Logo.svg', 'CAN / ISO-TP')}
+                        {renderSkill('/ISO_26262_ASIL_D.png', 'ISO 26262 (ASIL-D)')}
+                        {renderSkill('/Google_Lighthouse_logo.svg', 'Google Lighthouse')}
+                        {renderSkill('/wcag-2.1-aa-logo.svg', 'WCAG 2.1 AA')}
+                        {renderSkill('/agile.jpg', 'Agile')}
+                        {renderSkill('/Scrum-icon.jpg', 'Scrum')}
+                        {renderSkill('/sdlc.png', 'SDLC')}
 
-                <div className="glass-card" data-aos="fade-up" data-aos-delay="200">
-                    <h3 style={{ fontSize: '1.4rem', fontWeight: 600, marginBottom: '1.5rem', color: 'var(--accent-color)' }}>Databases and Cloud Architectures</h3>
+                        {renderSkill('/microsoft-365.png', 'Office 365')}
+                    </div>
+                </HolographicCard>
+
+                {/* 3. Databases and Cloud Architectures */}
+                <HolographicCard data-aos="fade-up" data-aos-delay="200">
+                    <h3 style={{ fontSize: '1.4rem', fontWeight: 600, marginBottom: '1.5rem', color: 'var(--accent-color)' }}>Databases and Enterprise Cloud Architectures</h3>
                     <div className="skills-grid">
                         {renderSkill('/sap_s4hana.png', 'SAP S/4HANA Cloud')}
                         {renderSkill('/Oracle_database.png', 'ORACLE Database')}
                         {renderSkill('/New_Power_BI.png', 'Microsoft Power BI')}
-                        {renderSkill('/aws.svg', 'AWS Fargate / ECS')}
-                        {renderSkill('/azure.svg', 'Azure Kubernetes (AKS)')}
-                        {renderSkill('/vercel.svg', 'Vercel / Cloudflare')}
-                        {renderSkill('/supabase.svg', 'Render / Supabase')}
+                        {renderSkill('/aws.svg', 'AWS (EC2, S3, Lambda, SQS, SNS)')}
+                        {renderSkill('/aws.svg', 'AWS CloudWatch & Step Function')}
+                        {renderSkill('/azure.svg', 'Azure & Azure Kubernetes Service (AKS)')}
+                        {renderSkill('/gcp.svg', 'Google Cloud Platform (GCP)')}
+                        {renderSkill('/vercel.svg', 'Vercel')}
+                        {renderSkill('/Cloudflare_Logo.svg', 'Cloudflare')}
+                        {renderSkill('/supabase.svg', 'Supabase (PostgreSQL with RLS)')}
+                        {renderSkill('/firebase.svg', 'Firebase')}
+                        {renderSkill('/render.svg', 'Render')}
                         {renderSkill('/Database-mysql.png', 'MySQL Database')}
                         {renderSkill('/sqlite.svg', 'PostgreSQL / SQLite')}
-                        {renderSkill('/Database-mysql.png', 'Redis')}
+                        {renderSkill('/Redis-Logo.svg', 'Redis')}
+                        {renderSkill('/prisma.svg', 'Prisma')}
+                        {renderSkill('/stripe.svg', 'Stripe')}
+                        {renderSkill('/Fundamental-cell-excel-spreadsheet.png', 'Excel (Dynamic Arrays & Stock Data)')}
+                        {renderSkill('/SharePoint.svg', 'SharePoint')}
+                        {renderSkill('/dataverse.webp', 'Dataverse')}
+                        {renderSkill('/Microsoft_Power_Automate.svg', 'Power Automate')}
                     </div>
-                </div>
+                </HolographicCard>
+
+                {/* 4. Hardware, Systems & Networking */}
+                <HolographicCard data-aos="fade-up" data-aos-delay="300">
+                    <h3 style={{ fontSize: '1.4rem', fontWeight: 600, marginBottom: '1.5rem', color: 'var(--accent-color)' }}>Hardware, Systems & Networking</h3>
+                    <div className="skills-grid">
+                        {renderSkill('/raspberrypi.svg', 'Raspberry Pi 5')}
+                        {renderSkill('/linux.svg', 'PREEMPT_RT Linux')}
+                        {renderSkill('/CAN_Logo.svg', 'ValueCAN 4 & DBC Parsing')}
+                        {renderSkill('/CAN_Logo.svg', 'XML-driven config')}
+                        {renderSkill('/terminal.png', 'MPMC zero-copy ROS–CAN transfer')}
+                        {renderSkill('/CAN_Logo.svg', 'ECU systems & CAN bus')}
+                        {renderSkill('/terminal.png', 'SPI / I2C / UART')}
+                        {renderSkill('/icons8-arduino.png', 'nRF52840 / ESP32 / Arduino / RF')}
+                        {renderSkill('/cyclone-v.png', 'Cyclone V FPGA')}
+                        {renderSkill('/icons8-c-programming.png', 'RISC-V ISA')}
+                        {renderSkill('/zephyr_rtos.svg', 'Thread mesh networking')}
+                        {renderSkill('/google-coral.webp', 'Coral TPU & EfficientDet')}
+                        {renderSkill('/icons8-c.png', 'CUDA & MPI')}
+                        {renderSkill('/Slurm_logo.svg', 'DVFS & RAPL')}
+                        {renderSkill('/terminal.png', 'OpenConfig')}
+                        {renderSkill('/etcd.svg', 'etcd & CoreDNS')}
+                        {renderSkill('/etcd.svg', 'Linux cgroup v1 deprecation')}
+                        {renderSkill('/terminal.png', 'pod DNS & DPANIC crashes')}
+                    </div>
+                </HolographicCard>
+
+                {/* 5. Software Engineering & MLOps Concepts */}
+                <HolographicCard data-aos="fade-up" data-aos-delay="400">
+                    <h3 style={{ fontSize: '1.4rem', fontWeight: 600, marginBottom: '1.5rem', color: 'var(--accent-color)' }}>Data, ML & Software Engineering Concepts</h3>
+                    <div className="skills-grid">
+                        {renderSkill('/icons8-python.png', 'structure-aware semantic chunking')}
+                        {renderSkill('/Scikit_learn.png', 'Random Forest & GridSearchCV')}
+                        {renderSkill('/Scikit_learn.png', 'Gini feature importance')}
+                        {renderSkill('/google-gemini.svg', 'legal interpretability & LLM hallucinations')}
+                        {renderSkill('/google-gemini.svg', 'LLM-powered resume automation SaaS')}
+                        {renderSkill('/pinecone.svg', 'memory-efficient RAG chatbot')}
+                        {renderSkill('/huggingface.svg', 'quantized LLaMA models (.gguf)')}
+                        {renderSkill('/terminal.png', 'context windows & token limits')}
+                        {renderSkill('/cvzone.webp', 'salient object segmentation (U²-Net)')}
+                        {renderSkill('/cvzone.webp', 'two-level nested U²-Net architecture')}
+                        {renderSkill('/OpenCV.png', 'OpenCV morphological mask refinement')}
+                        {renderSkill('/cvzone.webp', 'low-power autonomous object detection')}
+                        {renderSkill('/icons8-java.png', 'MVVM Clean Architecture & Repository pattern')}
+                        {renderSkill('/terminal.png', 'RESTful APIs & FAKE STORE REST API')}
+                        {renderSkill('/terminal.png', 'API uptime & rate limiting')}
+                        {renderSkill('/github.png', 'CI/CD & modular codebase')}
+                        {renderSkill('/Redis-Logo.svg', 'Redis rate limiting & caching layer')}
+                        {renderSkill('/icons8-java.png', 'Caffeine & resilience4j')}
+                        {renderSkill('/docker-mark-ocean-blue.svg', 'multi-stage Docker builds & containerizing')}
+                        {renderSkill('/icons8-python.png', 'data preprocessing')}
+                        {renderSkill('/terminal.png', 'offline functionality')}
+                    </div>
+                </HolographicCard>
 
             </div>
         </main>

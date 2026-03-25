@@ -1,6 +1,8 @@
 "use client";
 
 import Link from 'next/link';
+import SolarSystemBackground from '@/components/SolarSystemBackground';
+import HolographicCard from '@/components/HolographicCard';
 
 export default function Project() {
     const projects = [
@@ -273,7 +275,9 @@ export default function Project() {
     ];
 
     return (
-        <main className="section container" style={{ paddingTop: '8rem' }}>
+        <main className="section container" style={{ paddingTop: '8rem', position: 'relative' }}>
+            {/* Guarantee seamless WebGL persistence across routes seamlessly */}
+            <SolarSystemBackground />
 
             <div className="text-center" style={{ marginBottom: '4rem' }}>
                 <h1 className="title" data-aos="zoom-in">Featured Projects.</h1>
@@ -284,7 +288,7 @@ export default function Project() {
 
             <div className="projects-grid" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(400px, 1fr))' }}>
                 {projects.map((proj, index) => (
-                    <div className="glass-card" key={index} data-aos="fade-up" data-aos-delay={(index % 3) * 100} style={{ display: 'flex', flexDirection: 'column', padding: '2rem' }}>
+                    <HolographicCard key={index} data-aos="fade-up" data-aos-delay={(index % 3) * 100} style={{ display: 'flex', flexDirection: 'column', padding: '2rem' }}>
 
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
                             <h3 className="project-title" style={{ color: 'var(--text-primary)', margin: 0, fontSize: '1.4rem' }}>{proj.title}</h3>
@@ -320,7 +324,7 @@ export default function Project() {
                             </a>
                         )}
 
-                    </div>
+                    </HolographicCard>
                 ))}
             </div>
 

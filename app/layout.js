@@ -1,5 +1,9 @@
 import Navigation from "@/components/Navigation";
 import AOSSetup from "@/components/AOSSetup";
+import ParticleBackground from "@/components/ParticleBackground";
+import ScrollPhysics from "@/components/ScrollPhysics";
+import BlackHoleCursor from "@/components/BlackHoleCursor";
+import PerformanceHUD from "@/components/PerformanceHUD";
 import "./globals.css";
 import "aos/dist/aos.css";
 
@@ -14,6 +18,10 @@ export default function RootLayout({ children }) {
       <body suppressHydrationWarning>
         <AOSSetup />
         <Navigation />
+        <ParticleBackground />
+        <ScrollPhysics />
+        <BlackHoleCursor />
+        <PerformanceHUD />
         {children}
       </body>
     </html>
