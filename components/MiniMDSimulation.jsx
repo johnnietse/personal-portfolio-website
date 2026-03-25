@@ -4,20 +4,20 @@ import { useRef, useMemo, useState, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Box } from '@react-three/drei';
 import * as THREE from 'three';
+import { usePerformance } from './PerformanceManager';
 
-const NUM_ATOMS = 300;
 const BOX_SIZE = 14;
 
-const MDSystem = ({ simState }) => {
+const MDSystem = ({ simState, count }) => {
     const meshRef = useRef();
 
     // Allocate continuous blocks of Float32Array Memory for highly optimized calculations
     const particles = useMemo(() => {
-        const positions = new Float32Array(NUM_ATOMS * 3);
-        const velocities = new Float32Array(NUM_ATOMS * 3);
-        const forces = new Float32Array(NUM_ATOMS * 3);
+        const positions = new Float32Array(count * 3);
+        const velocities = new Float32Array(count * 3);
+        const forces = new Float32Array(count * 3);
 
-        for (let i = 0; i < NUM_ATOMS; i++) {
+        for (let i = 0; i < count; i++) {
             positions[i * 3] = (Math.random() - 0.5) * BOX_SIZE;
             positions[i * 3 + 1] = (Math.random() - 0.5) * BOX_SIZE;
             positions[i * 3 + 2] = (Math.random() - 0.5) * BOX_SIZE;
@@ -28,7 +28,7 @@ const MDSystem = ({ simState }) => {
         }
 
         return { positions, velocities, forces };
-    }, []);
+    }, [count]);
 
     const dummy = useMemo(() => new THREE.Object3D(), []);
     const color = new THREE.Color();
@@ -52,7 +52,7 @@ const MDSystem = ({ simState }) => {
         const dt = Math.min(delta, 0.015) * s.multiplier;
 
         // 1. Reset explicit force accumulators
-        for (let i = 0; i < NUM_ATOMS * 3; i++) {
+        for (let i = 0; i < count * 3; i++) {
             forces[i] = 0;
         }
 
@@ -60,8 +60,8 @@ const MDSystem = ({ simState }) => {
         const epsilon = 1.0;
         const cutoffSq = 16.0;
 
-        for (let i = 0; i < NUM_ATOMS; i++) {
-            for (let j = i + 1; j < NUM_ATOMS; j++) {
+        for (let i = 0; i < count; i++) {
+            for (let j = i + 1; j < count; j++) {
                 let dx = positions[i * 3] - positions[j * 3];
                 let dy = positions[i * 3 + 1] - positions[j * 3 + 1];
                 let dz = positions[i * 3 + 2] - positions[j * 3 + 2];
@@ -100,7 +100,7 @@ const MDSystem = ({ simState }) => {
 
         // 3. Explicit mathematical Velocity Verlet Integration
         const damping = 0.999; // Numerical thermostat preventing overheating
-        for (let i = 0; i < NUM_ATOMS; i++) {
+        for (let i = 0; i < count; i++) {
             velocities[i * 3] = (velocities[i * 3] + forces[i * 3] * dt) * damping;
             velocities[i * 3 + 1] = (velocities[i * 3 + 1] + forces[i * 3 + 1] * dt) * damping;
             velocities[i * 3 + 2] = (velocities[i * 3 + 2] + forces[i * 3 + 2] * dt) * damping;
@@ -137,9 +137,9 @@ const MDSystem = ({ simState }) => {
 
     return (
         <group>
-            {/* The primary 300-Node Instanced Buffer Mesh minimizing explicit drawn nodes into a single GPU call */}
-            <instancedMesh ref={meshRef} args={[null, null, NUM_ATOMS]}>
-                <sphereGeometry args={[0.4, 16, 16]} />
+            {/* The primary Instanced Buffer Mesh minimizing explicit drawn nodes into a single GPU call */}
+            <instancedMesh ref={meshRef} args={[null, null, count]}>
+                <sphereGeometry args={[0.4, count > 100 ? 16 : 8, count > 100 ? 16 : 8]} />
                 <meshStandardMaterial
                     metalness={0.2}
                     roughness={0.1}
@@ -164,7 +164,10 @@ const MDSystem = ({ simState }) => {
 };
 
 export default function MiniMDSimulation() {
+    const { isLowSpec, isMobile } = usePerformance();
     const [isOptimized, setIsOptimized] = useState(false);
+
+    const count = isLowSpec || isMobile ? 80 : 300;
 
     // Unified simulation state ref — this SINGLE object drives BOTH the WebGL math loop AND the DOM dashboard.
     // useRef avoids 60fps React re-renders; we flush to useState at 10Hz for the DOM overlay only.
@@ -276,7 +279,7 @@ export default function MiniMDSimulation() {
                 <pointLight position={[0, 0, 0]} intensity={2} color="#f472b6" />
 
                 {/* simState ref is passed directly into the WebGL loop — it reads phase + multiplier every frame */}
-                <MDSystem simState={simState} />
+                <MDSystem simState={simState} count={count} />
 
                 <OrbitControls
                     enableZoom={false}

@@ -1,12 +1,17 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from 'react';
+import { usePerformance } from './PerformanceManager';
 
 const IronManHUD = () => {
+    const { isMobile } = usePerformance();
     const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
     const [lerpPos, setLerpPos] = useState({ x: 0, y: 0 });
     const [scanData, setScanData] = useState({ target: "NONE", status: "SEARCHING..." });
     const [isVisible, setIsVisible] = useState(true);
+
+    // Completely disable HUD on mobile as mouse-tracking interactions don't apply
+    if (isMobile) return null;
 
     // Mouse Tracking with Lerp for high-tech "lag" effect
     useEffect(() => {

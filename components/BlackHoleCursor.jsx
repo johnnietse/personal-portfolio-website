@@ -3,6 +3,7 @@
 import { useRef, useEffect, useState } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
+import { usePerformance } from './PerformanceManager';
 
 // Low-level pure GLSL OpenGL Shading Language mathematics simulating Gravitational Lensing & Particle Plasmas
 const FluidShaderMaterial = {
@@ -127,11 +128,18 @@ const ShaderCanvas = () => {
 };
 
 export default function BlackHoleCursor() {
+    const { isLowSpec, isMobile } = usePerformance();
     const [enabled, setEnabled] = useState(true);
     const [isMounted, setIsMounted] = useState(false);
 
     // Prevent Next.js SSR hydration mismatch since `window` measurements and states are strictly browser-only
-    useEffect(() => setIsMounted(true), []);
+    useEffect(() => {
+        setIsMounted(true);
+        // Automatically disable on low-spec or mobile devices by default
+        if (isLowSpec || isMobile) {
+            setEnabled(false);
+        }
+    }, [isLowSpec, isMobile]);
     if (!isMounted) return null;
 
     return (

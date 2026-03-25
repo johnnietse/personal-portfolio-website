@@ -3,9 +3,12 @@
 import { useRef, useMemo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Float, Box, Cylinder, ContactShadows } from '@react-three/drei';
+import { usePerformance } from './PerformanceManager';
 
 // A proxy-proof, fully procedural 3D model of a high-end Embedded Microcontroller (Raspberry Pi / ESP32 hybrid)
 const MicrocontrollerBoard = () => {
+    const { isLowSpec, isMobile } = usePerformance();
+    const lowSpec = isLowSpec || isMobile;
     const boardRef = useRef();
 
     // The board slowly spins to show off all the metallic components
@@ -18,18 +21,19 @@ const MicrocontrollerBoard = () => {
 
     // Generate deterministic capacitor locations to prevent Next.js SSR hydration mismatches
     const capacitors = useMemo(() => {
-        return Array.from({ length: 15 }).map(() => ({
+        const count = lowSpec ? 5 : 15;
+        return Array.from({ length: count }).map(() => ({
             x: -1.5 + Math.random() * 3,
             z: -1.0 + Math.random() * 2,
             isSilver: Math.random() > 0.5
         }));
-    }, []);
+    }, [lowSpec]);
 
     return (
         <group ref={boardRef}>
             {/* 1. MAIN PCB MOTHERBOARD (Dark Green/Black fiberglass with clearcoat) */}
             <Box args={[6.5, 0.1, 4.2]} position={[0, 0, 0]}>
-                <meshPhysicalMaterial color="#064e3b" metalness={0.3} roughness={0.7} clearcoat={0.5} clearcoatRoughness={0.2} />
+                {lowSpec ? <meshStandardMaterial color="#064e3b" roughness={0.7} /> : <meshPhysicalMaterial color="#064e3b" metalness={0.3} roughness={0.7} clearcoat={0.5} clearcoatRoughness={0.2} />}
             </Box>
 
             {/* 2. MAIN CPU / SoC (System on Chip) with Metallic Heatspreader */}
@@ -50,9 +54,9 @@ const MicrocontrollerBoard = () => {
                 <Box args={[4.2, 0.15, 0.4]} position={[2.1, 0, 0]}>
                     <meshStandardMaterial color="#0f172a" roughness={0.8} />
                 </Box>
-                {/* Procedurally generating 40 golden pins */}
-                {Array.from({ length: 20 }).map((_, i) => (
-                    <group key={i} position={[i * 0.2 + 0.2, 0.2, 0]}>
+                {/* Procedurally generating golden pins - reduced for performance */}
+                {Array.from({ length: lowSpec ? 5 : 20 }).map((_, i) => (
+                    <group key={i} position={[i * (lowSpec ? 0.8 : 0.2) + 0.2, 0.2, 0]}>
                         <Cylinder args={[0.03, 0.03, 0.4, 8]} position={[0, 0, -0.1]}><meshStandardMaterial color="#fbbf24" metalness={0.8} roughness={0.2} /></Cylinder>
                         <Cylinder args={[0.03, 0.03, 0.4, 8]} position={[0, 0, 0.1]}><meshStandardMaterial color="#fbbf24" metalness={0.8} roughness={0.2} /></Cylinder>
                     </group>
@@ -122,6 +126,9 @@ const MicrocontrollerBoard = () => {
 };
 
 export default function EmbeddedController() {
+    const { isLowSpec, isMobile } = usePerformance();
+    const lowSpec = isLowSpec || isMobile;
+
     return (
         <Canvas camera={{ position: [0, 6, 8], fov: 45 }} style={{ cursor: 'grab', background: 'radial-gradient(circle at center, rgba(15, 23, 42, 0.4) 0%, transparent 100%)' }}>
             {/* Highly reflective studio lighting optimized for Metallic PCB tracing */}
@@ -130,12 +137,12 @@ export default function EmbeddedController() {
             <directionalLight position={[-10, 5, -10]} intensity={1.5} color="#60a5fa" />
             <pointLight position={[0, -5, 0]} intensity={2} color="#10b981" />
 
-            <Float speed={2.5} rotationIntensity={0.1} floatIntensity={0.5}>
+            <Float speed={lowSpec ? 1 : 2.5} rotationIntensity={0.1} floatIntensity={lowSpec ? 0.2 : 0.5}>
                 <MicrocontrollerBoard />
             </Float>
 
-            {/* Beautiful black ground reflection dropping below the floating board */}
-            <ContactShadows position={[0, -2, 0]} resolution={1024} scale={20} blur={2.5} opacity={0.5} color="#000000" />
+            {/* Beautiful black ground reflection dropping below the floating board - disabled on lowSpec */}
+            {!lowSpec && <ContactShadows position={[0, -2, 0]} resolution={512} scale={20} blur={2.5} opacity={0.5} color="#000000" />}
 
             {/* Interactive VR Orbiting */}
             <OrbitControls

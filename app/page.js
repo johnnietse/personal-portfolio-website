@@ -8,6 +8,7 @@ import EmbeddedController from '@/components/EmbeddedController';
 import MiniMDSimulation from '@/components/MiniMDSimulation';
 import TerminalProfile from '@/components/TerminalProfile';
 import SkillTicker from '@/components/SkillTicker';
+import VisibilityWrapper from '@/components/VisibilityWrapper';
 
 export default function Home() {
   return (
@@ -55,7 +56,9 @@ export default function Home() {
 
           {/* Right 3D VR Model Content */}
           <div className="hero-model-container" data-aos="zoom-in" data-aos-duration="1200" style={{ height: '500px', width: '100%', cursor: 'grab' }}>
-            <HeroModel />
+            <VisibilityWrapper height="500px">
+              <HeroModel />
+            </VisibilityWrapper>
           </div>
 
         </div>
@@ -111,8 +114,10 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="glass-card" style={{ padding: '0', overflow: 'hidden', height: '400px', width: '100%', border: '1px solid var(--border-color)' }} data-aos="zoom-in">
-            <AutonomousCar />
+          <div className="glass-card" style={{ padding: '0', overflow: 'hidden', width: '100%', border: '1px solid var(--border-color)' }} data-aos="zoom-in">
+            <VisibilityWrapper height="400px">
+              <AutonomousCar />
+            </VisibilityWrapper>
           </div>
         </div>
       </section>
@@ -122,8 +127,10 @@ export default function Home() {
         <div className="hero-grid" style={{ display: 'grid', gap: '3rem', alignItems: 'center' }}>
 
           {/* Left 3D Embedded Microcontroller Content */}
-          <div className="glass-card" style={{ padding: '0', overflow: 'hidden', height: '400px', width: '100%', border: '1px solid var(--border-color)' }} data-aos="zoom-in">
-            <EmbeddedController />
+          <div className="glass-card" style={{ padding: '0', overflow: 'hidden', width: '100%', border: '1px solid var(--border-color)' }} data-aos="zoom-in">
+            <VisibilityWrapper height="400px">
+              <EmbeddedController />
+            </VisibilityWrapper>
           </div>
 
           <div data-aos="fade-left">
@@ -166,8 +173,10 @@ export default function Home() {
           </div>
 
           {/* Right 3D Data Content */}
-          <div className="glass-card" style={{ padding: '0', overflow: 'hidden', height: '400px', width: '100%', border: '1px solid var(--border-color)' }} data-aos="zoom-in">
-            <MiniMDSimulation />
+          <div className="glass-card" style={{ padding: '0', overflow: 'hidden', width: '100%', border: '1px solid var(--border-color)' }} data-aos="zoom-in">
+            <VisibilityWrapper height="400px">
+              <MiniMDSimulation />
+            </VisibilityWrapper>
           </div>
 
         </div>

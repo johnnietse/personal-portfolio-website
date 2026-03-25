@@ -3,6 +3,7 @@
 import { useState, useRef, Suspense } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Points, PointMaterial } from "@react-three/drei";
+import { usePerformance } from "./PerformanceManager";
 
 function getSpherePositions(count, radius) {
     const positions = new Float32Array(count * 3);
@@ -20,9 +21,11 @@ function getSpherePositions(count, radius) {
 }
 
 const Starfield = () => {
+    const { isLowSpec, isMobile } = usePerformance();
     const ref = useRef();
-    // 4000 nodes for high visual density representing an HPC network / Neural network
-    const [positions] = useState(() => getSpherePositions(4000, 1.2));
+    // Reduce density for legacy/low-spec devices
+    const count = isLowSpec || isMobile ? 1000 : 4000;
+    const [positions] = useState(() => getSpherePositions(count, 1.2));
 
     useFrame((state, delta) => {
         // Slow, premium architectural rotation + real-time mouse parallax
