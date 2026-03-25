@@ -146,7 +146,17 @@ const MDSystem = ({ simState }) => {
                 />
             </instancedMesh>
             {/* The visual periodic boundary condition constraint box */}
-            <Box args={[BOX_SIZE, BOX_SIZE, BOX_SIZE]}>
+            <Box
+                args={[BOX_SIZE, BOX_SIZE, BOX_SIZE]}
+                onPointerOver={() => {
+                    window.dispatchEvent(new CustomEvent('hud-scan', {
+                        detail: { target: "MINI-MD NODE", status: "ANALYZING MOLECULAR DYNAMICS..." }
+                    }));
+                }}
+                onPointerOut={() => {
+                    window.dispatchEvent(new CustomEvent('hud-scan', { detail: null }));
+                }}
+            >
                 <meshBasicMaterial color="#38bdf8" wireframe opacity={0.15} transparent side={THREE.BackSide} />
             </Box>
         </group>
