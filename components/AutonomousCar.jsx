@@ -286,7 +286,17 @@ const VehicleMesh = ({ isDriving }) => {
     });
 
     return (
-        <group ref={vehicleGroupRef}>
+        <group
+            ref={vehicleGroupRef}
+            onPointerOver={() => {
+                window.dispatchEvent(new CustomEvent('hud-scan', {
+                    detail: { target: "L4 AUTONOMOUS UNIT", status: "LIDAR ARRAY: 360° ACTIVE" }
+                }));
+            }}
+            onPointerOut={() => {
+                window.dispatchEvent(new CustomEvent('hud-scan', { detail: null }));
+            }}
+        >
             <Float speed={isDriving ? 0.5 : 2} rotationIntensity={isDriving ? 0.05 : 0.2} floatIntensity={0.1}>
 
                 {/* --- CHASSIS & SHADERS --- */}
