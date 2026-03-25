@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useMemo } from 'react';
+import { useRef, useMemo, useState, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Html, Float } from '@react-three/drei';
 import { usePerformance } from './PerformanceManager';
@@ -39,6 +39,12 @@ const SkillNode = ({ img, label, radius, angle, speed, index }) => {
 
 export default function SkillConstellation() {
     const { isLowSpec, isMobile } = usePerformance();
+    const [isMounted, setIsMounted] = useState(false);
+
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
+
     const lowSpec = isLowSpec || isMobile;
 
     // Array of critical top-level technical skills extracted natively from the engineering matrix
@@ -84,6 +90,8 @@ export default function SkillConstellation() {
             allSkills[16], // Linux
         ];
     }, [lowSpec, allSkills]);
+
+    if (!isMounted) return <div style={{ height: '400px' }} />; // Placeholder to avoid layout shift
 
     return (
         <Canvas camera={{ position: [0, 5, 25], fov: 50 }} style={{ cursor: 'grab', background: 'radial-gradient(circle at center, rgba(15, 23, 42, 0.2) 0%, transparent 100%)' }}>

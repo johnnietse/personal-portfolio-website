@@ -8,6 +8,15 @@ export const PerformanceProvider = ({ children }) => {
     const [isLowSpec, setIsLowSpec] = useState(false);
     const [isMobile, setIsMobile] = useState(false);
 
+    // Granular Feature Toggles (Mainly for Mobile Opt-in)
+    const [features, setFeatures] = useState({
+        hud: true,
+        physics: true,
+        stars: true,
+        particles: true,
+        cursor: true
+    });
+
     useEffect(() => {
         // 1. Initial Device Detection
         const userAgent = navigator.userAgent || navigator.vendor || window.opera;
@@ -25,7 +34,26 @@ export const PerformanceProvider = ({ children }) => {
             setIsLowSpec(true);
         }
 
-        // 3. Dynamic Resize Check
+        // 3. Load Feature Toggles (Initial Mobile Disable)
+        if (typeof window !== 'undefined') {
+            const savedFeatures = localStorage.getItem('performanceFeatures');
+            if (savedFeatures) {
+                setFeatures(JSON.parse(savedFeatures));
+            } else if (mobileCheck) {
+                // Automatically DISABLE ALL heavy features on mobile by default
+                const initialMobileFeatures = {
+                    hud: false,
+                    physics: false,
+                    stars: false,
+                    particles: false,
+                    cursor: false
+                };
+                setFeatures(initialMobileFeatures);
+                localStorage.setItem('performanceFeatures', JSON.stringify(initialMobileFeatures));
+            }
+        }
+
+        // 4. Dynamic Resize Check
         const handleResize = () => {
             const currentMobile = window.innerWidth <= 768;
             setIsMobile(currentMobile);
@@ -43,8 +71,16 @@ export const PerformanceProvider = ({ children }) => {
         });
     };
 
+    const toggleFeature = (featureKey) => {
+        setFeatures(prev => {
+            const newFeatures = { ...prev, [featureKey]: !prev[featureKey] };
+            localStorage.setItem('performanceFeatures', JSON.stringify(newFeatures));
+            return newFeatures;
+        });
+    };
+
     return (
-        <PerformanceContext.Provider value={{ isLowSpec, isMobile, toggleLowSpec }}>
+        <PerformanceContext.Provider value={{ isLowSpec, isMobile, features, toggleLowSpec, toggleFeature }}>
             {children}
         </PerformanceContext.Provider>
     );

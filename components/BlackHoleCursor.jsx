@@ -128,47 +128,22 @@ const ShaderCanvas = () => {
 };
 
 export default function BlackHoleCursor() {
-    const { isLowSpec, isMobile } = usePerformance();
-    const [enabled, setEnabled] = useState(true);
+    const { isLowSpec, isMobile, features } = usePerformance();
     const [isMounted, setIsMounted] = useState(false);
 
     // Prevent Next.js SSR hydration mismatch since `window` measurements and states are strictly browser-only
     useEffect(() => {
         setIsMounted(true);
-        // Automatically disable on low-spec or mobile devices by default
-        if (isLowSpec || isMobile) {
-            setEnabled(false);
-        }
-    }, [isLowSpec, isMobile]);
+    }, []);
+
+    if (!isMounted || !features.cursor) return null;
     if (!isMounted) return null;
 
     return (
-        <>
-            {/* Absolute Spatial Toggle Component intercepting raw click events above the Z-index matrix */}
-            <button
-                onClick={() => setEnabled(!enabled)}
-                style={{
-                    position: 'fixed', bottom: '20px', left: '20px', zIndex: 10000,
-                    background: 'rgba(15, 23, 42, 0.65)', backdropFilter: 'blur(12px)',
-                    border: '1px solid rgba(88, 166, 255, 0.2)', color: 'var(--text-secondary)',
-                    padding: '8px 16px', borderRadius: '30px', fontSize: '0.85rem', fontWeight: 'bold',
-                    cursor: 'pointer', transition: 'all 0.3s ease', letterSpacing: '0.5px',
-                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.5)'
-                }}
-                onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(15, 23, 42, 0.95)'; e.currentTarget.style.color = '#fff'; e.currentTarget.style.borderColor = 'rgba(88, 166, 255, 0.6)'; }}
-                onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(15, 23, 42, 0.65)'; e.currentTarget.style.color = 'var(--text-secondary)'; e.currentTarget.style.borderColor = 'rgba(88, 166, 255, 0.2)'; }}
-            >
-                {enabled ? 'Disable Black Hole FX' : 'Enable Black Hole FX'}
-            </button>
-
-            {/* Conditionally unmount the entire massive native WebGL Canvas and the GLSL pipeline explicitly freeing the GPU */}
-            {enabled && (
-                <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', zIndex: 9999, pointerEvents: 'none' }}>
-                    <Canvas orthographic camera={{ position: [0, 0, 1], left: -1, right: 1, top: 1, bottom: -1 }} style={{ pointerEvents: 'none' }}>
-                        <ShaderCanvas />
-                    </Canvas>
-                </div>
-            )}
-        </>
+        <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', zIndex: 9999, pointerEvents: 'none' }}>
+            <Canvas orthographic camera={{ position: [0, 0, 1], left: -1, right: 1, top: 1, bottom: -1 }} style={{ pointerEvents: 'none' }}>
+                <ShaderCanvas />
+            </Canvas>
+        </div>
     );
 }

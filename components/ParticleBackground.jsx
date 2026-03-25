@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, Suspense } from "react";
+import { useState, useEffect, useRef, Suspense } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Points, PointMaterial } from "@react-three/drei";
 import { usePerformance } from "./PerformanceManager";
@@ -61,6 +61,15 @@ const Starfield = () => {
 };
 
 export default function ParticleBackground() {
+    const { features } = usePerformance();
+    const [isMounted, setIsMounted] = useState(false);
+
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
+
+    if (!isMounted || !features.particles) return null;
+
     return (
         <div style={{
             position: 'fixed',

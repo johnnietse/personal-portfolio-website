@@ -5,6 +5,7 @@ import ScrollPhysics from "@/components/ScrollPhysics";
 import BlackHoleCursor from "@/components/BlackHoleCursor";
 import PerformanceHUD from "@/components/PerformanceHUD";
 import IronManHUD from "@/components/IronManHUD";
+import MobileSystemsTray from "@/components/MobileSystemsTray";
 import { PerformanceProvider } from "@/components/PerformanceManager";
 import "./globals.css";
 import "aos/dist/aos.css";
@@ -29,6 +30,7 @@ export default function RootLayout({ children }) {
           <BlackHoleCursor />
           <PerformanceHUD />
           <IronManHUD />
+          <MobileSystemsTray />
           {children}
         </PerformanceProvider>
       </body>
