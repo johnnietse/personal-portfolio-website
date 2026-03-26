@@ -5,7 +5,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 const PerformanceContext = createContext();
 
 export const PerformanceProvider = ({ children }) => {
-    const [isLowSpec, setIsLowSpec] = useState(false);
+    const [isLowSpec, setIsLowSpec] = useState(true);
     const [isMobile, setIsMobile] = useState(false);
 
     // Granular Feature Toggles (Mainly for Mobile Opt-in)
@@ -26,22 +26,16 @@ export const PerformanceProvider = ({ children }) => {
 
         setIsMobile(mobileCheck);
 
-        // 2. Load manual override from localStorage
-        const savedSpec = localStorage.getItem('isLowSpec');
-        if (savedSpec !== null) {
-            setIsLowSpec(savedSpec === 'true');
-        } else if (mobileCheck) {
-            // Default to Low Spec on mobile
-            setIsLowSpec(true);
-        }
+        // 2. Session-Based Performance Defaults (Always start optimized)
+        setIsLowSpec(true);
 
         // 3. Load Feature Toggles (Absolute Gating Logic)
         if (typeof window !== 'undefined') {
             const savedFeatures = localStorage.getItem('performanceFeatures');
-            if (savedFeatures) {
-                setFeatures(JSON.parse(savedFeatures));
-            } else if (mobileCheck) {
-                // Automatically DISABLE ALL heavy features on mobile by default
+            let currentFeatures = savedFeatures ? JSON.parse(savedFeatures) : null;
+
+            if (mobileCheck) {
+                // MOBILE: Force all features OFF by default on start
                 const initialMobileFeatures = {
                     hud: false,
                     physics: false,
@@ -50,17 +44,21 @@ export const PerformanceProvider = ({ children }) => {
                     cursor: false
                 };
                 setFeatures(initialMobileFeatures);
-                localStorage.setItem('performanceFeatures', JSON.stringify(initialMobileFeatures));
-            } else {
-                // DESKTOP: Enable all heavy features by default if no override exists
+                // We DON'T sync this to localStorage here to avoid overwriting user's opt-ins permanently
+                // But we ensure the CURRENT state is disabled.
+            } else if (!currentFeatures) {
+                // NEW DESKTOP USER: Enable all except shader-heavy cursor
                 const initialDesktopFeatures = {
                     hud: true,
                     physics: true,
                     stars: true,
                     particles: true,
-                    cursor: true
+                    cursor: false // Manual opt-in only
                 };
                 setFeatures(initialDesktopFeatures);
+            } else {
+                // RETURNING DESKTOP USER: Force cursor OFF for session start
+                setFeatures({ ...currentFeatures, cursor: false });
             }
         }
 
