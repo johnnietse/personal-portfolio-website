@@ -5,7 +5,7 @@ import { Stats } from '@react-three/drei';
 import { usePerformance } from './PerformanceManager';
 
 export default function PerformanceHUD() {
-    const { isLowSpec, toggleLowSpec, isMobile } = usePerformance();
+    const { isLowSpec, toggleLowSpec, isMobile, features, toggleFeature } = usePerformance();
     const [fps, setFps] = useState(60);
     const [showWarning, setShowWarning] = useState(false);
     const [isMounted, setIsMounted] = useState(false);
