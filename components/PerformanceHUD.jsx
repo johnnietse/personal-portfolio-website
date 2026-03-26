@@ -81,10 +81,29 @@ export default function PerformanceHUD() {
                         fontSize: '0.7rem',
                         cursor: 'pointer',
                         fontWeight: 'bold',
-                        transition: 'all 0.2s ease'
+                        transition: 'all 0.2s ease',
+                        width: '100%'
                     }}
                 >
                     {isLowSpec ? 'LOW SPEC: ON' : 'LOW SPEC: OFF'}
+                </button>
+
+                <button
+                    onClick={() => toggleFeature('cursor')}
+                    style={{
+                        background: features.cursor ? 'rgba(56, 189, 248, 0.2)' : 'rgba(255,255,255,0.05)',
+                        border: `1px solid ${features.cursor ? '#38bdf8' : 'rgba(255,255,255,0.2)'}`,
+                        color: features.cursor ? '#38bdf8' : '#fff',
+                        padding: '5px 10px',
+                        borderRadius: '6px',
+                        fontSize: '0.7rem',
+                        cursor: 'pointer',
+                        fontWeight: 'bold',
+                        transition: 'all 0.2s ease',
+                        width: '100%'
+                    }}
+                >
+                    {features.cursor ? 'CURSOR: ON' : 'CURSOR: OFF'}
                 </button>
 
                 {showWarning && !isLowSpec && (
