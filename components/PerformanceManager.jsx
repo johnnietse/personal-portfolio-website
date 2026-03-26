@@ -9,12 +9,13 @@ export const PerformanceProvider = ({ children }) => {
     const [isMobile, setIsMobile] = useState(false);
 
     // Granular Feature Toggles (Mainly for Mobile Opt-in)
+    // Default to FALSE for SSR/Initial Hydration to prevent mobile resource spikes
     const [features, setFeatures] = useState({
-        hud: true,
-        physics: true,
-        stars: true,
-        particles: true,
-        cursor: true
+        hud: false,
+        physics: false,
+        stars: false,
+        particles: false,
+        cursor: false
     });
 
     useEffect(() => {
@@ -34,7 +35,7 @@ export const PerformanceProvider = ({ children }) => {
             setIsLowSpec(true);
         }
 
-        // 3. Load Feature Toggles (Initial Mobile Disable)
+        // 3. Load Feature Toggles (Absolute Gating Logic)
         if (typeof window !== 'undefined') {
             const savedFeatures = localStorage.getItem('performanceFeatures');
             if (savedFeatures) {
@@ -50,6 +51,16 @@ export const PerformanceProvider = ({ children }) => {
                 };
                 setFeatures(initialMobileFeatures);
                 localStorage.setItem('performanceFeatures', JSON.stringify(initialMobileFeatures));
+            } else {
+                // DESKTOP: Enable all heavy features by default if no override exists
+                const initialDesktopFeatures = {
+                    hud: true,
+                    physics: true,
+                    stars: true,
+                    particles: true,
+                    cursor: true
+                };
+                setFeatures(initialDesktopFeatures);
             }
         }
 
