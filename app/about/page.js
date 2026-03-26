@@ -393,7 +393,7 @@ export default function About() {
                         {renderSkill('/langchain.svg', 'LangChain')}
                         {renderSkill('/langgraph.svg', 'LangGraph')}
                         {renderSkill('/pinecone.svg', 'Pinecone')}
-                        {renderSkill('/chromadb.svg', 'ChromaDB')}
+                        {renderSkill('/chroma-logo.svg', 'ChromaDB')}
                         {renderSkill('/Scikit_learn.png', 'scikit-learn')}
                         {renderSkill('/pytorch.svg', 'PyTorch')}
                         {renderSkill('/tensorflow.svg', 'TensorFlow & Lite')}
@@ -519,7 +519,7 @@ export default function About() {
                         {renderSkill('/icons8-c-programming.png', 'RISC-V ISA')}
                         {renderSkill('/zephyr_rtos.svg', 'Thread mesh networking')}
                         {renderSkill('/google-coral.webp', 'Coral TPU & EfficientDet')}
-                        {renderSkill('/icons8-c.png', 'CUDA & MPI')}
+                        {renderSkill('/Nvidia_CUDA_logo.jpg', 'CUDA & MPI')}
                         {renderSkill('/Slurm_logo.svg', 'DVFS & RAPL')}
                         {renderSkill('/terminal.png', 'OpenConfig')}
                         {renderSkill('/etcd.svg', 'etcd & CoreDNS')}
