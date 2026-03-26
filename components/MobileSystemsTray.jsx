@@ -23,7 +23,18 @@ const MobileSystemsTray = () => {
     ];
 
     return (
-        <div className="fixed bottom-6 right-6 z-[10001] flex flex-col items-end gap-3">
+        <div
+            style={{
+                position: 'fixed',
+                bottom: 'calc(var(--safe-area-bottom, 0px) + 1.5rem)',
+                right: '1.5rem',
+                zIndex: 10001,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'flex-end',
+                gap: '0.75rem'
+            }}
+        >
             {/* Expanded Menu */}
             {isOpen && (
                 <div className="flex flex-col gap-2 mb-2 animate-in fade-in slide-in-from-bottom-5 duration-300">

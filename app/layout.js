@@ -15,6 +15,13 @@ export const metadata = {
   description: "Portfolio of Johnnie Tse, Computer Engineering student at Queen's University.",
 };
 
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+};
+
 export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>

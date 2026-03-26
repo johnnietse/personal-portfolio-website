@@ -48,24 +48,25 @@ export default function PerformanceHUD() {
             {/* FPS Counter & Toggle UI */}
             <div style={{
                 position: 'fixed',
-                top: '80px',
-                right: '20px',
+                top: 'calc(var(--safe-area-top, 0px) + 5.5rem)', // Below navbar
+                right: '1.25rem',
                 zIndex: 10000,
                 background: 'rgba(15, 23, 42, 0.7)',
                 backdropFilter: 'blur(10px)',
                 border: '1px solid rgba(56, 189, 248, 0.3)',
-                padding: '10px 15px',
-                borderRadius: '12px',
+                padding: '0.75rem 1rem',
+                borderRadius: '0.75rem',
                 color: '#fff',
                 fontFamily: 'monospace',
-                fontSize: '0.8rem',
+                fontSize: '0.85rem',
                 display: 'flex',
                 flexDirection: 'column',
-                gap: '8px',
+                gap: '0.5rem',
                 boxShadow: '0 4px 15px rgba(0,0,0,0.5)',
-                transition: 'all 0.3s ease'
+                transition: 'all 0.3s ease',
+                minWidth: '140px'
             }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '120px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <span style={{ color: 'rgba(255,255,255,0.6)' }}>PERF:</span>
                     <span style={{ color: fps < 30 ? '#ef4444' : '#22c55e', fontWeight: 'bold' }}>{fps} FPS</span>
                 </div>
