@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap');
 
 :root {
+    scroll-behavior: smooth;
     /* DARK MODE (Default) */
     --bg-color: #0d1117;
     --surface-color: rgba(22, 27, 34, 0.7);

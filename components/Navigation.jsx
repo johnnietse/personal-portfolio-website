@@ -43,7 +43,8 @@ export default function Navigation() {
     const navItems = [
         { label: 'Home', path: '/' },
         { label: 'About', path: '/about' },
-        { label: 'Projects', path: '/project' }
+        { label: 'Projects', path: '/project' },
+        { label: 'Contact', path: '/#herocontact' }
     ];
 
     return (
