@@ -48,25 +48,24 @@ export default function PerformanceHUD() {
             {/* FPS Counter & Toggle UI */}
             <div style={{
                 position: 'fixed',
-                top: 'calc(var(--safe-area-top, 0px) + 5.5rem)', // Below navbar
+                top: 'calc(5rem + env(safe-area-inset-top))',
                 right: '1.25rem',
                 zIndex: 10000,
                 background: 'rgba(15, 23, 42, 0.7)',
                 backdropFilter: 'blur(10px)',
                 border: '1px solid rgba(56, 189, 248, 0.3)',
-                padding: '0.75rem 1rem',
+                padding: '0.625rem 0.9375rem',
                 borderRadius: '0.75rem',
                 color: '#fff',
                 fontFamily: 'monospace',
-                fontSize: '0.85rem',
+                fontSize: '0.8rem',
                 display: 'flex',
                 flexDirection: 'column',
                 gap: '0.5rem',
-                boxShadow: '0 4px 15px rgba(0,0,0,0.5)',
-                transition: 'all 0.3s ease',
-                minWidth: '140px'
+                boxShadow: '0 0.25rem 0.9375rem rgba(0,0,0,0.5)',
+                transition: 'all 0.3s ease'
             }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '7.5rem' }}>
                     <span style={{ color: 'rgba(255,255,255,0.6)' }}>PERF:</span>
                     <span style={{ color: fps < 30 ? '#ef4444' : '#22c55e', fontWeight: 'bold' }}>{fps} FPS</span>
                 </div>
@@ -77,8 +76,8 @@ export default function PerformanceHUD() {
                         background: isLowSpec ? 'rgba(34, 197, 94, 0.2)' : 'rgba(255,255,255,0.05)',
                         border: `1px solid ${isLowSpec ? '#22c55e' : 'rgba(255,255,255,0.2)'}`,
                         color: isLowSpec ? '#22c55e' : '#fff',
-                        padding: '5px 10px',
-                        borderRadius: '6px',
+                        padding: '0.3125rem 0.625rem',
+                        borderRadius: '0.375rem',
                         fontSize: '0.7rem',
                         cursor: 'pointer',
                         fontWeight: 'bold',
@@ -95,8 +94,8 @@ export default function PerformanceHUD() {
                         background: features.cursor ? 'rgba(56, 189, 248, 0.2)' : 'rgba(255,255,255,0.05)',
                         border: `1px solid ${features.cursor ? '#38bdf8' : 'rgba(255,255,255,0.2)'}`,
                         color: features.cursor ? '#38bdf8' : '#fff',
-                        padding: '5px 10px',
-                        borderRadius: '6px',
+                        padding: '0.3125rem 0.625rem',
+                        borderRadius: '0.375rem',
                         fontSize: '0.7rem',
                         cursor: 'pointer',
                         fontWeight: 'bold',

@@ -19,12 +19,11 @@ export const PerformanceProvider = ({ children }) => {
     });
 
     useEffect(() => {
-        // 1. Initial Device Detection (Enhanced for iPads/Tablets)
+        // 1. Initial Device Detection
         const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-        const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
         const mobileCheck = /android|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(userAgent.toLowerCase())
             || (window.innerWidth <= 768)
-            || (isTouchDevice && window.innerWidth <= 1366); // Include iPad Pro
+            || (navigator.maxTouchPoints > 0 && /Macintosh/.test(userAgent)); // Catch modern iPads
 
         setIsMobile(mobileCheck);
 

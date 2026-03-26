@@ -24,15 +24,10 @@ const MobileSystemsTray = () => {
 
     return (
         <div
+            className="fixed z-[10001] flex flex-col items-end gap-3"
             style={{
-                position: 'fixed',
-                bottom: 'calc(var(--safe-area-bottom, 0px) + 1.5rem)',
-                right: '1.5rem',
-                zIndex: 10001,
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'flex-end',
-                gap: '0.75rem'
+                bottom: 'calc(1.5rem + env(safe-area-inset-bottom))',
+                right: 'calc(1.5rem + env(safe-area-inset-right))'
             }}
         >
             {/* Expanded Menu */}
