@@ -194,6 +194,7 @@ export default function Home() {
 
           <form action="https://api.web3forms.com/submit" method="POST">
             <input type="hidden" name="access_key" value="9667b268-56d2-448c-9bc9-b0a4d2de19e2" />
+            <input type="checkbox" name="botcheck" className="hidden" style={{ display: 'none' }} />
 
             <div className="form-group" data-aos="fade-up" data-aos-delay="100">
               <input type="text" id="name" name="name" placeholder="Your Name" className="form-control" autoComplete="off" required />
