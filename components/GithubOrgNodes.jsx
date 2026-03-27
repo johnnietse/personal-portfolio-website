@@ -22,11 +22,8 @@ export default function GithubOrgNodes({ organizations }) {
 
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1.5rem' }}>
                 {organizations.map((org, i) => (
-                    <a 
+                    <div 
                         key={i} 
-                        href={org.url} 
-                        target="_blank" 
-                        rel="noopener noreferrer" 
                         style={{ 
                             display: 'flex', 
                             alignItems: 'center', 
@@ -62,9 +59,8 @@ export default function GithubOrgNodes({ organizations }) {
                                 padding: '1px'
                             }} 
                         />
-                        <span style={{ fontWeight: 800, fontSize: '0.95rem' }}>{org.name}</span>
-                        <ExternalLink size={14} style={{ opacity: 0.4 }} />
-                    </a>
+                        <span style={{ fontWeight: 800, fontSize: '0.95rem', paddingRight: '0.5rem' }}>{org.name}</span>
+                    </div>
                 ))}
             </div>
         </div>
