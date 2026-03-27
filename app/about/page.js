@@ -5,6 +5,7 @@ import SolarSystemBackground from '@/components/SolarSystemBackground';
 import HolographicCard from '@/components/HolographicCard';
 import SkillConstellation from '@/components/SkillConstellation';
 import VisibilityWrapper from '@/components/VisibilityWrapper';
+import GitHubStats from '@/components/GitHubStats';
 
 export default function About() {
     const experiences = [
@@ -367,6 +368,9 @@ export default function About() {
                         {renderSkill('/icons8-css3.png', 'CSS')}
                         {renderSkill('/icons8-javascript.png', 'JavaScript (JS)')}
                         {renderSkill('/typescript.svg', 'TypeScript 5.8')}
+                        {renderSkill('/Tailwind_CSS_Logo.svg', 'Tailwind CSS')}
+                        {renderSkill('/bootstrap.png', 'Bootstrap')}
+                        {renderSkill('/material-tailwind.png', 'Material Tailwind')}
                         {renderSkill('/react-logo.png', 'React.js & React Native')}
                         {renderSkill('/nextjs.png', 'Next.js')}
                         {renderSkill('/expo.svg', 'Expo')}
@@ -414,6 +418,12 @@ export default function About() {
                         {renderSkill('/framer_motion.png', 'Framer Motion')}
                         {renderSkill('/gsap.png', 'GSAP')}
                         {renderSkill('/Three.js.svg', 'Three.js')}
+                        {renderSkill('/canvas-confetti.svg', 'Canvas Confetti')}
+                        {renderSkill('/lucide.svg', 'Lucide & Heroicons')}
+                        {renderSkill('/react-hook-form.svg', 'React Hook Form')}
+                        {renderSkill('/vite.svg', 'Vite')}
+                        {renderSkill('/graphql.svg', 'GraphQL')}
+                        {renderSkill('/webhook.svg', 'Webhooks')}
                         {renderSkill('/react-logo.png', 'Context API')}
                         {renderSkill('/redux.svg', 'Redux')}
                         {renderSkill('/selenium.svg', 'Selenium')}
@@ -425,6 +435,12 @@ export default function About() {
                         {renderSkill('/sqlite.svg', 'Room Database')}
                         {renderSkill('/icons8-java.png', 'Retrofit')}
                         {renderSkill('/jetpackcompose.svg', 'Android Jetpack Compose')}
+                        {renderSkill('/nextjs.png', 'Next.js API Routes')}
+                        {renderSkill('/nodemailer.svg', 'Nodemailer (SMTP)')}
+                        {renderSkill('/sharp.svg', 'Sharp')}
+                        {renderSkill('/postcss.svg', 'PostCSS')}
+                        {renderSkill('/autoprefixer.svg', 'Autoprefixer')}
+                        {renderSkill('/eslint.svg', 'ESLint')}
                     </div>
                 </HolographicCard>
 
@@ -457,7 +473,7 @@ export default function About() {
                         {renderSkill('/KiCad_logo_square.png', 'KiCad')}
                         {renderSkill('/LTSpice.jpeg', 'LTspice')}
                         {renderSkill('/Intel_quartus_prime.png', 'Intel Quartus Prime, Quartus II, ModelSim')}
-                        {renderSkill('/jupyter.png', 'Jupyter')}
+                        {/* {renderSkill('/jupyter.png', 'Jupyter')} */}
                         {renderSkill('/grafana.svg', 'Grafana')}
                         {renderSkill('/postman.svg', 'Postman')}
                         {renderSkill('/mysql_workbench.png', 'MySQL Workbench')}
@@ -465,6 +481,10 @@ export default function About() {
                         {renderSkill('/zephyr_rtos.svg', 'Zephyr RTOS')}
                         {renderSkill('/CAN_Logo.svg', 'CAN / ISO-TP')}
                         {renderSkill('/ISO_26262_ASIL_D.png', 'ISO 26262 (ASIL-D)')}
+                        {renderSkill('/gcb.svg', 'Google Cloud Build (GCB)')}
+                        {renderSkill('/kind.svg', 'KIND (Kubernetes in Docker)')}
+                        {renderSkill('/dependabot.svg', 'Dependabot')}
+                        {renderSkill('/vagrant.svg', 'Vagrant')}
                         {renderSkill('/Google_Lighthouse_logo.svg', 'Google Lighthouse')}
                         {renderSkill('/wcag-2.1-aa-logo.svg', 'WCAG 2.1 AA')}
                         {renderSkill('/agile.jpg', 'Agile')}
@@ -472,6 +492,9 @@ export default function About() {
                         {renderSkill('/sdlc.png', 'SDLC')}
 
                         {renderSkill('/microsoft-365.png', 'Office 365')}
+                        {renderSkill('/google_colab-logo.png', 'Google Colab')}
+                        {renderSkill('/jupyter_icon.svg', 'Jupyter')}
+
                     </div>
                 </HolographicCard>
 
@@ -541,9 +564,9 @@ export default function About() {
                         {renderSkill('/huggingface.svg', 'quantized LLaMA models (.gguf)')}
                         {renderSkill('/terminal.png', 'context windows & token limits')}
                         {renderSkill('/cvzone.webp', 'salient object segmentation (U²-Net)')}
-                        {renderSkill('/cvzone.webp', 'two-level nested U²-Net architecture')}
+                        {renderSkill('/tensorflow.svg', 'two-level nested U²-Net architecture')}
                         {renderSkill('/OpenCV.png', 'OpenCV morphological mask refinement')}
-                        {renderSkill('/cvzone.webp', 'low-power autonomous object detection')}
+                        {renderSkill('/tensorflow.svg', 'low-power autonomous object detection')}
                         {renderSkill('/icons8-java.png', 'MVVM Clean Architecture & Repository pattern')}
                         {renderSkill('/terminal.png', 'RESTful APIs & FAKE STORE REST API')}
                         {renderSkill('/terminal.png', 'API uptime & rate limiting')}
@@ -553,8 +576,33 @@ export default function About() {
                         {renderSkill('/docker-mark-ocean-blue.svg', 'multi-stage Docker builds & containerizing')}
                         {renderSkill('/icons8-python.png', 'data preprocessing')}
                         {renderSkill('/terminal.png', 'offline functionality')}
+                        {renderSkill('/canlii.svg', 'CanLII (Legal Data Retrieval)')}
+                        {renderSkill('/pdfplumber.svg', 'pdfplumber')}
                     </div>
                 </HolographicCard>
+
+                {/* 6. Open-Source Contributions */}
+                <HolographicCard data-aos="fade-up" data-aos-delay="500">
+                    <h3 style={{ fontSize: '1.4rem', fontWeight: 600, marginBottom: '1.5rem', color: 'var(--accent-color)' }}>Open-Source Contributions</h3>
+                    <div className="skills-grid">
+                        {renderSkill('/kubernetes.png', 'Kubernetes 1.35 cgroup v1 deprecation')}
+                        {renderSkill('/kubernetes.png', 'SIG Apps upstream maintainers')}
+                        {renderSkill('/kubernetes.png', 'SIG Cluster Lifecycle (kubespray)')}
+                        {renderSkill('/kubernetes.png', 'LeaderWorkerSet (LWS) controller fixes')}
+                        {renderSkill('/go.svg', 'Go controller-runtime patches')}
+                        {renderSkill('/github.png', 'CNCF Open Source Workflow')}
+                        {renderSkill('/terminal.png', 'Kubernetes Enhancement Proposals (KEPs)')}
+                        {renderSkill('/terminal.png', 'Unit / Integration / E2E Testing')}
+                        {renderSkill('/terminal.png', 'Ginkgo & Gomega test frameworks')}
+                        {renderSkill('/github.png', 'Code Review & PR collaboration')}
+                    </div>
+                </HolographicCard>
+
+                {/* 6. Live Engineering Intelligence */}
+                <div data-aos="fade-up" data-aos-delay="500">
+                    <h2 className="title" style={{ fontSize: '2.5rem', textAlign: 'center', marginBottom: '3rem', marginTop: '4rem' }}>Live Engineering Intelligence</h2>
+                    <GitHubStats />
+                </div>
 
             </div>
         </main>
