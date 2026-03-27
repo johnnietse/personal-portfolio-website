@@ -24,7 +24,7 @@ export default function MobileNav() {
                     </li>
                     <br />
                     <li>
-                        <a className="mobile-nav__btn btn" href="/Johnnie%20Tse's%20Resume%20-%20Queen's%20University.pdf" target="_blank" rel="noopener noreferrer">Download Resume</a>
+                        <a className="mobile-nav__btn btn" href="/Resume%20-%20Queen's%20University%20(Johnnie%20Tse%20-%202025-2026).pdf" target="_blank" rel="noopener noreferrer">Download Resume</a>
                     </li>
                 </ul>
             </nav>

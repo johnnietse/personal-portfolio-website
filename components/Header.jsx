@@ -21,7 +21,7 @@ export default function Header() {
                         <Link className="header__link_4" id="header__link_4" href="/#herocontact" data-aos="fade-right" data-aos-delay="400">Contact</Link>
                     </li>
                     <li>
-                        <a className="header__downloadResume btn" href="/Johnnie%20Tse's%20Resume%20-%20Queen's%20University.pdf" target="_blank" rel="noopener noreferrer" data-aos="zoom-in" data-aos-delay="500">Download Resume</a>
+                        <a className="header__downloadResume btn" href="/Resume%20-%20Queen's%20University%20(Johnnie%20Tse%20-%202025-2026).pdf" target="_blank" rel="noopener noreferrer" data-aos="zoom-in" data-aos-delay="500">Download Resume</a>
                     </li>
                 </ul>
 

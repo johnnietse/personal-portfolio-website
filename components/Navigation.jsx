@@ -84,7 +84,7 @@ export default function Navigation() {
                                 <svg viewBox="0 0 24 24"><path fillRule="evenodd" clipRule="evenodd" d="M9.528 1.718a.75.75 0 0 1 .162.819A8.97 8.97 0 0 0 9 6a9 9 0 0 0 9 9 8.97 8.97 0 0 0 3.463-.69.75.75 0 0 1 .981.98 10.503 10.503 0 0 1-9.694 6.46c-5.799 0-10.5-4.701-10.5-10.5 0-4.368 2.667-8.112 6.46-9.694a.75.75 0 0 1 .818.162Z" /></svg>
                             )}
                         </button>
-                        <a href="/Johnnie%20Tse's%20Resume%20-%20Queen's%20University.pdf" target="_blank" rel="noopener noreferrer" className="btn-primary">Resume</a>
+                        <a href="/Resume%20-%20Queen's%20University%20(Johnnie%20Tse%20-%202025-2026).pdf" target="_blank" rel="noopener noreferrer" className="btn-primary">Resume</a>
                     </div>
                 </nav>
             </div>
@@ -107,7 +107,7 @@ export default function Navigation() {
                             {theme === 'dark' ? '☀️' : '🌙'}
                         </button>
                         <a
-                            href="/Johnnie%20Tse's%20Resume%20-%20Queen's%20University.pdf"
+                            href="/Resume%20-%20Queen's%20University%20(Johnnie%20Tse%20-%202025-2026).pdf"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="btn-primary"
