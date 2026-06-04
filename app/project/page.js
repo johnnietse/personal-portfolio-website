@@ -29,6 +29,13 @@ export default function Project() {
             link: "https://github.com/johnnietse/lws"
         },
         {
+            title: "Energy-Aware Endpoint Picker Plugin (EPP)",
+            date: "Mar 2026 - Present",
+            desc: "Designed and implemented a Kubernetes-native Multi-Objective Routing Engine for the llm-d ecosystem. Integrates Carbon-Aware Controllers and eBPF telemetry to dynamically route LLM inference workloads based on real-time node power consumption.",
+            skills: ["Go", "Kubernetes", "vLLM", "eBPF", "Telemetry", "Controller-Runtime", "Energy Optimization"],
+            link: "https://github.com/johnnietse/llm-d-epp-Energy-Aware-Endpoint-Picker-Plugin-.git"
+        },
+        {
             title: "Kubernetes SIG-Cluster-Lifecycle (kubespray)",
             date: "Mar 20, 2026 - Present",
             desc: "Active upstream contribution to Kubespray for large-scale cluster deployments. Focusing on cgroup v2 migration pathways and automated bootstrap stability for production-ready bare-metal infrastructure.",
