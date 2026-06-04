@@ -602,6 +602,10 @@ export default function About() {
                 <HolographicCard data-aos="fade-up" data-aos-delay="500">
                     <h3 style={{ fontSize: '1.4rem', fontWeight: 600, marginBottom: '1.5rem', color: 'var(--accent-color)' }}>Open-Source Contributions</h3>
                     <div className="skills-grid">
+                        {renderSkill('/vllm.png', 'vLLM (llm-d ecosystem)')}
+                        {renderSkill('/vllm.png', 'Energy-Aware Endpoint Picker Plugin (EPP)')}
+                        {renderSkill('/go.svg', 'Multi-Objective Routing Engine')}
+                        {renderSkill('/terminal.png', 'eBPF Telemetry & DCGM / RAPL metrics')}
                         {renderSkill('/kubernetes.png', 'Kubernetes 1.35 cgroup v1 deprecation')}
                         {renderSkill('/kubernetes.png', 'SIG Apps upstream maintainers')}
                         {renderSkill('/kubernetes.png', 'SIG Cluster Lifecycle (kubespray)')}
