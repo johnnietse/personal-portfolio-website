@@ -13,6 +13,31 @@ import "aos/dist/aos.css";
 export const metadata = {
   title: "Johnnie Tse | Software Engineer",
   description: "Portfolio of Johnnie Tse, Computer Engineering student at Queen's University.",
+  openGraph: {
+    title: "Johnnie Tse | Software Engineer",
+    description: "Portfolio of Johnnie Tse, Computer Engineering student at Queen's University.",
+    url: "https://johnnietse.vercel.app",
+    siteName: "Johnnie Tse Portfolio",
+    images: [
+      {
+        url: "https://johnnietse.vercel.app/og-image.png",
+        width: 1200,
+        height: 630,
+      },
+    ],
+    type: "website",
+  },
+  icons: {
+    icon: "/logo.svg",
+    shortcut: "/logo.svg",
+    apple: "/logo.svg",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Johnnie Tse | Software Engineer",
+    description: "Portfolio of Johnnie Tse, Computer Engineering student at Queen's University.",
+    images: ["https://johnnietse.vercel.app/og-image.png"],
+  },
 };
 
 export const viewport = {
