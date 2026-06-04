@@ -21,6 +21,23 @@ export default function About() {
             skills: ["Golang (Go 1.25)", "Ansible", "Git", "Go Modules", "Go Code Generation", "Structured Logging (klog/v2, zap)", "Concurrent Programming", "CRDs & Controller-Runtime", "Kubernetes API Design", "Client-Go", "Admission Webhooks", "Kubebuilder", "RBAC", "Docker & Containerization", "Helm", "Kustomize", "Makefile Automation", "GitHub Actions", "Google Cloud Build (GCB)", "KIND (Kubernetes in Docker)", "Dependabot", "Leader-Worker Pattern", "GPU/TPU Accelerator Support", "Gang Scheduling & Volcano Integration", "Stateful Workload Orchestration", "Kubernetes Enhancement Proposals (KEPs)", "Unit / Integration / E2E Testing", "Ginkgo & Gomega", "Code Coverage (Goveralls)", "Static Analysis & Security Auditing", "Hugo & Genref", "Ansible Core", "Jinja2 & jmespath", "Inventory Validation", "Cluster Lifecycle (kubeadm)", "Control Plane Management (etcd, kubelet)", "Container Runtimes (containerd)", "CNI (Calico, Cilium, Flannel)", "Linux System Engineering (cgroups v1/v2)", "systemd", "GitLab CI", "Vagrant & Terraform", "Python", "Root Cause Analysis", "CNCF Open Source Workflow", "Open Source Contribution"]
         },
         {
+            company: "vLLM",
+            role: "Open Source Research Contributor | llm-d (vLLM ecosystem)",
+            date: "May 2026 - Present · 2 mos",
+            location: "Remote",
+            logo: "/vllm.png",
+            bullets: [
+                "Open-source development for llm-d, a Kubernetes-native LLM serving framework, focusing on sustainable and carbon-aware AI infrastructure. Designed and engineered an Energy-Aware Endpoint Picker Plugin (EPP) to optimize token-level routing across heterogeneous hardware accelerators (e.g., H100s, L4s).",
+                "Architected a Multi-Objective Routing Engine: Developed a high-performance Kubernetes Gateway API Inference Extension (GIE) sidecar in Go (v1.25), introducing a strict epsilon-constraint routing pipeline that optimizes for energy and carbon efficiency while strictly enforcing TTFT and TPOT latency SLOs.",
+                "Phase-Aware Disaggregated Serving: Designed dynamic scoring models that differentiate between compute-bound prefill phases and memory-bound decode phases, actively routing requests to the most thermodynamically efficient nodes while calculating network KV-cache transfer penalties.",
+                "Carbon-Aware Controller: Implemented real-time dynamic weight modulation based on grid carbon intensity (SCI standards) and cluster thermal budgets, enabling micro-spatial workload shifting during carbon spikes.",
+                "High-Performance Go Engineering: Built a highly concurrent, thread-safe asynchronous eBPF telemetry ingestion plane using DCGM and RAPL metrics and Welford’s Algorithm for ms-precision signal filtering. Containerized the microservice into an ultra-minimal 8.6 MB distroless image with a negligible 101 microseconds routing overhead.",
+                "Kubernetes CRD Reconciliation: Designed a native client-go Informer architecture to actively reconcile InferenceObjective CRDs, allowing cluster admins to dynamically pivot between autonomous “Carbon-Critical” and “Load-Shedding” control states.",
+                "Quantifiable Impact: Achieved an average 17.4% reduction in LLM inference energy consumption (up to 32.3% for decode-heavy workloads) compared to standard round-robin scheduling, driving significant reductions in Scope 2 and Scope 3 data center emissions."
+            ],
+            skills: ["Go", "Kubernetes", "vLLM", "eBPF", "Telemetry", "Distributed Systems", "Energy Optimization", "Carbon-Aware Computing", "LLM Infrastructure", "Controller-Runtime", "Multi-Objective Routing"]
+        },
+        {
             company: "Deel",
             role: "Machine Learning Research Assistant",
             date: "Nov 2025 - Present · 5 mos",
