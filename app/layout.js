@@ -11,11 +11,11 @@ import "./globals.css";
 import "aos/dist/aos.css";
 
 export const metadata = {
-  title: "Johnnie Tse | Software Engineer",
-  description: "Portfolio of Johnnie Tse, Computer Engineering student at Queen's University.",
+  title: "Johnnie Tse",
+  description: "Scaling High-Performance Distributed Compute.",
   openGraph: {
-    title: "Johnnie Tse | Software Engineer",
-    description: "Portfolio of Johnnie Tse, Computer Engineering student at Queen's University.",
+    title: "Johnnie Tse",
+    description: "Scaling High-Performance Distributed Compute.",
     url: "https://johnnietse.vercel.app",
     siteName: "Johnnie Tse Portfolio",
     images: [
@@ -34,8 +34,8 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Johnnie Tse | Software Engineer",
-    description: "Portfolio of Johnnie Tse, Computer Engineering student at Queen's University.",
+    title: "Johnnie Tse",
+    description: "Scaling High-Performance Distributed Compute.",
     images: ["https://johnnietse.vercel.app/og-image.png"],
   },
 };
