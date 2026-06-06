@@ -42,15 +42,15 @@ const VisibilityWrapper = ({ children, height = "400px", margin = "500px" }) => 
                 height: currentHeight,
                 width: '100%',
                 position: 'relative',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
+                display: showContent ? 'block' : 'flex',
+                alignItems: showContent ? undefined : 'center',
+                justifyContent: showContent ? undefined : 'center',
                 transition: 'all 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
                 overflow: 'hidden'
             }}
         >
             {showContent ? (
-                <div style={{ width: '100%', height: '100%', position: 'relative' }}>
+                <div style={{ width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }}>
                     {children}
 
                     {/* Mobile Deactivate Toggle */}
