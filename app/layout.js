@@ -51,15 +51,17 @@ export default function RootLayout({ children }) {
       </head>
       <body suppressHydrationWarning>
         <PerformanceProvider>
-          <AOSSetup />
-          <Navigation />
-          <ParticleBackground />
-          <ScrollPhysics />
-          <BlackHoleCursor />
-          <PerformanceHUD />
-          <IronManHUD />
-          <MobileSystemsTray />
-          {children}
+          <div className="relative flex flex-col min-h-screen w-full overflow-x-hidden overflow-y-auto">
+            <AOSSetup />
+            <Navigation />
+            <ParticleBackground />
+            <ScrollPhysics />
+            <BlackHoleCursor />
+            <PerformanceHUD />
+            <IronManHUD />
+            <MobileSystemsTray />
+            {children}
+          </div>
         </PerformanceProvider>
       </body>
     </html>

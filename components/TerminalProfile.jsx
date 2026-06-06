@@ -95,7 +95,8 @@ export default function TerminalProfile() {
                         color: line?.startsWith('johnnie@') ? '#7ee787' : line?.startsWith('>') ? '#79c0ff' : line?.startsWith('[ OK ]') ? '#56d364' : '#c9d1d9',
                         fontSize: '0.95rem',
                         lineHeight: 1.6,
-                        whiteSpace: 'pre-wrap'
+                        whiteSpace: 'pre-wrap',
+                        wordBreak: 'break-word'
                     }}>
                         {line}
                     </div>
