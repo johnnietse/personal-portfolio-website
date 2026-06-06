@@ -146,7 +146,7 @@ export default function SolarSystemBackground() {
     if (!isMounted || !features.stars) return null; // Hydration & Opt-in safety check
 
     return (
-        <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', zIndex: 0, pointerEvents: 'auto' }}>
+        <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', zIndex: 0, pointerEvents: 'auto' }}>
             {/* Extended far bounding box preventing clipping of Neptune/Uranus long orbits */}
             <Canvas camera={{ position: [0, 40, 90], fov: 45 }}>
                 <ambientLight intensity={0.15} />

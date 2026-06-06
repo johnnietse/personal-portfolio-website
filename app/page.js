@@ -14,15 +14,15 @@ export default function Home() {
   return (
     <main>
       {/* HERO SECTION */}
-      <section id="hero" className="section container" style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', paddingTop: '6rem' }}>
+      <section id="hero" className="section container" style={{ minHeight: '100dvh', display: 'flex', alignItems: 'center', paddingTop: '6rem' }}>
         <div className="hero-grid" style={{ display: 'grid', gap: '4rem', alignItems: 'center', width: '100%' }}>
 
           <div data-aos="fade-up" data-aos-duration="1000">
             <h2 style={{ fontSize: '1.25rem', color: 'var(--accent-color)', fontWeight: 600, marginBottom: '1rem', letterSpacing: '0.1em' }}>HELLO, I'M</h2>
-            <h1 className="title" data-aos="fade-right" data-aos-delay="200" style={{ fontSize: '5rem' }}>
+            <h1 className="title" data-aos="fade-right" data-aos-delay="200">
               Johnnie Tse.
             </h1>
-            <div className="subtitle" data-aos="fade-up" data-aos-delay="400" style={{ fontSize: '1.5rem', marginTop: '1rem', minHeight: '2.5rem' }}>
+            <div className="subtitle" data-aos="fade-up" data-aos-delay="400" style={{ marginTop: '1rem', minHeight: '2.5rem' }}>
               <Typewriter strings={[
                 "Computer Engineering Student @ Queen's University.",
                 "Architecting Level 4 Autonomous Systems.",
@@ -55,24 +55,24 @@ export default function Home() {
           </div>
 
           {/* Right 3D VR Model Content */}
-          <div className="hero-model-container" data-aos="zoom-in" data-aos-duration="1200" style={{ height: '500px', width: '100%', cursor: 'grab' }}>
-            <VisibilityWrapper height="500px">
+          <div className="hero-model-container" data-aos="zoom-in" data-aos-duration="1200" style={{ minHeight: '350px', height: '100%', width: '100%', cursor: 'grab', aspectRatio: '1/1', maxHeight: '500px' }}>
+            <VisibilityWrapper height="100%">
               <HeroModel />
             </VisibilityWrapper>
           </div>
 
         </div>
-
-        {/* Infinite Edge-to-Edge Hardware Ticker */}
-        <div style={{ position: 'absolute', bottom: '0', left: '0', width: '100%' }}>
-          <SkillTicker />
-        </div>
       </section>
 
+      {/* Infinite Edge-to-Edge Hardware Ticker */}
+      <div style={{ width: '100%', overflow: 'hidden' }}>
+        <SkillTicker />
+      </div>
+
       {/* SYSTEM ARCHITECTURE & DIAGNOSTICS */}
-      <section className="section container" data-aos="fade-up" data-aos-duration="1000" style={{ minHeight: '80vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', marginTop: '4rem', marginBottom: '4rem' }}>
+      <section className="section container" data-aos="fade-up" data-aos-duration="1000" style={{ minHeight: 'auto', display: 'flex', flexDirection: 'column', justifyContent: 'center', marginTop: '4rem', marginBottom: '4rem' }}>
         <div className="text-center mb-8">
-          <h2 className="title" style={{ fontSize: '3rem', marginBottom: '1rem' }}>Engineering Core Vectors</h2>
+          <h2 className="title" style={{ marginBottom: '1rem' }}>Engineering Core Vectors</h2>
           <p className="subtitle" style={{ margin: '0 auto', maxWidth: '700px' }}>
             Bridging the architectural gap between embedded systems hardware limits and scalable full-stack multi-host orchestration.
           </p>
@@ -89,9 +89,9 @@ export default function Home() {
       </section>
 
       {/* SPATIAL COMPUTING SHOWROOM SECTION */}
-      <section id="showroom" className="section container" data-aos="fade-up" data-aos-duration="1000" style={{ minHeight: '80vh', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+      <section id="showroom" className="section container" data-aos="fade-up" data-aos-duration="1000" style={{ minHeight: 'auto', padding: '4rem 0', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
         <div className="text-center mb-8">
-          <h2 className="title" style={{ fontSize: '3rem', marginBottom: '1rem' }}>Spatial Engineering Showroom</h2>
+          <h2 className="title" style={{ marginBottom: '1rem' }}>Spatial Engineering Showroom</h2>
           <p className="subtitle" style={{ margin: '0 auto' }}>
             Interact in real-time with procedural WebGL architectures reflecting my background in Autonomy and Systems Engineering.
           </p>
@@ -114,8 +114,8 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="glass-card" style={{ padding: '0', overflow: 'hidden', width: '100%', border: '1px solid var(--border-color)' }} data-aos="zoom-in">
-            <VisibilityWrapper height="400px">
+          <div className="glass-card" style={{ padding: '0', overflow: 'hidden', width: '100%', border: '1px solid var(--border-color)', minHeight: '300px', aspectRatio: '1/1', maxHeight: '400px' }} data-aos="zoom-in">
+            <VisibilityWrapper height="100%">
               <AutonomousCar />
             </VisibilityWrapper>
           </div>
@@ -123,12 +123,12 @@ export default function Home() {
       </section>
 
       {/* EMBEDDED SYSTEMS SHOWROOM SECTION */}
-      <section id="embedded" className="section container" data-aos="fade-up" data-aos-duration="1000" style={{ minHeight: '60vh', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+      <section id="embedded" className="section container" data-aos="fade-up" data-aos-duration="1000" style={{ minHeight: 'auto', padding: '4rem 0', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
         <div className="hero-grid" style={{ display: 'grid', gap: '3rem', alignItems: 'center' }}>
 
           {/* Left 3D Embedded Microcontroller Content */}
-          <div className="glass-card" style={{ padding: '0', overflow: 'hidden', width: '100%', border: '1px solid var(--border-color)' }} data-aos="zoom-in">
-            <VisibilityWrapper height="400px">
+          <div className="glass-card" style={{ padding: '0', overflow: 'hidden', width: '100%', border: '1px solid var(--border-color)', minHeight: '300px', aspectRatio: '1/1', maxHeight: '400px' }} data-aos="zoom-in">
+            <VisibilityWrapper height="100%">
               <EmbeddedController />
             </VisibilityWrapper>
           </div>
@@ -153,7 +153,7 @@ export default function Home() {
       </section>
 
       {/* MINIMD HPC PROXY APPLICATION SHOWROOM SECTION */}
-      <section id="waveform" className="section container" data-aos="fade-up" data-aos-duration="1000" style={{ minHeight: '60vh', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+      <section id="waveform" className="section container" data-aos="fade-up" data-aos-duration="1000" style={{ minHeight: 'auto', padding: '4rem 0', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
         <div className="hero-grid" style={{ display: 'grid', gap: '3rem', alignItems: 'center' }}>
 
           <div data-aos="fade-right">
@@ -173,8 +173,8 @@ export default function Home() {
           </div>
 
           {/* Right 3D Data Content */}
-          <div className="glass-card" style={{ padding: '0', overflow: 'hidden', width: '100%', border: '1px solid var(--border-color)' }} data-aos="zoom-in">
-            <VisibilityWrapper height="400px">
+          <div className="glass-card" style={{ padding: '0', overflow: 'hidden', width: '100%', border: '1px solid var(--border-color)', minHeight: '300px', aspectRatio: '1/1', maxHeight: '400px' }} data-aos="zoom-in">
+            <VisibilityWrapper height="100%">
               <MiniMDSimulation />
             </VisibilityWrapper>
           </div>
@@ -186,7 +186,7 @@ export default function Home() {
       <section id="herocontact" className="section container" data-aos="fade-up" data-aos-duration="1000">
         <div className="glass-card" style={{ maxWidth: '800px', margin: '0 auto', width: '100%' }}>
           <div className="text-center mb-8">
-            <h2 className="title" style={{ fontSize: '3rem', marginBottom: '1rem' }}>Get in Touch</h2>
+            <h2 className="title" style={{ marginBottom: '1rem' }}>Get in Touch</h2>
             <p className="subtitle" style={{ margin: '0 auto' }}>
               I'm always excited to discuss technology, mobile and web development, HPC, or anything else you’d like to share—let’s connect! 🤝
             </p>

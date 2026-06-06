@@ -80,7 +80,7 @@ const LaserBeam = () => {
 export default function TimelineLaser() {
     return (
         // Pinned perfectly to the left margin matching the exact CSS trajectory of the timeline borders natively
-        <div style={{ position: 'fixed', top: 0, left: '3%', width: '100px', height: '100vh', zIndex: -1, pointerEvents: 'none' }}>
+        <div style={{ position: 'fixed', top: 0, left: '3%', width: '100px', height: '100%', zIndex: -1, pointerEvents: 'none' }}>
             <Canvas orthographic camera={{ position: [0, 0, 10], left: -5, right: 5, top: 10, bottom: -10 }}>
                 <ambientLight intensity={1} />
                 <pointLight position={[0, 0, 5]} intensity={5} color="#0ea5e9" />

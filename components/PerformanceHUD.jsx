@@ -49,7 +49,7 @@ export default function PerformanceHUD() {
             <div style={{
                 position: 'fixed',
                 top: 'calc(5rem + env(safe-area-inset-top))',
-                right: '1.25rem',
+                right: 'calc(1.25rem + env(safe-area-inset-right, 0px))',
                 zIndex: 10000,
                 background: 'rgba(15, 23, 42, 0.7)',
                 backdropFilter: 'blur(10px)',
@@ -63,7 +63,10 @@ export default function PerformanceHUD() {
                 flexDirection: 'column',
                 gap: '0.5rem',
                 boxShadow: '0 0.25rem 0.9375rem rgba(0,0,0,0.5)',
-                transition: 'all 0.3s ease'
+                transition: 'all 0.3s ease',
+                maxWidth: '90vw',
+                maxHeight: 'calc(90dvh - 5rem)',
+                overflowY: 'auto'
             }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '7.5rem' }}>
                     <span style={{ color: 'rgba(255,255,255,0.6)' }}>PERF:</span>

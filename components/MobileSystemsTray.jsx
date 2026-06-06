@@ -32,7 +32,7 @@ const MobileSystemsTray = () => {
         >
             {/* Expanded Menu */}
             {isOpen && (
-                <div className="flex flex-col gap-2 mb-2 animate-in fade-in slide-in-from-bottom-5 duration-300">
+                <div className="flex flex-col gap-2 mb-2 animate-in fade-in slide-in-from-bottom-5 duration-300" style={{ maxHeight: 'calc(80dvh - 6rem)', overflowY: 'auto', maxWidth: '90vw' }}>
                     {trayItems.map((item) => (
                         <button
                             key={item.id}

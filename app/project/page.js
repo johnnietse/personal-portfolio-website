@@ -392,7 +392,7 @@ export default function Project() {
                 </p>
             </div>
 
-            <div className="projects-grid" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(400px, 1fr))' }}>
+            <div className="projects-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 350px), 1fr))' }}>
                 {projects.map((proj, index) => (
                     <HolographicCard key={index} data-aos="fade-up" data-aos-delay={(index % 3) * 100} style={{ display: 'flex', flexDirection: 'column', padding: '2rem' }}>
 
@@ -437,7 +437,7 @@ export default function Project() {
             {/* Live GitHub Feed Section */}
             <div data-aos="fade-up" data-aos-delay="200" style={{ marginTop: '8rem' }}>
                 <div className="text-center" style={{ marginBottom: '4rem' }}>
-                    <h2 className="title" style={{ fontSize: '2.5rem' }}>Live GitHub Feed.</h2>
+                    <h2 className="title">Live GitHub Feed.</h2>
                     <p className="subtitle" style={{ margin: '1rem auto' }}>
                         Real-time synchronization with my public repositories. This section is powered by the GitHub GraphQL API, showcasing my latest technical iterations and open-source contributions.
                     </p>

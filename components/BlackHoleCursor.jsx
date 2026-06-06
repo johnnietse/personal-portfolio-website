@@ -140,7 +140,7 @@ export default function BlackHoleCursor() {
     if (!isMounted) return null;
 
     return (
-        <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', zIndex: 9999, pointerEvents: 'none' }}>
+        <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', zIndex: 9999, pointerEvents: 'none' }}>
             <Canvas orthographic camera={{ position: [0, 0, 1], left: -1, right: 1, top: 1, bottom: -1 }} style={{ pointerEvents: 'none' }}>
                 <ShaderCanvas />
             </Canvas>

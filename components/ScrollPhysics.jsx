@@ -111,7 +111,7 @@ export default function PhysicsSandbox() {
                 {gravity[1] < 0 ? '0G' : 'RESTORE GRAVITY'}
             </button>
 
-            <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', zIndex: -2, pointerEvents: 'none' }}>
+            <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', zIndex: -2, pointerEvents: 'none' }}>
                 <Canvas camera={{ position: [0, 0, 15], fov: 45 }} style={{ pointerEvents: 'none' }}>
                     <ambientLight intensity={1.5} />
                     <directionalLight position={[10, 20, 10]} intensity={3} castShadow />
