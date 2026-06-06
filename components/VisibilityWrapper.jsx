@@ -38,10 +38,11 @@ const VisibilityWrapper = ({ children, height = "400px", margin = "500px" }) => 
         <div
             ref={containerRef}
             style={{
-                minHeight: currentHeight,
-                height: currentHeight,
                 width: '100%',
-                position: 'relative',
+                height: '100%',
+                position: 'absolute',
+                top: 0,
+                left: 0,
                 display: showContent ? 'block' : 'flex',
                 alignItems: showContent ? undefined : 'center',
                 justifyContent: showContent ? undefined : 'center',

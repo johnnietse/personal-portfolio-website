@@ -55,7 +55,7 @@ export default function Home() {
           </div>
 
           {/* Right 3D VR Model Content */}
-          <div className="hero-model-container" data-aos="zoom-in" data-aos-duration="1200" style={{ width: '100%', maxWidth: '500px', margin: '0 auto', cursor: 'grab', aspectRatio: '1/1', display: 'block' }}>
+          <div className="hero-model-container" data-aos="zoom-in" data-aos-duration="1200" style={{ position: 'relative', width: '100%', maxWidth: '500px', margin: '0 auto', cursor: 'grab', aspectRatio: '1/1', display: 'block' }}>
             <VisibilityWrapper height="100%" width="100%">
               <HeroModel />
             </VisibilityWrapper>
@@ -114,7 +114,7 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="glass-card" style={{ padding: '0', overflow: 'hidden', width: '100%', border: '1px solid var(--border-color)', aspectRatio: '1/1', maxWidth: '400px', margin: '0 auto', display: 'block' }} data-aos="zoom-in">
+          <div className="glass-card" style={{ position: 'relative', padding: '0', overflow: 'hidden', width: '100%', border: '1px solid var(--border-color)', aspectRatio: '1/1', maxWidth: '400px', margin: '0 auto', display: 'block' }} data-aos="zoom-in">
             <VisibilityWrapper height="100%" width="100%">
               <AutonomousCar />
             </VisibilityWrapper>
@@ -127,7 +127,7 @@ export default function Home() {
         <div className="hero-grid" style={{ display: 'grid', gap: '3rem', alignItems: 'center' }}>
 
           {/* Left 3D Embedded Microcontroller Content */}
-          <div className="glass-card" style={{ padding: '0', overflow: 'hidden', width: '100%', border: '1px solid var(--border-color)', aspectRatio: '1/1', maxWidth: '400px', margin: '0 auto', display: 'block' }} data-aos="zoom-in">
+          <div className="glass-card" style={{ position: 'relative', padding: '0', overflow: 'hidden', width: '100%', border: '1px solid var(--border-color)', aspectRatio: '1/1', maxWidth: '400px', margin: '0 auto', display: 'block' }} data-aos="zoom-in">
             <VisibilityWrapper height="100%" width="100%">
               <EmbeddedController />
             </VisibilityWrapper>
@@ -173,7 +173,7 @@ export default function Home() {
           </div>
 
           {/* Right 3D Data Content */}
-          <div className="glass-card" style={{ padding: '0', overflow: 'hidden', width: '100%', border: '1px solid var(--border-color)', aspectRatio: '1/1', maxWidth: '400px', margin: '0 auto', display: 'block' }} data-aos="zoom-in">
+          <div className="glass-card" style={{ position: 'relative', padding: '0', overflow: 'hidden', width: '100%', border: '1px solid var(--border-color)', aspectRatio: '1/1', maxWidth: '400px', margin: '0 auto', display: 'block' }} data-aos="zoom-in">
             <VisibilityWrapper height="100%" width="100%">
               <MiniMDSimulation />
             </VisibilityWrapper>

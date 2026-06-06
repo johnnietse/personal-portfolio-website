@@ -34,6 +34,9 @@ export const metadata = {
     description: "Scaling High-Performance Distributed Compute.",
     images: ["https://johnnietse.vercel.app/og-image.png"],
   },
+  icons: {
+    apple: "/apple-touch-icon.png",
+  },
 };
 
 export const viewport = {
