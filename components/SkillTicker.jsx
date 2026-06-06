@@ -20,7 +20,7 @@ export default function SkillTicker() {
 
     return (
         <div style={{
-            width: '100vw',
+            width: '100%',
             overflow: 'hidden',
             background: 'rgba(11, 15, 25, 0.4)',
             backdropFilter: 'blur(12px)',
@@ -28,10 +28,6 @@ export default function SkillTicker() {
             borderBottom: '1px solid rgba(88, 166, 255, 0.1)',
             padding: '12px 0',
             position: 'relative',
-            left: '50%',
-            right: '50%',
-            marginLeft: '-50vw',
-            marginRight: '-50vw',
             zIndex: 50,
             transition: 'all 0.4s ease',
             boxShadow: '0 4px 30px rgba(0, 0, 0, 0.1)'

@@ -237,7 +237,7 @@ export default function About() {
                 </div>
 
                 <div style={{ flex: '2', minWidth: '300px', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                    <h1 className="title" style={{ fontSize: '3rem', marginBottom: '0' }} data-aos="zoom-in" data-aos-delay="100">About Me.</h1>
+                    <h1 className="title" style={{ marginBottom: '0' }} data-aos="zoom-in" data-aos-delay="100">About Me.</h1>
                     <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem', lineHeight: '1.7' }} data-aos="fade-up" data-aos-delay="200">
                         Hello! I'm Johnnie. I'm a Computer Engineering student at Queen's University with a strong passion for scalable backends, Kubernetes ecosystems, modern high-performance web applications, and autonomous embedded systems (HPC & ROS2). I focus heavily on contributing to monumental open-source architectures while pushing modern scalable limits.
                     </p>
@@ -251,7 +251,7 @@ export default function About() {
             </HolographicCard>
 
             {/* EXPERIENCE SECTION */}
-            <h2 className="title" style={{ fontSize: '2.5rem', marginTop: '2rem', textAlign: 'center' }} data-aos="zoom-in">Experience</h2>
+            <h2 className="title" style={{ marginTop: '2rem', textAlign: 'center' }} data-aos="zoom-in">Experience</h2>
             <p className="subtitle" style={{ margin: '0 auto 3rem auto', textAlign: 'center' }} data-aos="fade-up" data-aos-delay="100">
                 My professional journey engineering open-source architectures, robust scalable platforms, and advanced high-performance solutions.
             </p>
@@ -299,7 +299,7 @@ export default function About() {
             </div>
 
             {/* EDUCATION SECTION */}
-            <h2 className="title" style={{ fontSize: '2.5rem', marginTop: '2rem', textAlign: 'center' }} data-aos="zoom-in">Education & Certifications</h2>
+            <h2 className="title" style={{ marginTop: '2rem', textAlign: 'center' }} data-aos="zoom-in">Education & Certifications</h2>
             <p className="subtitle" style={{ margin: '0 auto 3rem auto', textAlign: 'center' }} data-aos="fade-up" data-aos-delay="100">
                 Academic background, continuous learning, and official certifications.
             </p>
@@ -364,13 +364,13 @@ export default function About() {
             </div>
 
             {/* SKILLS SECTION */}
-            <h2 className="title" style={{ fontSize: '2.5rem', textAlign: 'center' }} data-aos="zoom-in" data-aos-delay="100">Technical Arsenal</h2>
+            <h2 className="title" style={{ textAlign: 'center' }} data-aos="zoom-in" data-aos-delay="100">Technical Arsenal</h2>
             <p className="subtitle" style={{ margin: '0 auto 3rem auto', textAlign: 'center' }} data-aos="fade-up" data-aos-delay="200">
                 A comprehensive overview of the tools, languages, and frameworks that power my workflows.
             </p>
 
-            <div style={{ height: '600px', width: '100%', marginBottom: '2rem' }}>
-                <VisibilityWrapper height="600px">
+            <div style={{ minHeight: '400px', height: '60vh', maxHeight: '700px', width: '100%', marginBottom: '2rem' }}>
+                <VisibilityWrapper height="100%">
                     <SkillConstellation />
                 </VisibilityWrapper>
             </div>
@@ -621,7 +621,7 @@ export default function About() {
 
                 {/* 6. Live Engineering Intelligence */}
                 <div data-aos="fade-up" data-aos-delay="500">
-                    <h2 className="title" style={{ fontSize: '2.5rem', textAlign: 'center', marginBottom: '3rem', marginTop: '4rem' }}>Live Engineering Intelligence</h2>
+                    <h2 className="title" style={{ textAlign: 'center', marginBottom: '3rem', marginTop: '4rem' }}>Live Engineering Intelligence</h2>
                     <GitHubStats />
                 </div>
 
