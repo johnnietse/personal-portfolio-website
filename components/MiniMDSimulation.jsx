@@ -229,7 +229,7 @@ export default function MiniMDSimulation() {
     return (
         <div style={{ position: 'relative', width: '100%', height: '100%', borderRadius: '12px', overflow: 'hidden' }}>
             {/* Real-time Telemetry Dashboard — reads from the SAME ref that controls the physics */}
-            <div style={{ position: 'absolute', top: 15, left: 15, zIndex: 10, background: 'rgba(13, 17, 23, 0.85)', border: '1px solid rgba(48, 54, 61, 0.8)', padding: '1.2rem', borderRadius: '12px', color: '#c9d1d9', fontSize: '0.9rem', backdropFilter: 'blur(8px)', width: '250px', boxShadow: '0 4px 12px rgba(0,0,0,0.5)' }}>
+            <div style={{ position: 'absolute', top: 15, left: 15, zIndex: 10, background: 'rgba(13, 17, 23, 0.85)', border: '1px solid rgba(48, 54, 61, 0.8)', padding: '1.2rem', borderRadius: '12px', color: '#c9d1d9', fontSize: '0.9rem', backdropFilter: 'blur(8px)', width: 'calc(100% - 30px)', maxWidth: '250px', boxShadow: '0 4px 12px rgba(0,0,0,0.5)' }}>
                 <h4 style={{ margin: '0 0 12px 0', color: '#79c0ff', fontSize: '1.05rem', borderBottom: '1px solid #30363d', paddingBottom: '8px', display: 'flex', justifyContent: 'space-between' }}>
                     <span>Hardware Telemetry</span>
                     <span style={{ color: ui.heat > 85 ? '#ff7b72' : '#8b949e', fontSize: '0.9rem' }}>{ui.heat.toFixed(0)}°C</span>
@@ -263,7 +263,7 @@ export default function MiniMDSimulation() {
             <button
                 onClick={() => setIsOptimized(!isOptimized)}
                 style={{
-                    position: 'absolute', top: 15, right: 15, zIndex: 10,
+                    position: 'absolute', bottom: 15, right: 15, zIndex: 10,
                     background: isOptimized ? 'rgba(86, 211, 100, 0.15)' : 'rgba(255, 123, 114, 0.15)',
                     color: isOptimized ? '#7ee787' : '#ff7b72',
                     border: `1px solid ${isOptimized ? 'rgba(86, 211, 100, 0.4)' : 'rgba(255, 123, 114, 0.4)'}`,
