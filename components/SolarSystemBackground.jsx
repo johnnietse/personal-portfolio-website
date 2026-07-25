@@ -125,11 +125,22 @@ const PlanetNode = ({ name, size, radius, speed, angle, color, hasRing, ringColo
 };
 
 export default function SolarSystemBackground() {
-    const { isLowSpec, isMobile, features } = usePerformance();
+    const { isLowSpec, isMobile, features, renderTier } = usePerformance();
     const [isMounted, setIsMounted] = useState(false);
     useEffect(() => { setIsMounted(true); }, []);
 
-    const lowSpec = isLowSpec || isMobile;
+    // Economy tier: return static gradient background (no WebGL)
+    if (renderTier === 'economy') {
+        return (
+            <div style={{
+                position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', zIndex: 0,
+                background: 'radial-gradient(ellipse at center, #0f172a 0%, #020617 100%)',
+                pointerEvents: 'none',
+            }} />
+        );
+    }
+
+    const lowSpec = renderTier === 'low';
 
     // Exact mapping of the 8 canonical celestial bodies natively simulating our physical Universe visually behind the DOM
     const planets = useMemo(() => [

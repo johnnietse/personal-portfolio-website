@@ -21,10 +21,10 @@ function getSpherePositions(count, radius) {
 }
 
 const Starfield = () => {
-    const { isLowSpec, isMobile } = usePerformance();
+    const { renderTier } = usePerformance();
     const ref = useRef();
     // Reduce density for legacy/low-spec devices
-    const count = isLowSpec || isMobile ? 1000 : 4000;
+    const count = renderTier === 'low' ? 400 : 4000;
     const [positions] = useState(() => getSpherePositions(count, 1.2));
 
     useFrame((state, delta) => {
@@ -61,7 +61,7 @@ const Starfield = () => {
 };
 
 export default function ParticleBackground() {
-    const { features } = usePerformance();
+    const { features, renderTier } = usePerformance();
     const [isMounted, setIsMounted] = useState(false);
 
     useEffect(() => {
@@ -69,6 +69,25 @@ export default function ParticleBackground() {
     }, []);
 
     if (!isMounted || !features.particles) return null;
+
+    // Economy tier: CSS animated dots fallback (no WebGL canvas)
+    if (renderTier === 'economy') {
+        return (
+            <div style={{
+                position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', zIndex: 0,
+                pointerEvents: 'none', overflow: 'hidden',
+            }}>
+                {Array.from({ length: 30 }).map((_, i) => (
+                    <div key={i} style={{
+                        position: 'absolute', width: '2px', height: '2px',
+                        background: 'rgba(255,255,255,0.3)', borderRadius: '50%',
+                        left: `${Math.random() * 100}%`, top: `${Math.random() * 100}%`,
+                        animation: `float ${3 + Math.random() * 4}s infinite`,
+                    }} />
+                ))}
+            </div>
+        );
+    }
 
     return (
         <div style={{

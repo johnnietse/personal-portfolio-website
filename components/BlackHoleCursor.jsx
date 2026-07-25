@@ -128,7 +128,7 @@ const ShaderCanvas = () => {
 };
 
 export default function BlackHoleCursor() {
-    const { isLowSpec, isMobile, features } = usePerformance();
+    const { isLowSpec, isMobile, features, renderTier } = usePerformance();
     const [isMounted, setIsMounted] = useState(false);
 
     // Prevent Next.js SSR hydration mismatch since `window` measurements and states are strictly browser-only
@@ -137,7 +137,23 @@ export default function BlackHoleCursor() {
     }, []);
 
     if (!isMounted || !features.cursor) return null;
-    if (!isMounted) return null;
+
+    // Economy and low tiers: CSS radial gradient follower (no shader)
+    if (renderTier === 'economy' || renderTier === 'low') {
+        return (
+            <div
+                style={{
+                    position: 'fixed', top: 0, left: 0, width: '100%', height: '100%',
+                    zIndex: 9999, pointerEvents: 'none',
+                    background: 'radial-gradient(600px circle at var(--cursor-x, 50%) var(--cursor-y, 50%), rgba(88,166,255,0.06) 0%, transparent 70%)',
+                }}
+                onMouseMove={(e) => {
+                    e.currentTarget.style.setProperty('--cursor-x', `${e.clientX}px`);
+                    e.currentTarget.style.setProperty('--cursor-y', `${e.clientY}px`);
+                }}
+            />
+        );
+    }
 
     return (
         <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', zIndex: 9999, pointerEvents: 'none' }}>

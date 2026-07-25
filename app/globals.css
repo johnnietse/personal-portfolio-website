@@ -576,3 +576,9 @@ textarea.form-control {
         height: 100vh;
     }
 }
+
+/* ParticleBackground CSS fallback animation for economy tier */
+@keyframes float {
+    0%, 100% { transform: translateY(0px); opacity: 0.3; }
+    50% { transform: translateY(-20px); opacity: 0.8; }
+}
