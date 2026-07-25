@@ -3,6 +3,17 @@
 import React, { useState, useEffect } from 'react';
 import HolographicCard from './HolographicCard';
 import { Star, GitFork, ExternalLink, Library } from 'lucide-react';
+import { CircuitBreaker } from '@/lib/utils/circuit-breaker';
+import { CACHE } from '@/lib/config/constants';
+
+// Module-scoped breaker persists across renders
+const reposBreaker = new CircuitBreaker({
+    name: 'GitHub Live Repos',
+    maxFailures: 3,
+    cooldownMs: 300_000,
+    cacheTtlMs: CACHE.GITHUB_REPOS_TTL_MS,
+    fallbackValue: null,
+});
 
 /**
  * LiveGithubProjects Component
@@ -17,10 +28,22 @@ export default function LiveGithubProjects() {
     useEffect(() => {
         const fetchRepos = async () => {
             try {
-                const response = await fetch('/api/github/stats');
-                if (!response.ok) throw new Error('Failed to synchronize with GitHub Intelligence');
-                const data = await response.json();
-                setRepos(data.repoList || []);
+                const data = await reposBreaker.execute(
+                    async () => {
+                        const response = await fetch('/api/github/stats');
+                        if (!response.ok) throw new Error('Failed to synchronize with GitHub Intelligence');
+                        return response.json();
+                    },
+                    (cached) => {
+                        // Serve stale cached data during outages
+                        setRepos(cached.repoList || []);
+                    }
+                );
+                if (data !== null) {
+                    setRepos(data.repoList || []);
+                } else {
+                    setError('Failed to synchronize with GitHub Intelligence');
+                }
             } catch (err) {
                 console.error('GitHub Repos Fetch Error:', err);
                 setError(err.message);

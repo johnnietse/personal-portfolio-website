@@ -14,6 +14,17 @@ import GithubVelocityChart from './GithubVelocityChart';
 import GithubAchievements from './GithubAchievements';
 import GithubOrgNodes from './GithubOrgNodes';
 import GithubInterestStreams from './GithubInterestStreams';
+import { CircuitBreaker } from '@/lib/utils/circuit-breaker';
+import { CACHE } from '@/lib/config/constants';
+
+// Module-scoped breaker persists across renders
+const statsBreaker = new CircuitBreaker({
+    name: 'GitHub Stats',
+    maxFailures: 3,
+    cooldownMs: 300_000,
+    cacheTtlMs: CACHE.GITHUB_PROFILE_TTL_MS,
+    fallbackValue: null,
+});
 
 /**
  * GitHubStats Component
@@ -30,10 +41,22 @@ export default function GitHubStats() {
     useEffect(() => {
         const fetchStats = async () => {
             try {
-                const response = await fetch('/api/github/stats');
-                if (!response.ok) throw new Error('Failed to synchronize with GitHub Intelligence');
-                const data = await response.json();
-                setStats(data);
+                const data = await statsBreaker.execute(
+                    async () => {
+                        const response = await fetch('/api/github/stats');
+                        if (!response.ok) throw new Error('Failed to synchronize with GitHub Intelligence');
+                        return response.json();
+                    },
+                    (cached) => {
+                        // Serve stale cached data during outages
+                        setStats(cached);
+                    }
+                );
+                if (data !== null) {
+                    setStats(data);
+                } else {
+                    setError('Failed to synchronize with GitHub Intelligence');
+                }
             } catch (err) {
                 console.error('GitHub Stats Privileged Error:', err);
                 setError(err.message);
