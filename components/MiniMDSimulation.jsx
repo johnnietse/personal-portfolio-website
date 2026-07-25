@@ -7,6 +7,10 @@ import * as THREE from 'three';
 import { usePerformance } from './PerformanceManager';
 import { useRenderBudget } from '@/lib/hooks/useRenderBudget';
 import { useBoundedHistory } from '@/lib/hooks/useBoundedHistory';
+import { WelfordRunningStats } from '@/lib/utils/welford';
+
+// Module-scoped running energy statistics (persists across renders, never resets)
+const energyStats = new WelfordRunningStats();
 
 const BOX_SIZE = 14;
 
@@ -145,7 +149,7 @@ const MDSystem = ({ simState, count }) => {
             consume(0.02);
         }
 
-        // Compute total kinetic energy for bounded history tracking
+        // Compute total kinetic energy for bounded history tracking and Welford streaming stats
         let totalKE = 0;
         for (let i = 0; i < count; i++) {
             const vx = velocities[i * 3];
@@ -153,7 +157,9 @@ const MDSystem = ({ simState, count }) => {
             const vz = velocities[i * 3 + 2];
             totalKE += vx * vx + vy * vy + vz * vz;
         }
-        pushEnergy({ meanEnergy: totalKE / count, particleCount: count });
+        const meanKE = totalKE / count;
+        energyStats.update(meanKE);
+        pushEnergy({ meanEnergy: meanKE, particleCount: count });
 
         // Instruct GPU memory to flush matrix coordinates actively
         meshRef.current.instanceMatrix.needsUpdate = true;

@@ -4,10 +4,16 @@ import { useState, useEffect, useRef } from 'react';
 import { Stats } from '@react-three/drei';
 import { usePerformance } from './PerformanceManager';
 import { useBoundedHistory } from '@/lib/hooks/useBoundedHistory';
+import { WelfordRunningStats } from '@/lib/utils/welford';
+
+// Module-scoped running FPS statistics (persists across renders, never resets)
+const fpsStats = new WelfordRunningStats();
 
 export default function PerformanceHUD() {
     const { isLowSpec, toggleLowSpec, isMobile, features, toggleFeature } = usePerformance();
     const [fps, setFps] = useState(60);
+    const [fpsMean, setFpsMean] = useState(0);
+    const [fpsAnomaly, setFpsAnomaly] = useState(false);
     const [showWarning, setShowWarning] = useState(false);
     const [isMounted, setIsMounted] = useState(false);
     const framesRef = useRef(0);
@@ -26,7 +32,12 @@ export default function PerformanceHUD() {
                 const currentFps = Math.round((framesRef.current * 1000) / elapsed);
                 setFps(currentFps);
 
-                // Push bounded FPS history for performance analytics (e.g. Welford stats)
+                // Welford online statistics: running mean and z-score anomaly detection
+                fpsStats.update(currentFps);
+                setFpsMean(Math.round(fpsStats.mean * 10) / 10);
+                setFpsAnomaly(fpsStats.zScore(currentFps) < -2);
+
+                // Push bounded FPS history for performance analytics
                 pushFps({ fps: currentFps });
 
                 // Auto-detection: If FPS is very low on non-low-spec mode, show warning
@@ -75,7 +86,13 @@ export default function PerformanceHUD() {
             }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '7.5rem' }}>
                     <span style={{ color: 'rgba(255,255,255,0.6)' }}>PERF:</span>
-                    <span style={{ color: fps < 30 ? '#ef4444' : '#22c55e', fontWeight: 'bold' }}>{fps} FPS</span>
+                    <span style={{ color: fps < 30 ? '#ef4444' : '#22c55e', fontWeight: 'bold' }}>
+                        {fps} FPS{fpsAnomaly ? ' ⚠' : ''}
+                    </span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '7.5rem', fontSize: '0.7rem' }}>
+                    <span style={{ color: 'rgba(255,255,255,0.4)' }}>AVG:</span>
+                    <span style={{ color: 'rgba(255,255,255,0.7)' }}>{fpsMean} FPS</span>
                 </div>
 
                 <button
