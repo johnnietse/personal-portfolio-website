@@ -52,7 +52,8 @@ export class CircuitBreaker<T> {
         onCache?.(this.cache.data);
         return this.cache.data;
       }
-      if (this.fallbackValue !== null && this.cache) {
+      // Serve stale cache if available — always prefer it over null fallback
+      if (this.cache) {
         onCache?.(this.cache.data);
         return this.cache.data;
       }
@@ -70,7 +71,7 @@ export class CircuitBreaker<T> {
       this.state = 'normal';
       this.failureCount = 0;
       return data;
-    } catch (err) {
+    } catch {
       this.failureCount++;
       this.lastFailureTime = Date.now();
       if (this.failureCount >= this.maxFailures) {
@@ -91,5 +92,7 @@ export class CircuitBreaker<T> {
   reset(): void {
     this.state = 'normal';
     this.failureCount = 0;
+    this.lastFailureTime = 0;
+    this.cache = null;
   }
 }
