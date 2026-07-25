@@ -1,6 +1,7 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useMemo } from 'react';
+import { detectWebGLTier } from '@/lib/utils/webgl-detect';
 
 const PerformanceContext = createContext();
 
@@ -17,6 +18,19 @@ export const PerformanceProvider = ({ children }) => {
         particles: false,
         cursor: false
     });
+
+    // Render tier derived from device capability + WebGL detection
+    // Determines which rendering path components should use (WebGL vs fallback)
+    const renderTier = useMemo(() => {
+        if (isMobile && isLowSpec) return 'economy';
+        if (isMobile) return 'low';
+
+        const webglTier = detectWebGLTier();
+        if (webglTier === 'none' || webglTier === 'software') return 'low';
+        if (isLowSpec) return 'high';
+
+        return 'ultra';
+    }, [isLowSpec, isMobile]);
 
     useEffect(() => {
         // 1. Initial Device Detection
@@ -90,7 +104,7 @@ export const PerformanceProvider = ({ children }) => {
     };
 
     return (
-        <PerformanceContext.Provider value={{ isLowSpec, isMobile, features, toggleLowSpec, toggleFeature }}>
+        <PerformanceContext.Provider value={{ isLowSpec, isMobile, features, renderTier, toggleLowSpec, toggleFeature }}>
             {children}
         </PerformanceContext.Provider>
     );
