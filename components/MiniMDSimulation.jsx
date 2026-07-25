@@ -5,11 +5,13 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Box } from '@react-three/drei';
 import * as THREE from 'three';
 import { usePerformance } from './PerformanceManager';
+import { useRenderBudget } from '@/lib/hooks/useRenderBudget';
 
 const BOX_SIZE = 14;
 
 const MDSystem = ({ simState, count }) => {
     const meshRef = useRef();
+    const { startFrame, consume, isOverBudget } = useRenderBudget(6);
 
     // Allocate continuous blocks of Float32Array Memory for highly optimized calculations
     const particles = useMemo(() => {
@@ -37,6 +39,8 @@ const MDSystem = ({ simState, count }) => {
     useFrame((state, delta) => {
         if (!meshRef.current) return;
 
+        startFrame();
+
         const s = simState.current;
 
         // CAPSTONE PROOF 1: IF MPI is in a 'COMM_WAIT' phase, compute cores are network-blocked. 
@@ -62,6 +66,8 @@ const MDSystem = ({ simState, count }) => {
 
         for (let i = 0; i < count; i++) {
             for (let j = i + 1; j < count; j++) {
+                if (isOverBudget()) break;
+
                 let dx = positions[i * 3] - positions[j * 3];
                 let dy = positions[i * 3 + 1] - positions[j * 3 + 1];
                 let dz = positions[i * 3 + 2] - positions[j * 3 + 2];
@@ -95,12 +101,17 @@ const MDSystem = ({ simState, count }) => {
                     forces[j * 3 + 1] -= fy;
                     forces[j * 3 + 2] -= fz;
                 }
+
+                consume(0.02);
             }
+            if (isOverBudget()) break;
         }
 
         // 3. Explicit mathematical Velocity Verlet Integration
         const damping = 0.999; // Numerical thermostat preventing overheating
         for (let i = 0; i < count; i++) {
+            if (isOverBudget()) break;
+
             velocities[i * 3] = (velocities[i * 3] + forces[i * 3] * dt) * damping;
             velocities[i * 3 + 1] = (velocities[i * 3 + 1] + forces[i * 3 + 1] * dt) * damping;
             velocities[i * 3 + 2] = (velocities[i * 3 + 2] + forces[i * 3 + 2] * dt) * damping;
@@ -128,6 +139,8 @@ const MDSystem = ({ simState, count }) => {
             const speed = Math.sqrt(velocities[i * 3] ** 2 + velocities[i * 3 + 1] ** 2 + velocities[i * 3 + 2] ** 2);
             color.setHSL(0.6 - Math.min(speed * 0.03, 0.6), 0.9, 0.6);
             meshRef.current.setColorAt(i, color);
+
+            consume(0.02);
         }
 
         // Instruct GPU memory to flush matrix coordinates actively

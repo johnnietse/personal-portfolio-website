@@ -4,17 +4,25 @@ import { useRef } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Icosahedron, Float, MeshDistortMaterial } from '@react-three/drei';
 import { usePerformance } from './PerformanceManager';
+import { useRenderBudget } from '@/lib/hooks/useRenderBudget';
 
 const AbstractShape = () => {
     const { renderTier } = usePerformance();
     const isLowQuality = renderTier === 'low';
     const meshRef = useRef();
+    const { startFrame, consume, isOverBudget } = useRenderBudget(4);
 
     // Slow autonomous rotation 
     useFrame((state, delta) => {
+        startFrame();
         if (meshRef.current) {
             meshRef.current.rotation.x += delta * (isLowQuality ? 0.1 : 0.2);
             meshRef.current.rotation.y += delta * (isLowQuality ? 0.15 : 0.3);
+        }
+        consume(0.1);
+
+        if (isOverBudget()) {
+            // Skip non-essential effects this frame
         }
     });
 

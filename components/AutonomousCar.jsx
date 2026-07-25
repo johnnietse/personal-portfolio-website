@@ -5,14 +5,18 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Float, Box, Cylinder, Sphere, MeshDistortMaterial, ContactShadows, Html, QuadraticBezierLine } from '@react-three/drei';
 import * as THREE from 'three';
 import { usePerformance } from './PerformanceManager';
+import { useRenderBudget } from '@/lib/hooks/useRenderBudget';
 
 // 1. DATA/AUDIO WAVEFORM (Dynamic Topographical Ground Shader dependent on Driving State)
 const Topography = ({ isDriving }) => {
     const planeRef = useRef();
     const speedLerp = useRef(0);
     const scrollOffset = useRef(0);
+    const { startFrame, consume, isOverBudget } = useRenderBudget(4);
 
     useFrame((state, delta) => {
+        startFrame();
+
         // Smoothly accelerate the ground scrolling when driving
         speedLerp.current = THREE.MathUtils.lerp(speedLerp.current, isDriving ? 4 : 0, delta * 2);
         scrollOffset.current += delta * speedLerp.current; // Integrate speed over time to prevent math jumping
@@ -22,10 +26,12 @@ const Topography = ({ isDriving }) => {
             const time = state.clock.elapsedTime;
 
             for (let i = 0; i < pos.count; i++) {
+                if (isOverBudget()) break;
                 const x = pos.getX(i);
                 // When driving, the continuous scroll offset drags the Y coordinate backward aggressively
                 const y = pos.getY(i) + scrollOffset.current;
                 pos.setZ(i, Math.sin(x * 0.8 + time * 1.5) * Math.cos(y * 0.8) * 0.3);
+                consume(0.02);
             }
             pos.needsUpdate = true;
         }
@@ -46,6 +52,7 @@ const LidarScanner = () => {
     const pointsRef = useRef();
     const laserRef = useRef();
     const particleCount = isLowQuality ? 1000 : 4000;
+    const { startFrame, consume, isOverBudget } = useRenderBudget(4);
 
     const positions = useMemo(() => {
         const pos = new Float32Array(particleCount * 3);
@@ -60,8 +67,10 @@ const LidarScanner = () => {
     }, []);
 
     useFrame((state, delta) => {
+        startFrame();
         if (pointsRef.current) pointsRef.current.rotation.y -= delta * 2;
         if (laserRef.current) laserRef.current.rotation.y -= delta * 4;
+        consume(0.1);
     });
 
     return (
@@ -90,8 +99,11 @@ const AutonomousWheel = ({ position, isDriving, isFront }) => {
     const steeringRef = useRef();
     const wheelSpeed = useRef(0);
     const steerAngle = useRef(0);
+    const { startFrame, consume, isOverBudget } = useRenderBudget(4);
 
     useFrame((state, delta) => {
+        startFrame();
+
         // Lerp wheel velocity up and down smoothly
         wheelSpeed.current = THREE.MathUtils.lerp(wheelSpeed.current, isDriving ? 15 : 0, delta * 3);
 
@@ -106,6 +118,8 @@ const AutonomousWheel = ({ position, isDriving, isFront }) => {
             steerAngle.current = THREE.MathUtils.lerp(steerAngle.current, isDriving ? +0.4 : 0, delta * 2);
             steeringRef.current.rotation.y = steerAngle.current;
         }
+
+        consume(0.1);
     });
 
     return (
@@ -246,12 +260,15 @@ const VehicleMesh = ({ isDriving }) => {
     const vehicleGroupRef = useRef();
     const lidarRef1 = useRef();
     const lidarRef2 = useRef();
+    const { startFrame, consume, isOverBudget } = useRenderBudget(4);
 
     // Core physics interpolation vectors tracking states between [INSPECT] and [DRIVE]
     const driveProgress = useRef(0);
     const accumulatedDriveTime = useRef(0);
 
     useFrame((state, delta) => {
+        startFrame();
+
         // ALWAYS spin sensory payloads (Hardware sensors are active even when parked)
         if (lidarRef1.current) lidarRef1.current.rotation.y -= delta * 15;
         if (lidarRef2.current) lidarRef2.current.rotation.y -= delta * 15;
@@ -291,6 +308,12 @@ const VehicleMesh = ({ isDriving }) => {
 
             const currentQuat = originQuat.clone().slerp(targetQuat, driveProgress.current);
             vehicleGroupRef.current.quaternion.copy(currentQuat);
+
+            consume(0.5);
+        }
+
+        if (isOverBudget()) {
+            // Skip non-essential effects this frame
         }
     });
 

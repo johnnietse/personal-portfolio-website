@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, Suspense } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Points, PointMaterial } from "@react-three/drei";
 import { usePerformance } from "./PerformanceManager";
+import { useRenderBudget } from '@/lib/hooks/useRenderBudget';
 
 function getSpherePositions(count, radius) {
     const positions = new Float32Array(count * 3);
@@ -26,8 +27,10 @@ const Starfield = () => {
     // Reduce density for legacy/low-spec devices
     const count = renderTier === 'low' ? 400 : 4000;
     const [positions] = useState(() => getSpherePositions(count, 1.2));
+    const { startFrame, consume, isOverBudget } = useRenderBudget(4);
 
     useFrame((state, delta) => {
+        startFrame();
         // Slow, premium architectural rotation + real-time mouse parallax
         if (ref.current) {
             // Parallax offset matching pointer
@@ -41,6 +44,12 @@ const Starfield = () => {
             // Autonomous drift
             ref.current.rotation.y -= delta / 30;
             ref.current.rotation.x -= delta / 40;
+
+            consume(0.1);
+        }
+
+        if (isOverBudget()) {
+            // Skip non-essential effects this frame
         }
     });
 
