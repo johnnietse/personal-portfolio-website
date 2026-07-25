@@ -4,6 +4,7 @@ import React, { useRef, useMemo, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Float, Box, Cylinder, Sphere, MeshDistortMaterial, ContactShadows, Html, QuadraticBezierLine } from '@react-three/drei';
 import * as THREE from 'three';
+import { usePerformance } from './PerformanceManager';
 
 // 1. DATA/AUDIO WAVEFORM (Dynamic Topographical Ground Shader dependent on Driving State)
 const Topography = ({ isDriving }) => {
@@ -40,9 +41,11 @@ const Topography = ({ isDriving }) => {
 
 // 2. LiDAR MASSIVE POINT CLOUD SCANNER
 const LidarScanner = () => {
+    const { renderTier } = usePerformance();
+    const isLowQuality = renderTier === 'low';
     const pointsRef = useRef();
     const laserRef = useRef();
-    const particleCount = 4000;
+    const particleCount = isLowQuality ? 1000 : 4000;
 
     const positions = useMemo(() => {
         const pos = new Float32Array(particleCount * 3);
@@ -81,6 +84,8 @@ const LidarScanner = () => {
 
 // Custom Wheel Physics Component dependent on Driving State & Steering Axis
 const AutonomousWheel = ({ position, isDriving, isFront }) => {
+    const { renderTier } = usePerformance();
+    const isLowQuality = renderTier === 'low';
     const wheelRef = useRef();
     const steeringRef = useRef();
     const wheelSpeed = useRef(0);
@@ -105,9 +110,9 @@ const AutonomousWheel = ({ position, isDriving, isFront }) => {
 
     return (
         <group position={position} ref={steeringRef}>
-            <Cylinder ref={wheelRef} args={[0.4, 0.4, 0.25, 32]} rotation={[Math.PI / 2, 0, 0]}>
+            <Cylinder ref={wheelRef} args={[0.4, 0.4, 0.25, isLowQuality ? 12 : 32]} rotation={[Math.PI / 2, 0, 0]}>
                 <meshStandardMaterial color="#111827" roughness={0.9} />
-                <Cylinder args={[0.25, 0.25, 0.26, 16]}>
+                <Cylinder args={[0.25, 0.25, 0.26, isLowQuality ? 6 : 16]}>
                     <meshPhysicalMaterial color="#94a3b8" metalness={1} roughness={0.1} clearcoat={1.0} />
                 </Cylinder>
                 {/* Visual marker to prove geometric rotation to the human eye */}
@@ -118,6 +123,8 @@ const AutonomousWheel = ({ position, isDriving, isFront }) => {
 };
 
 const ProceduralBoltChassis = () => {
+    const { renderTier } = usePerformance();
+    const isLowQuality = renderTier === 'low';
     const geometryRef = useRef();
 
     const bodyShape = useMemo(() => {
@@ -175,12 +182,12 @@ const ProceduralBoltChassis = () => {
 
     return (
         <group position={[0, -0.1, -0.75]}>
-            <mesh castShadow receiveShadow>
+            <mesh castShadow={!isLowQuality} receiveShadow={!isLowQuality}>
                 <extrudeGeometry ref={geometryRef} args={[bodyShape, extrudeSettings]} />
                 <meshPhysicalMaterial vertexColors={true} clearcoat={1.0} clearcoatRoughness={0.1} metalness={0.9} roughness={0.3} />
             </mesh>
 
-            <mesh position={[0, 0, 0.1]} castShadow>
+            <mesh position={[0, 0, 0.1]} castShadow={!isLowQuality}>
                 <extrudeGeometry args={[cabinShape, cabinSettings]} />
                 <meshPhysicalMaterial color="#111111" transmission={1} thickness={2.5} ior={1.5} roughness={0} metalness={0.1} />
             </mesh>
@@ -234,6 +241,8 @@ const TrajectoryPath = () => {
 
 // Core Vehicle Physics Wrapper
 const VehicleMesh = ({ isDriving }) => {
+    const { renderTier } = usePerformance();
+    const isLowQuality = renderTier === 'low';
     const vehicleGroupRef = useRef();
     const lidarRef1 = useRef();
     const lidarRef2 = useRef();
@@ -371,14 +380,17 @@ const VehicleMesh = ({ isDriving }) => {
                     </Sphere>
                 </Float>
             </Float>
-            <ContactShadows position={[0, -0.6, 0]} resolution={1024} scale={20} blur={2} opacity={0.6} far={10} color="#000000" />
+            {!isLowQuality && <ContactShadows position={[0, -0.6, 0]} resolution={1024} scale={20} blur={2} opacity={0.6} far={10} color="#000000" />}
         </group>
     );
 };
 
 // Application Root Overlay
 export default function AutonomousCar() {
+    const { renderTier } = usePerformance();
     const [isDriving, setIsDriving] = useState(false);
+
+    if (renderTier === 'economy') return null;
 
     return (
         <div style={{ position: 'relative', width: '100%', height: '100%' }}>

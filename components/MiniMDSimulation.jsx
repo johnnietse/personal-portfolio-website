@@ -164,10 +164,13 @@ const MDSystem = ({ simState, count }) => {
 };
 
 export default function MiniMDSimulation() {
-    const { isLowSpec, isMobile } = usePerformance();
+    const { renderTier } = usePerformance();
     const [isOptimized, setIsOptimized] = useState(false);
 
-    const count = isLowSpec || isMobile ? 80 : 300;
+    if (renderTier === 'economy') return null;
+
+    const isLowQuality = renderTier === 'low';
+    const count = isLowQuality ? 100 : 300;
 
     // Unified simulation state ref — this SINGLE object drives BOTH the WebGL math loop AND the DOM dashboard.
     // useRef avoids 60fps React re-renders; we flush to useState at 10Hz for the DOM overlay only.
