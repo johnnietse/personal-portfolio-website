@@ -16,7 +16,8 @@ const BOX_SIZE = 14;
 
 const MDSystem = ({ simState, count }) => {
     const meshRef = useRef();
-    const { startFrame, consume, isOverBudget } = useRenderBudget(6);
+    const { quality } = usePerformance();
+    const { startFrame, consume, isOverBudget } = useRenderBudget(quality.targetFPS === 60 ? 6 : 12);
     const { history: energyHistory, push: pushEnergy } = useBoundedHistory(100);
 
     // Allocate continuous blocks of Float32Array Memory for highly optimized calculations
@@ -195,10 +196,10 @@ const MDSystem = ({ simState, count }) => {
 };
 
 export default function MiniMDSimulation() {
-    const { renderTier } = usePerformance();
+    const { quality } = usePerformance();
     const [isOptimized, setIsOptimized] = useState(false);
 
-    if (renderTier === 'economy') {
+    if (quality.targetFPS < 30) {
       // Render simplified version on economy tier
       return (
         <div style={{ position: 'relative', width: '100%', height: '100%', borderRadius: '12px', overflow: 'hidden' }}>
@@ -212,8 +213,8 @@ export default function MiniMDSimulation() {
       );
     }
 
-    const isLowQuality = renderTier === 'low';
-    const count = isLowQuality ? 100 : 300;
+    const isLowQuality = quality.geometryDetail < 0.75;
+    const count = Math.round(300 * quality.particleMultiplier);
 
     // Unified simulation state ref — this SINGLE object drives BOTH the WebGL math loop AND the DOM dashboard.
     // useRef avoids 60fps React re-renders; we flush to useState at 10Hz for the DOM overlay only.

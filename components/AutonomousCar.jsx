@@ -12,7 +12,8 @@ const Topography = ({ isDriving }) => {
     const planeRef = useRef();
     const speedLerp = useRef(0);
     const scrollOffset = useRef(0);
-    const { startFrame, consume, isOverBudget } = useRenderBudget(4);
+    const { quality } = usePerformance();
+    const { startFrame, consume, isOverBudget } = useRenderBudget(quality.targetFPS === 60 ? 4 : 8);
 
     useFrame((state, delta) => {
         startFrame();
@@ -47,12 +48,12 @@ const Topography = ({ isDriving }) => {
 
 // 2. LiDAR MASSIVE POINT CLOUD SCANNER
 const LidarScanner = () => {
-    const { renderTier } = usePerformance();
-    const isLowQuality = renderTier === 'low';
+    const { quality } = usePerformance();
+    const isLowQuality = quality.particleMultiplier < 0.5;
     const pointsRef = useRef();
     const laserRef = useRef();
-    const particleCount = isLowQuality ? 1000 : 4000;
-    const { startFrame, consume, isOverBudget } = useRenderBudget(4);
+    const particleCount = Math.round(4000 * quality.particleMultiplier);
+    const { startFrame, consume, isOverBudget } = useRenderBudget(quality.targetFPS === 60 ? 4 : 8);
 
     const positions = useMemo(() => {
         const pos = new Float32Array(particleCount * 3);
@@ -93,13 +94,13 @@ const LidarScanner = () => {
 
 // Custom Wheel Physics Component dependent on Driving State & Steering Axis
 const AutonomousWheel = ({ position, isDriving, isFront }) => {
-    const { renderTier } = usePerformance();
-    const isLowQuality = renderTier === 'low';
+    const { quality } = usePerformance();
+    const isLowQuality = quality.geometryDetail < 0.75;
     const wheelRef = useRef();
     const steeringRef = useRef();
     const wheelSpeed = useRef(0);
     const steerAngle = useRef(0);
-    const { startFrame, consume, isOverBudget } = useRenderBudget(4);
+    const { startFrame, consume, isOverBudget } = useRenderBudget(quality.targetFPS === 60 ? 4 : 8);
 
     useFrame((state, delta) => {
         startFrame();
@@ -137,8 +138,8 @@ const AutonomousWheel = ({ position, isDriving, isFront }) => {
 };
 
 const ProceduralBoltChassis = () => {
-    const { renderTier } = usePerformance();
-    const isLowQuality = renderTier === 'low';
+    const { quality } = usePerformance();
+    const isLowQuality = quality.geometryDetail < 0.75;
     const geometryRef = useRef();
 
     const bodyShape = useMemo(() => {
@@ -255,12 +256,12 @@ const TrajectoryPath = () => {
 
 // Core Vehicle Physics Wrapper
 const VehicleMesh = ({ isDriving }) => {
-    const { renderTier } = usePerformance();
-    const isLowQuality = renderTier === 'low';
+    const { quality } = usePerformance();
+    const isLowQuality = quality.geometryDetail < 0.75;
     const vehicleGroupRef = useRef();
     const lidarRef1 = useRef();
     const lidarRef2 = useRef();
-    const { startFrame, consume, isOverBudget } = useRenderBudget(4);
+    const { startFrame, consume, isOverBudget } = useRenderBudget(quality.targetFPS === 60 ? 4 : 8);
 
     // Core physics interpolation vectors tracking states between [INSPECT] and [DRIVE]
     const driveProgress = useRef(0);
@@ -410,10 +411,10 @@ const VehicleMesh = ({ isDriving }) => {
 
 // Application Root Overlay
 export default function AutonomousCar() {
-    const { renderTier } = usePerformance();
+    const { quality } = usePerformance();
     const [isDriving, setIsDriving] = useState(false);
 
-    if (renderTier === 'economy') {
+    if (quality.targetFPS < 30) {
       // Render simplified version on economy tier instead of hiding
       return (
         <div style={{ position: 'relative', width: '100%', height: '100%' }}>

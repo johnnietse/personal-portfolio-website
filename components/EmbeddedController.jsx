@@ -7,27 +7,27 @@ import { usePerformance } from './PerformanceManager';
 
 // A proxy-proof, fully procedural 3D model of a high-end Embedded Microcontroller (Raspberry Pi / ESP32 hybrid)
 const MicrocontrollerBoard = () => {
-    const { renderTier } = usePerformance();
-    const isLowQuality = renderTier === 'low';
+    const { quality } = usePerformance();
+    const isLowQuality = quality.geometryDetail < 0.75;
     const boardRef = useRef();
 
     // The board slowly spins to show off all the metallic components
     useFrame((state, delta) => {
         if (boardRef.current) {
-            boardRef.current.rotation.y += delta * 0.4;
+            boardRef.current.rotation.y += delta * 0.4 * quality.floatIntensity;
             boardRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.5) * 0.1 + 0.5; // Gentle tilt
         }
     });
 
     // Generate deterministic capacitor locations to prevent Next.js SSR hydration mismatches
     const capacitors = useMemo(() => {
-        const count = isLowQuality ? 5 : 15;
+        const count = Math.round(15 * quality.particleMultiplier);
         return Array.from({ length: count }).map(() => ({
             x: -1.5 + Math.random() * 3,
             z: -1.0 + Math.random() * 2,
             isSilver: Math.random() > 0.5
         }));
-    }, [isLowQuality]);
+    }, [quality.particleMultiplier]);
 
     return (
         <group ref={boardRef}>
@@ -126,10 +126,10 @@ const MicrocontrollerBoard = () => {
 };
 
 export default function EmbeddedController() {
-    const { renderTier } = usePerformance();
-    const isLowQuality = renderTier === 'low';
+    const { quality } = usePerformance();
+    const isLowQuality = quality.geometryDetail < 0.75;
 
-    if (renderTier === 'economy') {
+    if (quality.targetFPS < 30) {
       // Render simplified version on economy tier
       return (
         <div style={{ position: 'relative', width: '100%', height: '100%' }}>
@@ -151,18 +151,19 @@ export default function EmbeddedController() {
             <directionalLight position={[-10, 5, -10]} intensity={1.5} color="#60a5fa" />
             <pointLight position={[0, -5, 0]} intensity={2} color="#10b981" />
 
-            <Float speed={isLowQuality ? 1 : 2.5} rotationIntensity={0.1} floatIntensity={isLowQuality ? 0.2 : 0.5}>
+            <Float speed={quality.floatIntensity * 2.5} rotationIntensity={0.1} floatIntensity={quality.floatIntensity * 0.5}>
                 <MicrocontrollerBoard />
             </Float>
 
-            {/* Beautiful black ground reflection dropping below the floating board - disabled on isLowQuality */}
+            {/* Beautiful black ground reflection dropping below the floating board - disabled on low quality */}
             {!isLowQuality && <ContactShadows position={[0, -2, 0]} resolution={512} scale={20} blur={2.5} opacity={0.5} color="#000000" />}
 
             {/* Interactive VR Orbiting */}
             <OrbitControls
                 enableZoom={false}
                 enablePan={false}
-                autoRotate={false}
+                autoRotate={quality.enableAutoRotate}
+                autoRotateSpeed={0.8}
                 maxPolarAngle={Math.PI / 2}
                 minPolarAngle={0}
             />

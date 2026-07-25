@@ -95,17 +95,17 @@ function Globe() {
 }
 
 export default function GlobeFootprint() {
-  const { renderTier } = usePerformance();
+  const { quality } = usePerformance();
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => { setIsMounted(true); }, []);
 
   // No globe on low-end devices - but show simplified version on economy
-  if (!isMounted || renderTier === 'low') {
+  if (!isMounted) {
     return null;
   }
 
-  if (renderTier === 'economy') {
+  if (quality.targetFPS < 30) {
     // Render simplified static globe on economy tier
     return (
       <div style={{
