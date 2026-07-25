@@ -413,7 +413,24 @@ export default function AutonomousCar() {
     const { renderTier } = usePerformance();
     const [isDriving, setIsDriving] = useState(false);
 
-    if (renderTier === 'economy') return null;
+    if (renderTier === 'economy') {
+      // Render simplified version on economy tier instead of hiding
+      return (
+        <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+          <Canvas camera={{ position: [12, 8, 12], fov: 50 }} style={{ cursor: 'grab', borderRadius: '16px', background: 'radial-gradient(circle at center, rgba(15, 23, 42, 0.4) 0%, transparent 100%)' }}>
+            <ambientLight intensity={1.5} />
+            <directionalLight position={[10, 10, 5]} intensity={2.5} color="#ffffff" />
+            <VehicleMesh isDriving={isDriving} />
+            <OrbitControls enableZoom={true} enablePan={false} autoRotate={false} maxPolarAngle={Math.PI / 2 - 0.05} minPolarAngle={0} target={[0, 0, 0]} />
+          </Canvas>
+          <div style={{ position: 'absolute', bottom: '24px', left: '50%', transform: 'translateX(-50%)', zIndex: 10, display: 'flex', gap: '12px' }}>
+            <button onClick={() => setIsDriving(!isDriving)} style={{ background: isDriving ? 'rgba(239, 68, 68, 0.2)' : 'rgba(34, 197, 94, 0.2)', border: `1px solid ${isDriving ? '#ef4444' : '#22c55e'}`, color: isDriving ? '#ef4444' : '#22c55e', padding: '12px 24px', borderRadius: '8px', fontFamily: 'monospace', fontSize: '14px', fontWeight: 'bold', backdropFilter: 'blur(8px)', cursor: 'pointer', transition: 'all 0.3s ease', boxShadow: `0 0 15px ${isDriving ? 'rgba(239, 68, 68, 0.4)' : 'rgba(34, 197, 94, 0.4)'}`, textShadow: '0 0 5px currentColor' }}>
+              {isDriving ? '■ HALT L4 SIMULATION' : '▶ INITIATE L4 AUTONOMY'}
+            </button>
+          </div>
+        </div>
+      );
+    }
 
     return (
         <div style={{ position: 'relative', width: '100%', height: '100%' }}>

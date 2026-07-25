@@ -100,9 +100,32 @@ export default function GlobeFootprint() {
 
   useEffect(() => { setIsMounted(true); }, []);
 
-  // No globe on low-end devices
-  if (!isMounted || renderTier === 'economy' || renderTier === 'low') {
+  // No globe on low-end devices - but show simplified version on economy
+  if (!isMounted || renderTier === 'low') {
     return null;
+  }
+
+  if (renderTier === 'economy') {
+    // Render simplified static globe on economy tier
+    return (
+      <div style={{
+        position: 'relative', width: '100%', maxWidth: '500px', margin: '0 auto',
+        aspectRatio: '1/1', cursor: 'grab',
+      }}>
+        <div style={{
+          width: '100%', height: '100%', borderRadius: '50%',
+          background: 'radial-gradient(circle at center, #0f172a 0%, #020617 100%)',
+          border: '1px solid #58a6ff',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+        }}>
+          <div style={{ color: '#58a6ff', fontSize: '14px', fontWeight: 600, textAlign: 'center', padding: '20px' }}>
+            Global Engineering Footprint
+            <br />
+            <span style={{ fontSize: '12px', color: '#8b949e' }}>Queen's University</span>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (

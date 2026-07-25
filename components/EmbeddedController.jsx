@@ -129,7 +129,19 @@ export default function EmbeddedController() {
     const { renderTier } = usePerformance();
     const isLowQuality = renderTier === 'low';
 
-    if (renderTier === 'economy') return null;
+    if (renderTier === 'economy') {
+      // Render simplified version on economy tier
+      return (
+        <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+          <Canvas camera={{ position: [0, 0, 10], fov: 45 }} style={{ cursor: 'grab', borderRadius: '16px', background: 'radial-gradient(circle at center, rgba(15, 23, 42, 0.4) 0%, transparent 100%)' }}>
+            <ambientLight intensity={0.8} />
+            <directionalLight position={[10, 20, 10]} intensity={3} color="#ffffff" />
+            <MicrocontrollerBoard />
+            <OrbitControls enableZoom={false} enablePan={false} autoRotate autoRotateSpeed={0.8} />
+          </Canvas>
+        </div>
+      );
+    }
 
     return (
         <Canvas camera={{ position: [0, 6, 8], fov: 45 }} style={{ cursor: 'grab', background: 'radial-gradient(circle at center, rgba(15, 23, 42, 0.4) 0%, transparent 100%)' }}>
