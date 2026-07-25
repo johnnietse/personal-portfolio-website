@@ -6,12 +6,14 @@ import { OrbitControls, Box } from '@react-three/drei';
 import * as THREE from 'three';
 import { usePerformance } from './PerformanceManager';
 import { useRenderBudget } from '@/lib/hooks/useRenderBudget';
+import { useBoundedHistory } from '@/lib/hooks/useBoundedHistory';
 
 const BOX_SIZE = 14;
 
 const MDSystem = ({ simState, count }) => {
     const meshRef = useRef();
     const { startFrame, consume, isOverBudget } = useRenderBudget(6);
+    const { history: energyHistory, push: pushEnergy } = useBoundedHistory(100);
 
     // Allocate continuous blocks of Float32Array Memory for highly optimized calculations
     const particles = useMemo(() => {
@@ -142,6 +144,16 @@ const MDSystem = ({ simState, count }) => {
 
             consume(0.02);
         }
+
+        // Compute total kinetic energy for bounded history tracking
+        let totalKE = 0;
+        for (let i = 0; i < count; i++) {
+            const vx = velocities[i * 3];
+            const vy = velocities[i * 3 + 1];
+            const vz = velocities[i * 3 + 2];
+            totalKE += vx * vx + vy * vy + vz * vz;
+        }
+        pushEnergy({ meanEnergy: totalKE / count, particleCount: count });
 
         // Instruct GPU memory to flush matrix coordinates actively
         meshRef.current.instanceMatrix.needsUpdate = true;

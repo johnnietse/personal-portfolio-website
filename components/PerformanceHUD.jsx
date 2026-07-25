@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Stats } from '@react-three/drei';
 import { usePerformance } from './PerformanceManager';
+import { useBoundedHistory } from '@/lib/hooks/useBoundedHistory';
 
 export default function PerformanceHUD() {
     const { isLowSpec, toggleLowSpec, isMobile, features, toggleFeature } = usePerformance();
@@ -11,6 +12,7 @@ export default function PerformanceHUD() {
     const [isMounted, setIsMounted] = useState(false);
     const framesRef = useRef(0);
     const lastTimeRef = useRef(performance.now());
+    const { history: fpsHistory, push: pushFps } = useBoundedHistory(30);
 
     useEffect(() => {
         let animationFrameId;
@@ -23,6 +25,9 @@ export default function PerformanceHUD() {
             if (elapsed >= 1000) {
                 const currentFps = Math.round((framesRef.current * 1000) / elapsed);
                 setFps(currentFps);
+
+                // Push bounded FPS history for performance analytics (e.g. Welford stats)
+                pushFps({ fps: currentFps });
 
                 // Auto-detection: If FPS is very low on non-low-spec mode, show warning
                 if (currentFps < 25 && !isLowSpec) {
