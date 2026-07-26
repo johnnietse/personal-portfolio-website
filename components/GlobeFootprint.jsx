@@ -44,6 +44,32 @@ function buildLabelTooltipHtml(loc) {
   ].join('');
 }
 
+function latLngToVec3(lat, lng, radius) {
+  const phi = (90 - lat) * Math.PI / 180;
+  const theta = (lng + 180) * Math.PI / 180;
+  return new THREE.Vector3(
+    -radius * Math.sin(phi) * Math.cos(theta),
+    radius * Math.cos(phi),
+    radius * Math.sin(phi) * Math.sin(theta),
+  );
+}
+
+function createGlowTexture() {
+  const size = 128;
+  const canvas = document.createElement('canvas');
+  canvas.width = size;
+  canvas.height = size;
+  const ctx = canvas.getContext('2d');
+  const gradient = ctx.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2);
+  gradient.addColorStop(0, 'rgba(126,231,135,1)');
+  gradient.addColorStop(0.15, 'rgba(126,231,135,0.7)');
+  gradient.addColorStop(0.4, 'rgba(126,231,135,0.25)');
+  gradient.addColorStop(1, 'rgba(126,231,135,0)');
+  ctx.fillStyle = gradient;
+  ctx.fillRect(0, 0, size, size);
+  return new THREE.CanvasTexture(canvas);
+}
+
 // ─── Component states ────────────────────────────────────────────────────────
 
 function EconomyFallback() {
@@ -106,6 +132,37 @@ export default function GlobeFootprint() {
   const cleanupRef = useRef(null);
   const controlsRef = useRef(null);
   const selectedRef = useRef(null);
+  const glowRef = useRef(null);
+  const glowMatRef = useRef(null);
+
+  function destroyGlow() {
+    if (glowRef.current) {
+      const parent = glowRef.current.parent;
+      if (parent) parent.remove(glowRef.current);
+      if (glowMatRef.current) glowMatRef.current.dispose();
+      glowRef.current = null;
+      glowMatRef.current = null;
+    }
+  }
+
+  function spawnGlow(lat, lng, scene) {
+    destroyGlow();
+    const texture = createGlowTexture();
+    const mat = new THREE.SpriteMaterial({
+      map: texture,
+      blending: THREE.AdditiveBlending,
+      transparent: true,
+      opacity: 0.9,
+      depthWrite: false,
+    });
+    glowMatRef.current = mat;
+    const sprite = new THREE.Sprite(mat);
+    sprite.position.copy(latLngToVec3(lat, lng, 1.02));
+    sprite.scale.set(0.15, 0.15, 1);
+    scene.add(sprite);
+    glowRef.current = sprite;
+  }
+
   const { quality } = usePerformance();
   const [isMounted, setIsMounted] = useState(false);
   const [globeState, setGlobeState] = useState({ type: 'loading' });
@@ -181,6 +238,7 @@ export default function GlobeFootprint() {
             selectedRef.current = label;
             setSelectedCity(label);
             controlsRef.current.autoRotate = false;
+            spawnGlow(label.lat, label.lon, scene);
             globe.pointOfView(
               { lat: label.lat, lng: label.lon, altitude: 0.7 },
               1200,
@@ -219,6 +277,7 @@ export default function GlobeFootprint() {
           .ringRepeatPeriod(500)
           .onGlobeClick(() => {
             if (!selectedRef.current) return;
+            destroyGlow();
             selectedRef.current = null;
             setSelectedCity(null);
             controlsRef.current.autoRotate = true;
@@ -298,6 +357,11 @@ export default function GlobeFootprint() {
           cloudMesh.rotation.y = rotateY * 1.15;  // clouds drift faster than globe
           cloudMesh.rotation.x = rotateX * 0.85;
           globeMaterial.emissiveIntensity = 0.12 + Math.sin(time * 0.0006) * 0.04;
+          if (glowRef.current && glowMatRef.current) {
+            const pulse = 1 + Math.sin(time * 0.003) * 0.2;
+            glowRef.current.scale.set(0.15 * pulse, 0.15 * pulse, 1);
+            glowMatRef.current.opacity = 0.5 + Math.sin(time * 0.003 + 1) * 0.3;
+          }
           particleAnimId = requestAnimationFrame(tickParticles);
         }
         particleAnimId = requestAnimationFrame(tickParticles);
@@ -407,6 +471,7 @@ export default function GlobeFootprint() {
           scene.remove(cloudMesh);
           cloudGeom.dispose();
           cloudMat.dispose();
+          destroyGlow();
           ro.disconnect();
           container.removeEventListener('pointerenter', onPointerEnter);
           container.removeEventListener('pointerleave', onPointerLeave);
@@ -446,6 +511,7 @@ export default function GlobeFootprint() {
       if (!g || !ctrls) return;
 
       if (e.key === 'Escape' && selectedRef.current) {
+        destroyGlow();
         selectedRef.current = null;
         setSelectedCity(null);
         ctrls.autoRotate = true;
@@ -456,6 +522,7 @@ export default function GlobeFootprint() {
         selectedRef.current = loc;
         setSelectedCity(loc);
         ctrls.autoRotate = false;
+        spawnGlow(loc.lat, loc.lon, g.scene());
         g.pointOfView({ lat: loc.lat, lng: loc.lon, altitude: 0.7 }, 1000);
         e.preventDefault();
       } else if (e.key === '2' && !selectedRef.current) {
@@ -463,6 +530,7 @@ export default function GlobeFootprint() {
         selectedRef.current = loc;
         setSelectedCity(loc);
         ctrls.autoRotate = false;
+        spawnGlow(loc.lat, loc.lon, g.scene());
         g.pointOfView({ lat: loc.lat, lng: loc.lon, altitude: 0.7 }, 1000);
         e.preventDefault();
       }
@@ -537,6 +605,7 @@ export default function GlobeFootprint() {
             <button
               onClick={() => {
                 if (!selectedRef.current) return;
+                destroyGlow();
                 selectedRef.current = null;
                 setSelectedCity(null);
                 if (controlsRef.current) controlsRef.current.autoRotate = true;
