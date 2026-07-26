@@ -133,6 +133,44 @@ export default function GlobeFootprint() {
       const { default: Globe } = globeModule;
       const { UnrealBloomPass } = bloomModule;
 
+      // ── PBR roughness map (procedural land/water mask) ────────────
+
+      const R_MAP_W = 1024;
+      const R_MAP_H = 512;
+      const rCanvas = document.createElement('canvas');
+      rCanvas.width = R_MAP_W;
+      rCanvas.height = R_MAP_H;
+      const rCtx = rCanvas.getContext('2d');
+      // Water → dark (smooth / low roughness); Land → white (rough / high roughness)
+      rCtx.fillStyle = '#050505';
+      rCtx.fillRect(0, 0, R_MAP_W, R_MAP_H);
+      rCtx.fillStyle = '#ffffff';
+
+      function drawLandPolygon(coords) {
+        rCtx.beginPath();
+        for (let ring = 0; ring < coords.length; ring++) {
+          coords[ring].forEach(([lng, lat], i) => {
+            const x = ((lng + 180) / 360) * R_MAP_W;
+            const y = ((90 - lat) / 180) * R_MAP_H;
+            if (i === 0) rCtx.moveTo(x, y);
+            else rCtx.lineTo(x, y);
+          });
+          rCtx.closePath();
+        }
+        rCtx.fill('evenodd');
+      }
+
+      countries.features.forEach((f) => {
+        if (!f.geometry) return;
+        const g = f.geometry;
+        if (g.type === 'Polygon') drawLandPolygon(g.coordinates);
+        else if (g.type === 'MultiPolygon') g.coordinates.forEach((p) => drawLandPolygon(p));
+      });
+
+      const roughnessTexture = new THREE.CanvasTexture(rCanvas);
+      roughnessTexture.wrapS = THREE.RepeatWrapping;
+      roughnessTexture.wrapT = THREE.RepeatWrapping;
+
       // ── Helper functions (closed over `THREE`) ─────────────────────
 
       function latLngToVec3(lat, lng, radius) {
@@ -410,12 +448,31 @@ const deviceMem = navigator.deviceMemory || 8; // not available everywhere, defa
 const targetPR = isLowPower || deviceMem < 4 ? 1 : Math.min(dpr, 2);
 globe.renderer().setPixelRatio(targetPR);
 
-      // ── Custom globe material (bump + slight emissive for city lights) ──
+      // ── PBR material (MeshStandardMaterial + specular water + city lights) ──
 
-      const globeMaterial = globe.globeMaterial();
-      globeMaterial.bumpScale = 4;
-      globeMaterial.emissive = new THREE.Color('#111122');
-      globeMaterial.emissiveIntensity = 0.15;
+      const texLoader = new THREE.TextureLoader();
+      const pbrDayTex = texLoader.load('/textures/earth-day.jpg');
+      const pbrNightTex = texLoader.load('/textures/earth-night.jpg');
+
+      const oldMat = globe.globeMaterial();
+      const pbrMaterial = new THREE.MeshStandardMaterial({
+        map: pbrDayTex,
+        roughnessMap: roughnessTexture,
+        roughness: 0.35,
+        metalness: 0.02,
+        bumpMap: pbrDayTex,
+        bumpScale: 4,
+        emissive: new THREE.Color('#ffaa44'),
+        emissiveIntensity: 0.4,
+        emissiveMap: pbrNightTex,
+      });
+      globe.globeMaterial(pbrMaterial);
+      if (oldMat) oldMat.dispose();
+
+      // ── Ambient light so PBR material isn't pure-black ─────────────
+      const scene = globe.scene();
+      const ambientLight = new THREE.AmbientLight(0x223355, 0.5);
+      scene.add(ambientLight);
 
       // ── Cloud layer (custom mesh, independently rotated) ──────────────
 
@@ -431,7 +488,6 @@ globe.renderer().setPixelRatio(targetPR);
       });
       const cloudGeom = new THREE.SphereGeometry(1.008, 64, 64);
       const cloudMesh = new THREE.Mesh(cloudGeom, cloudMat);
-      const scene = globe.scene();
       scene.add(cloudMesh);
 
       // ── Enhanced atmosphere glow (World Monitor style) ────────────────
@@ -504,7 +560,7 @@ globe.renderer().setPixelRatio(targetPR);
         }
         outerGlow.rotation.y += 0.0003;
         innerGlow.rotation.y += 0.0002;
-        globeMaterial.emissiveIntensity = 0.12 + Math.sin(time * 0.0006) * 0.04;
+        globeMaterial.emissiveIntensity = 0.38 + Math.sin(time * 0.0006) * 0.06;
         if (glowRef.current && glowMatRef.current) {
           const pulse = 1 + Math.sin(time * 0.003) * 0.2;
           glowRef.current.scale.set(0.15 * pulse, 0.15 * pulse, 1);
@@ -653,7 +709,16 @@ globe.renderer().setPixelRatio(targetPR);
         innerGlowGeo.dispose();
         innerGlowMat.dispose();
         scene.remove(cyanLight);
+        scene.remove(ambientLight);
         destroyGlow();
+        // PBR material cleanup
+        if (globeMaterial) {
+          globeMaterial.dispose();
+          if (globeMaterial.map) globeMaterial.map.dispose();
+          if (globeMaterial.roughnessMap) globeMaterial.roughnessMap.dispose();
+          if (globeMaterial.emissiveMap) globeMaterial.emissiveMap.dispose();
+          if (globeMaterial.bumpMap) globeMaterial.bumpMap.dispose();
+        }
         ro.disconnect();
         container.removeEventListener('pointerenter', onPointerEnter);
         container.removeEventListener('pointerleave', onPointerLeave);
