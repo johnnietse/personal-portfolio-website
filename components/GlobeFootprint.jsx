@@ -32,16 +32,6 @@ function escapeHtml(str) {
   return div.innerHTML;
 }
 
-function buildLabelTooltipHtml(loc) {
-  return [
-    `<div style="color:#7ee787;font-weight:700;font-size:13px;margin-bottom:6px;letter-spacing:0.02em;">${escapeHtml(loc.city)}</div>`,
-    ...loc.experiences.map(
-      (e) =>
-        `<div style="padding:2px 0;"><span style="color:#58a6ff;margin-right:6px;">▸</span>${escapeHtml(e)}</div>`,
-    ),
-  ].join('');
-}
-
 // ─── Component states ────────────────────────────────────────────────────────
 
 function EconomyFallback() {
@@ -200,6 +190,48 @@ export default function GlobeFootprint() {
 
       glowFnsRef.current = { spawnGlow, destroyGlow };
 
+      // ── Inject CSS for HTML city badges ──────────────────────────────
+
+      const styleId = 'globe-city-marker-style';
+      if (!document.getElementById(styleId)) {
+        const style = document.createElement('style');
+        style.id = styleId;
+        style.textContent = `
+          .globe-city-marker {
+            display:flex;align-items:center;gap:6px;
+            background:rgba(13,17,23,0.8);
+            border:1px solid rgba(126,231,135,0.25);
+            border-radius:20px;
+            padding:4px 12px 4px 8px;
+            color:#e6edf3;
+            font-size:12px;
+            font-family:system-ui,sans-serif;
+            font-weight:500;
+            letter-spacing:0.01em;
+            cursor:pointer;
+            pointer-events:auto;
+            white-space:nowrap;
+            backdrop-filter:blur(6px);
+            transition:all 0.2s ease;
+            box-shadow:0 2px 8px rgba(0,0,0,0.3);
+            user-select:none;
+          }
+          .globe-city-marker:hover {
+            border-color:rgba(126,231,135,0.7);
+            box-shadow:0 0 16px rgba(126,231,135,0.25);
+            transform:scale(1.06);
+          }
+          .globe-city-dot {
+            width:7px;height:7px;
+            border-radius:50%;
+            background:#7ee787;
+            flex-shrink:0;
+            box-shadow:0 0 4px rgba(126,231,135,0.5);
+          }
+        `;
+        document.head.appendChild(style);
+      }
+
       const container = containerRef.current;
       if (!container) return;
 
@@ -231,32 +263,41 @@ export default function GlobeFootprint() {
         .polygonStrokeColor(() => 'rgba(139,148,158,0.2)')
         .polygonAltitude(0.002)
 
-        // ── Labels (city names + dots) ─────────────────────────────────
+        // ── Labels (city names + dots, visual only) ──────────────────────
         .labelsData(LABELS_DATA)
         .labelLat((d) => d.lat)
         .labelLng((d) => d.lon)
         .labelText((d) => d.text)
-        .labelLabel((d) => buildLabelTooltipHtml(d))
         .labelColor(() => '#e6edf3')
         .labelSize(0.55)
         .labelIncludeDot(true)
         .labelDotRadius(0.12)
         .labelDotOrientation(() => 'bottom')
         .labelResolution(8)
-        .onLabelClick((label) => {
-          if (selectedRef.current) return; // already focused
-          selectedRef.current = label;
-          setSelectedCity(label);
-          controlsRef.current.autoRotate = false;
-          spawnGlow(label.lat, label.lon, scene);
-          globe.pointOfView(
-            { lat: label.lat, lng: label.lon, altitude: 0.7 },
-            1200,
-          );
-        })
-        .onLabelHover((label) => {
-          const canvas = container.querySelector('canvas');
-          if (canvas) canvas.style.cursor = label ? 'pointer' : 'grab';
+
+        // ── HTML city badges (easier to click) ────────────────────────────
+        .htmlElementsData(LABELS_DATA)
+        .htmlLat((d) => d.lat)
+        .htmlLng((d) => d.lon)
+        .htmlAltitude(() => 0.006)
+        .htmlElement((d) => {
+          const el = document.createElement('div');
+          el.innerHTML = `
+            <div class="globe-city-marker">
+              <span class="globe-city-dot"></span>
+              <span class="globe-city-name">${escapeHtml(d.text)}</span>
+            </div>`;
+          const inner = el.firstElementChild;
+          inner.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (selectedRef.current) return;
+            selectedRef.current = d;
+            setSelectedCity(d);
+            controlsRef.current.autoRotate = false;
+            spawnGlow(d.lat, d.lon, scene);
+            globe.pointOfView({ lat: d.lat, lng: d.lon, altitude: 0.7 }, 1200);
+          });
+          return inner;
         })
 
         // ── Arc (Kingston ↔ Hong Kong) ─────────────────────────────────
@@ -437,16 +478,30 @@ export default function GlobeFootprint() {
 
       globe.pointOfView({ lat: 32, lng: -30, altitude: 2.6 });
 
-      // ── Pause auto-rotate on pointer hover ──────────────────────────
+      // ── Auto-rotate idle timeout (World Monitor style) ───────────────
+      // Resume rotation after 60s of inactivity
+      let autoRotateTimer = null;
+      const pauseAutoRotate = () => {
+        controls.autoRotate = false;
+        if (autoRotateTimer) { clearTimeout(autoRotateTimer); autoRotateTimer = null; }
+      };
+      const scheduleResumeAutoRotate = () => {
+        if (selectedRef.current) return; // don't resume while city is focused
+        if (autoRotateTimer) clearTimeout(autoRotateTimer);
+        autoRotateTimer = setTimeout(() => { controls.autoRotate = true; }, 60_000);
+      };
+      container.addEventListener('mousedown', () => { pauseAutoRotate(); });
+      container.addEventListener('touchstart', () => { pauseAutoRotate(); }, { passive: true });
+      container.addEventListener('mouseup', scheduleResumeAutoRotate);
+      container.addEventListener('touchend', scheduleResumeAutoRotate);
 
-      const onPointerEnter = () => {
+      // ── Pause auto-rotate on pointer hover ──────────────────────────
+      container.addEventListener('pointerenter', () => {
         if (!selectedRef.current) controls.autoRotate = false;
-      };
-      const onPointerLeave = () => {
+      });
+      container.addEventListener('pointerleave', () => {
         if (!selectedRef.current) controls.autoRotate = true;
-      };
-      container.addEventListener('pointerenter', onPointerEnter);
-      container.addEventListener('pointerleave', onPointerLeave);
+      });
 
       // ── Ensure WebGL canvas is visible ───────────────────────────────
 
