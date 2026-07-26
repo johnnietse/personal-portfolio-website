@@ -142,7 +142,6 @@ export default function GlobeFootprint() {
           .atmosphereAltitude(0.18)
           .width(w)
           .height(h)
-          .pixelRatio(Math.min(window.devicePixelRatio || 1, 2))
 
           // ── Labels (city names + dots) ─────────────────────────────────
           .labelsData(LABELS_DATA)
@@ -183,6 +182,10 @@ export default function GlobeFootprint() {
           .ringMaxRadius(2.5)
           .ringPropagationSpeed(1.8)
           .ringRepeatPeriod(500);
+
+        // ── Renderer pixel ratio (retina) ───────────────────────────────
+
+        globe.renderer().setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
 
         // ── Custom globe material (bump + water specular) ────────────────
 
