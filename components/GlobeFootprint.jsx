@@ -1,13 +1,13 @@
 'use client';
 
-import { useRef, useMemo, useState, useEffect } from 'react';
+import React, { useRef, useMemo, useState, useEffect, Component } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Html, Line, useTexture } from '@react-three/drei';
 import * as THREE from 'three';
 import { usePerformance } from './PerformanceManager';
 import { LOCATIONS } from '@/lib/config/locations';
 
-const EARTH_TEXTURE_URL = 'https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg';
+const EARTH_TEXTURE_URL = '/textures/earth-blue-marble.jpg';
 const GLOBE_RADIUS = 2;
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
@@ -208,6 +208,24 @@ function EconomyFallback() {
   );
 }
 
+// ─── Error Boundary ──────────────────────────────────────────────────────────
+
+class GlobeErrorBoundary extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+  render() {
+    if (this.state.hasError) {
+      return <EconomyFallback />;
+    }
+    return this.props.children;
+  }
+}
+
 // ─── Default Export ──────────────────────────────────────────────────────────
 
 export default function GlobeFootprint() {
@@ -230,27 +248,29 @@ export default function GlobeFootprint() {
   const showWireframe = quality.geometryDetail >= 0.75;
 
   return (
-    <div style={{
-      position: 'relative', width: '100%', maxWidth: '500px', margin: '0 auto',
-      aspectRatio: '1/1', cursor: 'grab',
-    }}>
-      <Canvas camera={{ position: [0, 0.5, 5.5], fov: 38 }}>
-        <ambientLight intensity={0.6} />
-        <directionalLight position={[5, 8, 5]} intensity={1.5} />
-        <directionalLight position={[-3, -2, 4]} intensity={0.4} color="#58a6ff" />
+    <GlobeErrorBoundary>
+      <div style={{
+        position: 'relative', width: '100%', maxWidth: '500px', margin: '0 auto',
+        aspectRatio: '1/1', cursor: 'grab',
+      }}>
+        <Canvas camera={{ position: [0, 0.5, 5.5], fov: 38 }}>
+          <ambientLight intensity={0.6} />
+          <directionalLight position={[5, 8, 5]} intensity={1.5} />
+          <directionalLight position={[-3, -2, 4]} intensity={0.4} color="#58a6ff" />
 
-        <TexturedEarth detail={detail} showWireframe={showWireframe} />
-        <LocationPins radius={GLOBE_RADIUS} hoveredPin={hoveredPin} setHoveredPin={setHoveredPin} />
-        {showArcs && <ConnectionArcs radius={GLOBE_RADIUS} />}
+          <TexturedEarth detail={detail} showWireframe={showWireframe} />
+          <LocationPins radius={GLOBE_RADIUS} hoveredPin={hoveredPin} setHoveredPin={setHoveredPin} />
+          {showArcs && <ConnectionArcs radius={GLOBE_RADIUS} />}
 
-        <OrbitControls
-          enableZoom={false}
-          enablePan={false}
-          autoRotate={false}
-          minPolarAngle={Math.PI / 3}
-          maxPolarAngle={Math.PI / 1.5}
-        />
-      </Canvas>
-    </div>
+          <OrbitControls
+            enableZoom={false}
+            enablePan={false}
+            autoRotate={false}
+            minPolarAngle={Math.PI / 3}
+            maxPolarAngle={Math.PI / 1.5}
+          />
+        </Canvas>
+      </div>
+    </GlobeErrorBoundary>
   );
 }
