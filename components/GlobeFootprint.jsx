@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
+import { feature } from 'topojson-client';
 import { usePerformance } from './PerformanceManager';
 import { LOCATIONS } from '@/lib/config/locations';
 
@@ -117,8 +118,14 @@ export default function GlobeFootprint() {
     let destroyed = false;
     setGlobeState({ type: 'loading' });
 
-    import('globe.gl')
-      .then(async ({ default: Globe }) => {
+    // Fetch globe module + countries data in parallel
+    const globeModule = import('globe.gl');
+    const countriesData = fetch('/data/countries-110m.json')
+      .then((r) => r.json())
+      .then((topology) => feature(topology, topology.objects.countries));
+
+    Promise.all([globeModule, countriesData])
+      .then(async ([{ default: Globe }, countries]) => {
         if (destroyed) return;
 
         const container = containerRef.current;
@@ -134,14 +141,21 @@ export default function GlobeFootprint() {
           animateIn: true,
           rendererConfig: { antialias: true, alpha: true },
         })
-          .globeImageUrl('/textures/earth-blue-marble.jpg')
-          .bumpImageUrl('/textures/earth-topology.png')
-          .backgroundImageUrl('/textures/night-sky.png')
+          .globeImageUrl('/textures/earth-night.jpg')
           .backgroundColor('#000000')
+          .backgroundImageUrl('/textures/night-sky.png')
           .atmosphereColor('#58a6ff')
-          .atmosphereAltitude(0.18)
+          .atmosphereAltitude(0.15)
+          .showGraticules(true)
           .width(w)
           .height(h)
+
+          // ── Country outlines (subtle wireframe) ────────────────────────
+          .polygonsData(countries.features)
+          .polygonGeoJsonGeometry((d) => d.geometry)
+          .polygonCapColor(() => 'transparent')
+          .polygonStrokeColor(() => 'rgba(139,148,158,0.2)')
+          .polygonAltitude(0.002)
 
           // ── Labels (city names + dots) ─────────────────────────────────
           .labelsData(LABELS_DATA)
@@ -163,9 +177,9 @@ export default function GlobeFootprint() {
           .arcEndLat((d) => d.endLat)
           .arcEndLng((d) => d.endLng)
           .arcColor(() => [
-            'rgba(126,231,135,0.4)',
-            'rgba(88,166,255,0.6)',
-            'rgba(126,231,135,0.4)',
+            'rgba(126,231,135,0.5)',
+            'rgba(88,166,255,0.7)',
+            'rgba(126,231,135,0.5)',
           ])
           .arcAltitude(0.35)
           .arcDashLength(0.6)
@@ -178,7 +192,7 @@ export default function GlobeFootprint() {
           .ringsData(RINGS_DATA)
           .ringLat((d) => d.lat)
           .ringLng((d) => d.lng)
-          .ringColor(() => ['rgba(126,231,135,0)', 'rgba(126,231,135,0.8)'])
+          .ringColor(() => ['rgba(126,231,135,0)', 'rgba(126,231,135,0.7)'])
           .ringMaxRadius(2.5)
           .ringPropagationSpeed(1.8)
           .ringRepeatPeriod(500);
@@ -187,24 +201,12 @@ export default function GlobeFootprint() {
 
         globe.renderer().setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
 
-        // ── Custom globe material (bump + water specular) ────────────────
+        // ── Custom globe material (bump + slight emissive for city lights) ──
 
         const globeMaterial = globe.globeMaterial();
-        globeMaterial.bumpScale = 8;
-
-        const loader = new THREE.TextureLoader();
-        loader.load('/textures/earth-water.png', (tex) => {
-          if (destroyed) return;
-          globeMaterial.specularMap = tex;
-          globeMaterial.specular = new THREE.Color('grey');
-          globeMaterial.shininess = 15;
-          globeMaterial.needsUpdate = true;
-        });
-
-        // ── Move directional light for specular effect ───────────────────
-
-        const dirLight = globe.lights().find((l) => l.type === 'DirectionalLight');
-        if (dirLight) dirLight.position.set(1, 1, 1);
+        globeMaterial.bumpScale = 4;
+        globeMaterial.emissive = new THREE.Color('#111122');
+        globeMaterial.emissiveIntensity = 0.15;
 
         // ── Orbit controls ───────────────────────────────────────────────
 
@@ -246,8 +248,8 @@ export default function GlobeFootprint() {
       })
       .catch((err) => {
         if (destroyed) return;
-        console.error('[GlobeFootprint] globe.gl init failed:', err);
-        setGlobeState({ type: 'error', message: err.message || 'Failed to load globe' });
+        console.error('[GlobeFootprint] init failed:', err);
+        setGlobeState({ type: 'error', message: err.message || 'Init failed' });
       });
 
     return () => {
