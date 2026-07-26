@@ -2,7 +2,7 @@
 
 import { useRef, useMemo, useState, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { OrbitControls, Box } from '@react-three/drei';
+import { OrbitControls, Box, ContactShadows } from '@react-three/drei';
 import * as THREE from 'three';
 import { usePerformance } from './PerformanceManager';
 import { useRenderBudget } from '@/lib/hooks/useRenderBudget';
@@ -172,12 +172,17 @@ const MDSystem = ({ simState, count }) => {
             {/* The primary Instanced Buffer Mesh minimizing explicit drawn nodes into a single GPU call */}
             <instancedMesh ref={meshRef} args={[null, null, count]}>
                 <sphereGeometry args={[0.4, count > 100 ? 16 : 8, count > 100 ? 16 : 8]} />
-                <meshStandardMaterial
-                    metalness={0.2}
-                    roughness={0.1}
+                <meshPhysicalMaterial
+                    metalness={0.3}
+                    roughness={0.15}
+                    clearcoat={0.5}
+                    clearcoatRoughness={0.1}
+                    transmission={0.3}
+                    thickness={1.5}
+                    ior={1.4}
                 />
             </instancedMesh>
-            {/* The visual periodic boundary condition constraint box */}
+            {/* The visual periodic boundary condition constraint box - enhanced */}
             <Box
                 args={[BOX_SIZE, BOX_SIZE, BOX_SIZE]}
                 onPointerOver={() => {
@@ -189,7 +194,7 @@ const MDSystem = ({ simState, count }) => {
                     window.dispatchEvent(new CustomEvent('hud-scan', { detail: null }));
                 }}
             >
-                <meshBasicMaterial color="#38bdf8" wireframe opacity={0.15} transparent side={THREE.BackSide} />
+                <meshPhysicalMaterial color="#38bdf8" wireframe transparent opacity={0.12} side={THREE.BackSide} metalness={0.5} roughness={0.3} />
             </Box>
         </group>
     );
@@ -260,7 +265,7 @@ export default function MiniMDSimulation() {
         return () => clearInterval(interval);
     }, [isOptimized]);
 
-    if (quality.targetFPS < 30) {
+if (quality.targetFPS < 30) {
       // Render simplified version on economy tier
       return (
         <div style={{ position: 'relative', width: '100%', height: '100%', borderRadius: '12px', overflow: 'hidden' }}>
@@ -322,12 +327,18 @@ export default function MiniMDSimulation() {
             </button>
 
             <Canvas camera={{ position: [0, 8, 22], fov: 45 }} style={{ cursor: 'grab', background: 'radial-gradient(circle at center, rgba(15, 23, 42, 0.6) 0%, transparent 100%)' }}>
-                <ambientLight intensity={0.8} />
-                <directionalLight position={[10, 20, 10]} intensity={3} color="#ffffff" castShadow />
-                <pointLight position={[0, 0, 0]} intensity={2} color="#f472b6" />
+                {/* Studio lighting for molecular dynamics visualization */}
+                <ambientLight intensity={0.9} color="#ffffff" />
+                <directionalLight position={[10, 20, 10]} intensity={3.5} color="#ffffff" castShadow />
+                <directionalLight position={[-10, 15, -10]} intensity={2} color="#60a5fa" />
+                <pointLight position={[0, 0, 0]} intensity={2.5} color="#f472b6" decay={1.5} distance={25} />
+                <pointLight position={[0, -8, 0]} intensity={1.5} color="#10b981" decay={2} distance={20} />
 
                 {/* simState ref is passed directly into the WebGL loop — it reads phase + multiplier every frame */}
                 <MDSystem simState={simState} count={count} />
+
+                {/* Ground reflection */}
+                {!isLowQuality && <ContactShadows position={[0, -7.5, 0]} resolution={512} scale={30} blur={3} opacity={0.35} color="#000000" far={20} />}
 
                 <OrbitControls
                     enableZoom={false}

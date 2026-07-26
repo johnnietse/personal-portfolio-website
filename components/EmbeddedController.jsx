@@ -145,11 +145,13 @@ export default function EmbeddedController() {
 
     return (
         <Canvas camera={{ position: [0, 6, 8], fov: 45 }} style={{ cursor: 'grab', background: 'radial-gradient(circle at center, rgba(15, 23, 42, 0.4) 0%, transparent 100%)' }}>
-            {/* Highly reflective studio lighting optimized for Metallic PCB tracing */}
-            <ambientLight intensity={1.5} />
-            <directionalLight position={[10, 10, 10]} intensity={3} color="#ffffff" castShadow />
-            <directionalLight position={[-10, 5, -10]} intensity={1.5} color="#60a5fa" />
-            <pointLight position={[0, -5, 0]} intensity={2} color="#10b981" />
+            {/* Studio lighting setup optimized for metallic PCB visualization */}
+            <ambientLight intensity={1.2} color="#ffffff" />
+            <directionalLight position={[10, 15, 10]} intensity={3.5} color="#ffffff" castShadow />
+            <directionalLight position={[-10, 8, -10]} intensity={2} color="#60a5fa" />
+            <directionalLight position={[0, -5, 0]} intensity={1.2} color="#10b981" />
+            <pointLight position={[0, 12, 12]} intensity={2.5} color="#facc15" decay={1.5} distance={30} />
+            <pointLight position={[0, -3, 0]} intensity={1.8} color="#10b981" decay={2} distance={15} />
 
             <Float speed={quality.floatIntensity * 2.5} rotationIntensity={0.1} floatIntensity={quality.floatIntensity * 0.5}>
                 <MicrocontrollerBoard />

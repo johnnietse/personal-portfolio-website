@@ -20,7 +20,7 @@ const Topography = ({ isDriving }) => {
 
         // Smoothly accelerate the ground scrolling when driving
         speedLerp.current = THREE.MathUtils.lerp(speedLerp.current, isDriving ? 4 : 0, delta * 2);
-        scrollOffset.current += delta * speedLerp.current; // Integrate speed over time to prevent math jumping
+        scrollOffset.current += delta * speedLerp.current;
 
         if (planeRef.current && planeRef.current.attributes && planeRef.current.attributes.position) {
             const pos = planeRef.current.attributes.position;
@@ -29,7 +29,6 @@ const Topography = ({ isDriving }) => {
             for (let i = 0; i < pos.count; i++) {
                 if (isOverBudget()) break;
                 const x = pos.getX(i);
-                // When driving, the continuous scroll offset drags the Y coordinate backward aggressively
                 const y = pos.getY(i) + scrollOffset.current;
                 pos.setZ(i, Math.sin(x * 0.8 + time * 1.5) * Math.cos(y * 0.8) * 0.3);
                 consume(0.02);
@@ -436,10 +435,13 @@ export default function AutonomousCar() {
     return (
         <div style={{ position: 'relative', width: '100%', height: '100%' }}>
             <Canvas camera={{ position: [12, 8, 12], fov: 50 }} style={{ cursor: 'grab', borderRadius: '16px', background: 'radial-gradient(circle at center, rgba(15, 23, 42, 0.4) 0%, transparent 100%)' }}>
-                <ambientLight intensity={1.5} />
-                <directionalLight position={[10, 10, 5]} intensity={2.5} color="#ffffff" castShadow />
-                <directionalLight position={[-10, 5, -10]} intensity={1.5} color="#60a5fa" />
-                <pointLight position={[0, 5, 10]} intensity={2} color="#facc15" />
+                {/* Studio lighting setup for automotive visualization */}
+                <ambientLight intensity={1.2} color="#ffffff" />
+                <directionalLight position={[10, 15, 10]} intensity={3} color="#ffffff" castShadow />
+                <directionalLight position={[-10, 8, -10]} intensity={1.8} color="#60a5fa" />
+                <directionalLight position={[0, -5, 0]} intensity={1} color="#10b981" />
+                <pointLight position={[0, 10, 15]} intensity={2} color="#facc15" decay={1.5} distance={30} />
+                <pointLight position={[0, -3, 0]} intensity={1.5} color="#10b981" decay={2} distance={15} />
 
                 {/* Propagating the driving state down directly into the specific core meshes */}
                 <VehicleMesh isDriving={isDriving} />
