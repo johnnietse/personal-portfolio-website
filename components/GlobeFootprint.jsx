@@ -432,6 +432,46 @@ export default function GlobeFootprint() {
     };
   }, [isLowPower, isMounted]);
 
+  // ── Keyboard shortcuts ─────────────────────────────────────────────────────
+
+  useEffect(() => {
+    if (globeState.type !== 'ready') return;
+
+    function handleKeyDown(e) {
+      // Only respond when the globe is focused (no input field active)
+      if (['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement?.tagName)) return;
+
+      const g = globeRef.current;
+      const ctrls = controlsRef.current;
+      if (!g || !ctrls) return;
+
+      if (e.key === 'Escape' && selectedRef.current) {
+        selectedRef.current = null;
+        setSelectedCity(null);
+        ctrls.autoRotate = true;
+        g.pointOfView({ lat: 32, lng: -30, altitude: 2.6 }, 800);
+        e.preventDefault();
+      } else if (e.key === '1' && !selectedRef.current) {
+        const loc = LABELS_DATA[0];
+        selectedRef.current = loc;
+        setSelectedCity(loc);
+        ctrls.autoRotate = false;
+        g.pointOfView({ lat: loc.lat, lng: loc.lon, altitude: 0.7 }, 1000);
+        e.preventDefault();
+      } else if (e.key === '2' && !selectedRef.current) {
+        const loc = LABELS_DATA[1];
+        selectedRef.current = loc;
+        setSelectedCity(loc);
+        ctrls.autoRotate = false;
+        g.pointOfView({ lat: loc.lat, lng: loc.lon, altitude: 0.7 }, 1000);
+        e.preventDefault();
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [globeState.type]);
+
   // ── Render ────────────────────────────────────────────────────────────────
 
   const showOverlay = isMounted && (globeState.type !== 'ready' || isLowPower);
