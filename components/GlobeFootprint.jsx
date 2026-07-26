@@ -1,10 +1,11 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import * as THREE from 'three';
 import { usePerformance } from './PerformanceManager';
 import { LOCATIONS } from '@/lib/config/locations';
 
-// ─── Arc data: Kingston ↔ Hong Kong ──────────────────────────────────────────
+// ─── Static data ─────────────────────────────────────────────────────────────
 
 const ARC_DATA = [{
   startLat: LOCATIONS[0].lat,
@@ -13,7 +14,17 @@ const ARC_DATA = [{
   endLng: LOCATIONS[1].lon,
 }];
 
-// ─── Pin HTML builder ────────────────────────────────────────────────────────
+const RINGS_DATA = LOCATIONS.map((loc) => ({
+  lat: loc.lat,
+  lng: loc.lon,
+}));
+
+const LABELS_DATA = LOCATIONS.map((loc) => ({
+  ...loc,
+  text: loc.city.replace(', ON', '').replace(' SAR', ''),
+}));
+
+// ─── Helpers ─────────────────────────────────────────────────────────────────
 
 function escapeHtml(str) {
   const div = document.createElement('div');
@@ -21,70 +32,22 @@ function escapeHtml(str) {
   return div.innerHTML;
 }
 
-function createPinElement(loc) {
-  const wrapper = document.createElement('div');
-  wrapper.style.cssText =
-    'position:relative;display:flex;align-items:center;justify-content:center;cursor:pointer;width:24px;height:24px;';
-
-  const glow = document.createElement('div');
-  glow.style.cssText =
-    'position:absolute;width:18px;height:18px;border-radius:50%;' +
-    'background:rgba(126,231,135,0.15);animation:globe-pulse 2.5s ease-in-out infinite;';
-
-  const dot = document.createElement('div');
-  dot.style.cssText =
-    'width:8px;height:8px;border-radius:50%;background:#7ee787;' +
-    'box-shadow:0 0 12px rgba(126,231,135,0.9);z-index:1;';
-
-  wrapper.appendChild(glow);
-  wrapper.appendChild(dot);
-
-  const tooltip = document.createElement('div');
-  tooltip.style.cssText = [
-    'position:absolute;bottom:26px;left:50%;transform:translateX(-50%);',
-    'background:rgba(13,17,23,0.95);border:1px solid #7ee787;border-radius:10px;',
-    'padding:10px 14px;font-family:system-ui,sans-serif;font-size:12px;line-height:1.5;',
-    'color:#c9d1d9;box-shadow:0 8px 32px rgba(0,0,0,0.6);backdrop-filter:blur(8px);',
-    'opacity:0;pointer-events:none;transition:opacity 0.2s ease;',
-    'max-width:300px;white-space:normal;z-index:100;',
-  ].join('');
-  tooltip.innerHTML = [
+function buildLabelTooltipHtml(loc) {
+  return [
     `<div style="color:#7ee787;font-weight:700;font-size:13px;margin-bottom:6px;letter-spacing:0.02em;">${escapeHtml(loc.city)}</div>`,
     ...loc.experiences.map(
       (e) =>
         `<div style="padding:2px 0;"><span style="color:#58a6ff;margin-right:6px;">▸</span>${escapeHtml(e)}</div>`,
     ),
   ].join('');
-  wrapper.appendChild(tooltip);
-
-  wrapper.addEventListener('mouseenter', () => { tooltip.style.opacity = '1'; });
-  wrapper.addEventListener('mouseleave', () => { tooltip.style.opacity = '0'; });
-
-  return wrapper;
 }
 
-// ─── Injection keyframes ────────────────────────────────────────────────────
-
-function injectStyles() {
-  const id = 'globe-footprint-styles';
-  if (document.getElementById(id)) return;
-  const style = document.createElement('style');
-  style.id = id;
-  style.textContent = `
-    @keyframes globe-pulse {
-      0%, 100% { transform: scale(1); opacity: 0.25; }
-      50% { transform: scale(1.6); opacity: 0.08; }
-    }
-  `;
-  document.head.appendChild(style);
-}
-
-// ─── Economy fallback ────────────────────────────────────────────────────────
+// ─── Component states ────────────────────────────────────────────────────────
 
 function EconomyFallback() {
   return (
     <div style={{
-      position: 'absolute', inset: 0, borderRadius: '50%',
+      position: 'absolute', inset: 0, borderRadius: '50%', zIndex: 1,
       background: 'radial-gradient(circle at center, #0f172a 0%, #020617 100%)',
       border: '1px solid #58a6ff',
       display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -97,8 +60,6 @@ function EconomyFallback() {
     </div>
   );
 }
-
-// ─── Loading / error states ──────────────────────────────────────────────────
 
 function GlobePlaceholder() {
   return (
@@ -114,9 +75,7 @@ function GlobePlaceholder() {
         borderTopColor: '#58a6ff',
         animation: 'globe-spin 0.8s linear infinite',
       }} />
-      <style>{`
-        @keyframes globe-spin { to { transform: rotate(360deg); } }
-      `}</style>
+      <style>{`@keyframes globe-spin{to{transform:rotate(360deg)}}`}</style>
     </div>
   );
 }
@@ -144,93 +103,148 @@ export default function GlobeFootprint() {
   const cleanupRef = useRef(null);
   const { quality } = usePerformance();
   const [isMounted, setIsMounted] = useState(false);
-  const [uiState, setUiState] = useState({ type: 'loading' }); // 'loading' | 'ready' | 'error'
+  const [globeState, setGlobeState] = useState({ type: 'loading' });
 
   useEffect(() => { setIsMounted(true); }, []);
 
   const isLowPower = quality.targetFPS < 30;
 
-  // ── Initialise globe.gl once container exists on client ──────────────────
+  // ── Initialise globe.gl ─────────────────────────────────────────────────
 
   useEffect(() => {
-    // Wait until hydrated AND container DOM is ready
     if (!isMounted || isLowPower || !containerRef.current) return;
 
     let destroyed = false;
-    setUiState({ type: 'loading' });
-
-    injectStyles();
+    setGlobeState({ type: 'loading' });
 
     import('globe.gl')
-      .then(({ default: Globe }) => {
+      .then(async ({ default: Globe }) => {
         if (destroyed) return;
 
         const container = containerRef.current;
         if (!container) return;
 
         const rect = container.getBoundingClientRect();
-        const w = rect.width || 400;
-        const h = rect.height || 400;
+        const w = rect.width || 500;
+        const h = rect.height || 500;
 
-        const globe = new Globe(container)
+        // ── Create globe instance ────────────────────────────────────────
+
+        const globe = new Globe(container, {
+          animateIn: true,
+          rendererConfig: { antialias: true, alpha: true },
+        })
           .globeImageUrl('/textures/earth-blue-marble.jpg')
-          .backgroundColor('#020617')
+          .bumpImageUrl('/textures/earth-topology.png')
+          .backgroundImageUrl('/textures/night-sky.png')
+          .backgroundColor('#000000')
           .atmosphereColor('#58a6ff')
-          .atmosphereAltitude(0.12)
+          .atmosphereAltitude(0.18)
           .width(w)
           .height(h)
-          .htmlElementsData(LOCATIONS)
-          .htmlLat((d) => d.lat)
-          .htmlLng((d) => d.lon)
-          .htmlElement((d) => createPinElement(d))
+          .pixelRatio(Math.min(window.devicePixelRatio || 1, 2))
+
+          // ── Labels (city names + dots) ─────────────────────────────────
+          .labelsData(LABELS_DATA)
+          .labelLat((d) => d.lat)
+          .labelLng((d) => d.lon)
+          .labelText((d) => d.text)
+          .labelLabel((d) => buildLabelTooltipHtml(d))
+          .labelColor(() => '#e6edf3')
+          .labelSize(0.55)
+          .labelIncludeDot(true)
+          .labelDotRadius(0.12)
+          .labelDotOrientation(() => 'bottom')
+          .labelResolution(8)
+
+          // ── Arc (Kingston ↔ Hong Kong) ─────────────────────────────────
           .arcsData(ARC_DATA)
           .arcStartLat((d) => d.startLat)
           .arcStartLng((d) => d.startLng)
           .arcEndLat((d) => d.endLat)
           .arcEndLng((d) => d.endLng)
-          .arcColor(() => ['rgba(126,231,135,0.12)', 'rgba(88,166,255,0.12)'])
+          .arcColor(() => [
+            'rgba(126,231,135,0.4)',
+            'rgba(88,166,255,0.6)',
+            'rgba(126,231,135,0.4)',
+          ])
+          .arcAltitude(0.35)
           .arcDashLength(0.6)
-          .arcDashGap(0.15)
-          .arcDashAnimateTime(5000)
-          .arcStroke(0.4);
+          .arcDashGap(0.12)
+          .arcDashAnimateTime(4000)
+          .arcStroke(0.6)
+          .arcCurveResolution(64)
+
+          // ── Rings (pulse at cities) ────────────────────────────────────
+          .ringsData(RINGS_DATA)
+          .ringLat((d) => d.lat)
+          .ringLng((d) => d.lng)
+          .ringColor(() => ['rgba(126,231,135,0)', 'rgba(126,231,135,0.8)'])
+          .ringMaxRadius(2.5)
+          .ringPropagationSpeed(1.8)
+          .ringRepeatPeriod(500);
+
+        // ── Custom globe material (bump + water specular) ────────────────
+
+        const globeMaterial = globe.globeMaterial();
+        globeMaterial.bumpScale = 8;
+
+        const loader = new THREE.TextureLoader();
+        loader.load('/textures/earth-water.png', (tex) => {
+          if (destroyed) return;
+          globeMaterial.specularMap = tex;
+          globeMaterial.specular = new THREE.Color('grey');
+          globeMaterial.shininess = 15;
+          globeMaterial.needsUpdate = true;
+        });
+
+        // ── Move directional light for specular effect ───────────────────
+
+        const dirLight = globe.lights().find((l) => l.type === 'DirectionalLight');
+        if (dirLight) dirLight.position.set(1, 1, 1);
+
+        // ── Orbit controls ───────────────────────────────────────────────
 
         const controls = globe.controls();
-        controls.autoRotate = false;
-        controls.autoRotateSpeed = 0;
+        controls.autoRotate = true;
+        controls.autoRotateSpeed = 0.4;
         controls.enableZoom = false;
         controls.enablePan = false;
-        controls.minPolarAngle = Math.PI / 3.5;
-        controls.maxPolarAngle = Math.PI / 1.3;
+        controls.minPolarAngle = Math.PI / 4;
+        controls.maxPolarAngle = Math.PI / 1.2;
 
-        globe.pointOfView({ lat: 30, lng: -20, altitude: 2.8 });
+        globe.pointOfView({ lat: 32, lng: -30, altitude: 2.6 });
 
-        // Ensure the WebGL canvas is visible
+        // ── Ensure WebGL canvas is visible ───────────────────────────────
+
         const canvas = container.querySelector('canvas');
         if (canvas) canvas.style.display = 'block';
 
-        // ResizeObserver for responsive sizing
+        // ── ResizeObserver for responsiveness ────────────────────────────
+
         const ro = new ResizeObserver((entries) => {
           for (const entry of entries) {
-            const { width, height } = entry.contentRect;
-            if (width > 0 && height > 0) {
-              globe.width(width).height(height);
+            const { width: cw, height: ch } = entry.contentRect;
+            if (cw > 0 && ch > 0) {
+              globe.width(cw).height(ch);
             }
           }
         });
         ro.observe(container);
 
-        // Store teardown
+        // ── Store teardown ───────────────────────────────────────────────
+
         cleanupRef.current = () => {
           ro.disconnect();
           globe._destructor();
         };
 
-        setUiState({ type: 'ready' });
+        setGlobeState({ type: 'ready' });
       })
       .catch((err) => {
         if (destroyed) return;
         console.error('[GlobeFootprint] globe.gl init failed:', err);
-        setUiState({ type: 'error', message: err.message || 'Failed to load globe' });
+        setGlobeState({ type: 'error', message: err.message || 'Failed to load globe' });
       });
 
     return () => {
@@ -244,10 +258,7 @@ export default function GlobeFootprint() {
 
   // ── Render ────────────────────────────────────────────────────────────────
 
-  // Container div is ALWAYS rendered so containerRef.current is always set
-  // after first paint.  Placeholder / fallback sits on top via absolute positioning.
-
-  const showOverlay = isMounted && (uiState.type !== 'ready' || isLowPower);
+  const showOverlay = isMounted && (globeState.type !== 'ready' || isLowPower);
 
   return (
     <div style={{
@@ -255,16 +266,16 @@ export default function GlobeFootprint() {
       aspectRatio: '1 / 1',
     }}>
       {showOverlay && isLowPower && <EconomyFallback />}
-      {showOverlay && !isLowPower && uiState.type === 'loading' && <GlobePlaceholder />}
-      {showOverlay && !isLowPower && uiState.type === 'error' && (
-        <GlobeError message={uiState.message || 'Globe failed to load'} />
+      {showOverlay && !isLowPower && globeState.type === 'loading' && <GlobePlaceholder />}
+      {showOverlay && !isLowPower && globeState.type === 'error' && (
+        <GlobeError message={globeState.message || 'Globe failed to load'} />
       )}
 
       <div
         ref={containerRef}
         style={{
           position: 'absolute', inset: 0, cursor: 'grab',
-          visibility: uiState.type === 'ready' && !isLowPower ? 'visible' : 'hidden',
+          visibility: globeState.type === 'ready' && !isLowPower ? 'visible' : 'hidden',
         }}
       />
     </div>
