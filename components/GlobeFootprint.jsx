@@ -1,14 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import {
-  Vector2, Vector3, CanvasTexture, Sprite, SpriteMaterial,
-  AdditiveBlending, Color, TextureLoader,
-  MeshPhongMaterial, SphereGeometry, Mesh, DoubleSide,
-  Points, PointsMaterial, BufferGeometry, BufferAttribute,
-  IcosahedronGeometry, EdgesGeometry, LineBasicMaterial, LineSegments,
-  Line,
-} from 'three';
+import * as THREE from 'three';
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
 import { feature } from 'topojson-client';
 import { usePerformance } from './PerformanceManager';
@@ -119,7 +112,7 @@ export default function GlobeFootprint() {
   function latLngToVec3(lat, lng, radius) {
     const phi = (90 - lat) * Math.PI / 180;
     const theta = (lng + 180) * Math.PI / 180;
-    return new Vector3(
+    return new THREE.Vector3(
       -radius * Math.sin(phi) * Math.cos(theta),
       radius * Math.cos(phi),
       radius * Math.sin(phi) * Math.sin(theta),
@@ -139,7 +132,7 @@ export default function GlobeFootprint() {
     gradient.addColorStop(1, 'rgba(126,231,135,0)');
     ctx.fillStyle = gradient;
     ctx.fillRect(0, 0, size, size);
-    return new CanvasTexture(canvas);
+    return new THREE.CanvasTexture(canvas);
   }
 
   function destroyGlow() {
@@ -155,15 +148,15 @@ export default function GlobeFootprint() {
   function spawnGlow(lat, lng, scene) {
     destroyGlow();
     const texture = makeGlowTexture();
-    const mat = new SpriteMaterial({
+    const mat = new THREE.SpriteMaterial({
       map: texture,
-      blending: AdditiveBlending,
+      blending: THREE.AdditiveBlending,
       transparent: true,
       opacity: 0.9,
       depthWrite: false,
     });
     glowMatRef.current = mat;
-    const sprite = new Sprite(mat);
+    const sprite = new THREE.Sprite(mat);
     sprite.position.copy(latLngToVec3(lat, lng, 1.02));
     sprite.scale.set(0.15, 0.15, 1);
     scene.add(sprite);
@@ -193,9 +186,8 @@ export default function GlobeFootprint() {
       .then((r) => r.json())
       .then((topology) => feature(topology, topology.objects.countries));
 
-    Promise.all([globeModule, countriesData])
-      .then(async ([{ default: Globe }, countries]) => {
-        if (destroyed) return;
+    Promise.all([globeModule, countriesData]).then(([{ default: Globe }, countries]) => {
+      if (destroyed) return;
 
         const container = containerRef.current;
         if (!container) return;
@@ -299,23 +291,23 @@ export default function GlobeFootprint() {
 
         const globeMaterial = globe.globeMaterial();
         globeMaterial.bumpScale = 4;
-        globeMaterial.emissive = new Color('#111122');
+        globeMaterial.emissive = new THREE.Color('#111122');
         globeMaterial.emissiveIntensity = 0.15;
 
         // ── Cloud layer (custom mesh, independently rotated) ──────────────
 
-        const cloudTexture = new TextureLoader()
+        const cloudTexture = new THREE.TextureLoader()
           .load('/textures/clouds-alpha.png');
-        const cloudMat = new MeshPhongMaterial({
+        const cloudMat = new THREE.MeshPhongMaterial({
           map: cloudTexture,
           transparent: true,
           opacity: 0.35,
           depthWrite: false,
-          blending: AdditiveBlending,
-          side: DoubleSide,
+          blending: THREE.AdditiveBlending,
+          side: THREE.DoubleSide,
         });
-        const cloudGeom = new SphereGeometry(1.008, 64, 64);
-        const cloudMesh = new Mesh(cloudGeom, cloudMat);
+        const cloudGeom = new THREE.SphereGeometry(1.008, 64, 64);
+        const cloudMesh = new THREE.Mesh(cloudGeom, cloudMat);
         scene.add(cloudMesh);
 
         // ── Orbital particle field ────────────────────────────────────────
@@ -333,21 +325,21 @@ export default function GlobeFootprint() {
           particleSizes[i] = 0.4 + Math.random() * 0.6;
         }
 
-        const particleGeom = new BufferGeometry();
-        particleGeom.setAttribute('position', new BufferAttribute(particlePos, 3));
-        particleGeom.setAttribute('aSize', new BufferAttribute(particleSizes, 1));
+        const particleGeom = new THREE.BufferGeometry();
+        particleGeom.setAttribute('position', new THREE.BufferAttribute(particlePos, 3));
+        particleGeom.setAttribute('aSize', new THREE.BufferAttribute(particleSizes, 1));
 
-        const particleMat = new PointsMaterial({
-          color: new Color('#58a6ff'),
+        const particleMat = new THREE.PointsMaterial({
+          color: new THREE.Color('#58a6ff'),
           size: 0.012,
           transparent: true,
           opacity: 0.45,
-          blending: AdditiveBlending,
+          blending: THREE.AdditiveBlending,
           depthWrite: false,
           sizeAttenuation: true,
         });
 
-        const particleField = new Points(particleGeom, particleMat);
+        const particleField = new THREE.Points(particleGeom, particleMat);
         const scene = globe.scene();
         scene.add(particleField);
 
@@ -375,14 +367,14 @@ export default function GlobeFootprint() {
 
         // ── Geodesic wireframe cage (floating above surface) ────────────
 
-        const cageGeom = new IcosahedronGeometry(1.04, 2);
-        const cageEdges = new EdgesGeometry(cageGeom);
-        const cageMat = new LineBasicMaterial({
+        const cageGeom = new THREE.IcosahedronGeometry(1.04, 2);
+        const cageEdges = new THREE.EdgesGeometry(cageGeom);
+        const cageMat = new THREE.LineBasicMaterial({
           color: '#58a6ff',
           transparent: true,
           opacity: 0.12,
         });
-        const wireframeCage = new LineSegments(cageEdges, cageMat);
+        const wireframeCage = new THREE.LineSegments(cageEdges, cageMat);
         scene.add(wireframeCage);
 
         // ── Equatorial ring ──────────────────────────────────────────────
@@ -393,26 +385,26 @@ export default function GlobeFootprint() {
         for (let i = 0; i <= ringSegments; i++) {
           const theta = (i / ringSegments) * Math.PI * 2;
           ringPoints.push(
-            new Vector3(
+            new THREE.Vector3(
               Math.cos(theta) * ringRadius,
               0,
               Math.sin(theta) * ringRadius,
             ),
           );
         }
-        const ringGeom = new BufferGeometry().setFromPoints(ringPoints);
-        const ringMat = new LineBasicMaterial({
+        const ringGeom = new THREE.BufferGeometry().setFromPoints(ringPoints);
+        const ringMat = new THREE.LineBasicMaterial({
           color: '#58a6ff',
           transparent: true,
           opacity: 0.08,
         });
-        const equatorRing = new Line(ringGeom, ringMat);
+        const equatorRing = new THREE.Line(ringGeom, ringMat);
         scene.add(equatorRing);
 
         // ── Bloom post-processing (cinematic glow) ───────────────────────
 
         const bloomPass = new UnrealBloomPass(
-          new Vector2(w, h),
+          new THREE.Vector2(w, h),
           0.2,   // strength — subtle bloom on bright elements
           0.4,   // radius
           0.15,  // threshold — only bloom the bright parts
