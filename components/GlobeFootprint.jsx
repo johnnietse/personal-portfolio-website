@@ -199,6 +199,7 @@ export default function GlobeFootprint() {
         style.id = styleId;
         style.textContent = `
           .globe-city-marker {
+            position:relative;
             display:flex;align-items:center;gap:6px;
             background:rgba(13,17,23,0.8);
             border:1px solid rgba(126,231,135,0.25);
@@ -219,15 +220,35 @@ export default function GlobeFootprint() {
           }
           .globe-city-marker:hover {
             border-color:rgba(126,231,135,0.7);
-            box-shadow:0 0 16px rgba(126,231,135,0.25);
+            box-shadow:0 0 16px rgba(126,231,135,0.25), 0 0 32px rgba(126,231,135,0.1);
             transform:scale(1.06);
           }
           .globe-city-dot {
+            position:relative;z-index:1;
             width:7px;height:7px;
             border-radius:50%;
             background:#7ee787;
             flex-shrink:0;
             box-shadow:0 0 4px rgba(126,231,135,0.5);
+            animation:globe-dot-breathe 3s ease-in-out infinite;
+          }
+          @keyframes globe-dot-breathe {
+            0%,100% { opacity:1; transform:scale(1); }
+            50%     { opacity:0.6; transform:scale(0.85); }
+          }
+          .globe-city-pulse {
+            position:absolute;z-index:0;
+            width:20px;height:20px;border-radius:50%;
+            left:1px;top:50%;transform:translateY(-50%);
+            border:1.5px solid rgba(126,231,135,0.4);
+            background:rgba(126,231,135,0.08);
+            animation:globe-pulse 2.5s ease-out infinite;
+            pointer-events:none;
+          }
+          @keyframes globe-pulse {
+            0%   { transform:translateY(-50%) scale(1);   opacity:0.6; }
+            70%  { transform:translateY(-50%) scale(2.5); opacity:0;   }
+            100% { transform:translateY(-50%) scale(2.5); opacity:0;   }
           }
           @keyframes globe-flash {
             0%   { transform:scale(0.5); opacity:0.8; }
@@ -256,8 +277,8 @@ export default function GlobeFootprint() {
         .globeImageUrl('/textures/earth-night.jpg')
         .backgroundColor('#000000')
         .backgroundImageUrl('/textures/night-sky.png')
-        .atmosphereColor('#58a6ff')
-        .atmosphereAltitude(0.22)
+.atmosphereColor('#4466cc')
+          .atmosphereAltitude(0.18)
         .showGraticules(true)
         .width(w)
         .height(h)
@@ -268,6 +289,10 @@ export default function GlobeFootprint() {
         .polygonCapColor(() => 'transparent')
         .polygonStrokeColor(() => 'rgba(139,148,158,0.2)')
         .polygonAltitude(0.002)
+        .onPolygonHover((polygon) => {
+          const canvas = container.querySelector('canvas');
+          if (canvas) canvas.style.cursor = polygon ? 'pointer' : 'grab';
+        })
 
         // ── Labels (city names + dots, visual only) ──────────────────────
         .labelsData(LABELS_DATA)
@@ -328,9 +353,10 @@ export default function GlobeFootprint() {
                 </div>`;
               return el.firstElementChild;
             }
-            // City badge
+            // City badge (with pulsing ring)
             el.innerHTML = `
               <div class="globe-city-marker">
+                <span class="globe-city-pulse"></span>
                 <span class="globe-city-dot"></span>
                 <span class="globe-city-name">${escapeHtml(d.text)}</span>
               </div>`;
@@ -379,7 +405,10 @@ export default function GlobeFootprint() {
 
       // ── Renderer pixel ratio (retina) ───────────────────────────────
 
-      globe.renderer().setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+      const dpr = window.devicePixelRatio || 1;
+const deviceMem = navigator.deviceMemory || 8; // not available everywhere, defaults high
+const targetPR = isLowPower || deviceMem < 4 ? 1 : Math.min(dpr, 2);
+globe.renderer().setPixelRatio(targetPR);
 
       // ── Custom globe material (bump + slight emissive for city lights) ──
 
@@ -473,6 +502,8 @@ export default function GlobeFootprint() {
           cloudMesh.rotation.y = rotateY * 1.15;
           cloudMesh.rotation.x = rotateX * 0.85;
         }
+        outerGlow.rotation.y += 0.0003;
+        innerGlow.rotation.y += 0.0002;
         globeMaterial.emissiveIntensity = 0.12 + Math.sin(time * 0.0006) * 0.04;
         if (glowRef.current && glowMatRef.current) {
           const pulse = 1 + Math.sin(time * 0.003) * 0.2;
