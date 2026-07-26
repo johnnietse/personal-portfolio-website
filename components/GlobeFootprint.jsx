@@ -154,6 +154,9 @@ export default function GlobeFootprint() {
           .atmosphereColor('#58a6ff')
           .atmosphereAltitude(0.22)
           .showGraticules(true)
+          .cloudsImageUrl('/textures/clouds-alpha.png')
+          .cloudsOpacity(0.35)
+          .cloudsColor(() => 'rgba(230,237,243,0.9)')
           .width(w)
           .height(h)
 
@@ -419,35 +422,39 @@ export default function GlobeFootprint() {
       {selectedCity && globeState.type === 'ready' && !isLowPower && (
         <div style={{
           position: 'absolute', left: '12px', right: '12px', bottom: '12px',
-          background: 'rgba(13,17,23,0.92)',
-          border: '1px solid rgba(88,166,255,0.3)',
-          borderRadius: '12px',
-          padding: '16px 18px',
-          backdropFilter: 'blur(12px)',
+          background: 'rgba(13,17,23,0.94)',
+          border: '1px solid rgba(88,166,255,0.25)',
+          borderRadius: '14px',
+          padding: '14px 16px',
+          backdropFilter: 'blur(14px)',
           zIndex: 10,
-          animation: 'globe-card-in 0.3s ease-out',
-          maxHeight: '55%', overflowY: 'auto',
+          animation: 'globe-card-in 0.35s cubic-bezier(0.22,1,0.36,1)',
+          maxHeight: '58%', overflowY: 'auto',
+          boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
         }}>
           <style>{`
             @keyframes globe-card-in {
-              from { opacity: 0; transform: translateY(12px); }
-              to   { opacity: 1; transform: translateY(0); }
+              from { opacity: 0; transform: translateY(16px) scale(0.97); }
+              to   { opacity: 1; transform: translateY(0) scale(1); }
             }
           `}</style>
 
           {/* Header */}
           <div style={{
             display: 'flex', justifyContent: 'space-between',
-            alignItems: 'flex-start', marginBottom: '10px',
+            alignItems: 'flex-start', marginBottom: '14px',
           }}>
             <div>
               <div style={{
-                color: '#7ee787', fontWeight: 700, fontSize: '15px',
-                letterSpacing: '0.02em',
+                color: '#7ee787', fontWeight: 600, fontSize: '14px',
+                letterSpacing: '0.01em',
               }}>
                 {selectedCity.city}
               </div>
-              <div style={{ color: '#8b949e', fontSize: '11px', marginTop: '2px' }}>
+              <div style={{
+                color: '#8b949e', fontSize: '10.5px', marginTop: '3px',
+                letterSpacing: '0.01em',
+              }}>
                 {selectedCity.label}
               </div>
             </div>
@@ -464,25 +471,46 @@ export default function GlobeFootprint() {
                 }
               }}
               style={{
-                background: 'rgba(255,255,255,0.06)', border: 'none',
-                color: '#8b949e', borderRadius: '6px', padding: '4px 10px',
-                cursor: 'pointer', fontSize: '12px', flexShrink: 0,
+                background: 'transparent', border: 'none',
+                color: '#484f58', cursor: 'pointer', fontSize: '16px',
+                lineHeight: 1, padding: '0 2px', flexShrink: 0,
+                marginTop: '-2px', transition: 'color 0.2s',
               }}
+              onMouseEnter={(e) => { e.currentTarget.style.color = '#8b949e'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.color = '#484f58'; }}
             >
-              ✕
+              &#x2715;
             </button>
           </div>
 
+          {/* Type badge */}
+          <div style={{
+            display: 'inline-block',
+            backgroundColor: selectedCity.type === 'education'
+              ? 'rgba(88,166,255,0.15)'
+              : 'rgba(126,231,135,0.15)',
+            color: selectedCity.type === 'education' ? '#58a6ff' : '#7ee787',
+            fontSize: '9.5px', fontWeight: 600, textTransform: 'uppercase',
+            letterSpacing: '0.08em', padding: '2px 8px', borderRadius: '4px',
+            marginBottom: '12px',
+          }}>
+            {selectedCity.type}
+          </div>
+
           {/* Experiences */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
             {selectedCity.experiences.map((exp, i) => (
               <div key={i} style={{
-                display: 'flex', alignItems: 'flex-start', gap: '8px',
-                fontSize: '12px', lineHeight: '1.5', color: '#c9d1d9',
+                display: 'flex', alignItems: 'flex-start', gap: '10px',
+                fontSize: '11.5px', lineHeight: '1.55', color: '#c9d1d9',
+                padding: '5px 0',
+                borderTop: i === 0 ? 'none' : '1px solid rgba(255,255,255,0.04)',
               }}>
-                <span style={{
-                  color: '#58a6ff', flexShrink: 0, marginTop: '3px',
-                }}>▸</span>
+                <div style={{
+                  width: '3px', height: '3px', borderRadius: '50%',
+                  backgroundColor: '#58a6ff', flexShrink: 0,
+                  marginTop: '8px', opacity: 0.6,
+                }} />
                 <span>{exp}</span>
               </div>
             ))}
