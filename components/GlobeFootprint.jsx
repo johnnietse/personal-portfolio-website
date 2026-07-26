@@ -244,11 +244,53 @@ export default function GlobeFootprint() {
 
         let particleAnimId;
         function tickParticles(time) {
-          particleField.rotation.y = time * 0.00008;
-          particleField.rotation.x = Math.sin(time * 0.00003) * 0.03;
+          const rotateY = time * 0.00008;
+          const rotateX = Math.sin(time * 0.00003) * 0.03;
+          particleField.rotation.y = rotateY;
+          particleField.rotation.x = rotateX;
+          wireframeCage.rotation.y = rotateY;
+          wireframeCage.rotation.x = rotateX;
+          equatorRing.rotation.y = rotateY;
+          equatorRing.rotation.x = rotateX;
           particleAnimId = requestAnimationFrame(tickParticles);
         }
         particleAnimId = requestAnimationFrame(tickParticles);
+
+        // ── Geodesic wireframe cage (floating above surface) ────────────
+
+        const cageGeom = new THREE.IcosahedronGeometry(1.04, 2);
+        const cageEdges = new THREE.EdgesGeometry(cageGeom);
+        const cageMat = new THREE.LineBasicMaterial({
+          color: '#58a6ff',
+          transparent: true,
+          opacity: 0.12,
+        });
+        const wireframeCage = new THREE.LineSegments(cageEdges, cageMat);
+        scene.add(wireframeCage);
+
+        // ── Equatorial ring ──────────────────────────────────────────────
+
+        const ringPoints = [];
+        const ringSegments = 80;
+        const ringRadius = 1.06;
+        for (let i = 0; i <= ringSegments; i++) {
+          const theta = (i / ringSegments) * Math.PI * 2;
+          ringPoints.push(
+            new THREE.Vector3(
+              Math.cos(theta) * ringRadius,
+              0,
+              Math.sin(theta) * ringRadius,
+            ),
+          );
+        }
+        const ringGeom = new THREE.BufferGeometry().setFromPoints(ringPoints);
+        const ringMat = new THREE.LineBasicMaterial({
+          color: '#58a6ff',
+          transparent: true,
+          opacity: 0.08,
+        });
+        const equatorRing = new THREE.Line(ringGeom, ringMat);
+        scene.add(equatorRing);
 
         // ── Bloom post-processing (cinematic glow) ───────────────────────
 
@@ -297,6 +339,13 @@ export default function GlobeFootprint() {
           scene.remove(particleField);
           particleGeom.dispose();
           particleMat.dispose();
+          scene.remove(wireframeCage);
+          cageGeom.dispose();
+          cageEdges.dispose();
+          cageMat.dispose();
+          scene.remove(equatorRing);
+          ringGeom.dispose();
+          ringMat.dispose();
           ro.disconnect();
           globe.postProcessingComposer().removePass(bloomPass);
           bloomPass.dispose();
