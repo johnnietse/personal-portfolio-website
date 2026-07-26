@@ -44,32 +44,6 @@ function buildLabelTooltipHtml(loc) {
   ].join('');
 }
 
-function latLngToVec3(lat, lng, radius) {
-  const phi = (90 - lat) * Math.PI / 180;
-  const theta = (lng + 180) * Math.PI / 180;
-  return new THREE.Vector3(
-    -radius * Math.sin(phi) * Math.cos(theta),
-    radius * Math.cos(phi),
-    radius * Math.sin(phi) * Math.sin(theta),
-  );
-}
-
-function createGlowTexture() {
-  const size = 128;
-  const canvas = document.createElement('canvas');
-  canvas.width = size;
-  canvas.height = size;
-  const ctx = canvas.getContext('2d');
-  const gradient = ctx.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2);
-  gradient.addColorStop(0, 'rgba(126,231,135,1)');
-  gradient.addColorStop(0.15, 'rgba(126,231,135,0.7)');
-  gradient.addColorStop(0.4, 'rgba(126,231,135,0.25)');
-  gradient.addColorStop(1, 'rgba(126,231,135,0)');
-  ctx.fillStyle = gradient;
-  ctx.fillRect(0, 0, size, size);
-  return new THREE.CanvasTexture(canvas);
-}
-
 // ─── Component states ────────────────────────────────────────────────────────
 
 function EconomyFallback() {
@@ -135,6 +109,32 @@ export default function GlobeFootprint() {
   const glowRef = useRef(null);
   const glowMatRef = useRef(null);
 
+  function latLngToVec3(lat, lng, radius) {
+    const phi = (90 - lat) * Math.PI / 180;
+    const theta = (lng + 180) * Math.PI / 180;
+    return new THREE.Vector3(
+      -radius * Math.sin(phi) * Math.cos(theta),
+      radius * Math.cos(phi),
+      radius * Math.sin(phi) * Math.sin(theta),
+    );
+  }
+
+  function makeGlowTexture() {
+    const size = 128;
+    const canvas = document.createElement('canvas');
+    canvas.width = size;
+    canvas.height = size;
+    const ctx = canvas.getContext('2d');
+    const gradient = ctx.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2);
+    gradient.addColorStop(0, 'rgba(126,231,135,1)');
+    gradient.addColorStop(0.15, 'rgba(126,231,135,0.7)');
+    gradient.addColorStop(0.4, 'rgba(126,231,135,0.25)');
+    gradient.addColorStop(1, 'rgba(126,231,135,0)');
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, size, size);
+    return new THREE.CanvasTexture(canvas);
+  }
+
   function destroyGlow() {
     if (glowRef.current) {
       const parent = glowRef.current.parent;
@@ -147,7 +147,7 @@ export default function GlobeFootprint() {
 
   function spawnGlow(lat, lng, scene) {
     destroyGlow();
-    const texture = createGlowTexture();
+    const texture = makeGlowTexture();
     const mat = new THREE.SpriteMaterial({
       map: texture,
       blending: THREE.AdditiveBlending,
