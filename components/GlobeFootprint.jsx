@@ -98,6 +98,7 @@ export default function GlobeFootprint() {
   const glowMatRef = useRef(null);
   // Stubs populated by init (where THREE is dynamically loaded)
   const glowFnsRef = useRef({ spawnGlow: () => {}, destroyGlow: () => {} });
+  const flashRef = useRef([]);
 
   const { quality } = usePerformance();
   const [isMounted, setIsMounted] = useState(false);
@@ -188,7 +189,7 @@ export default function GlobeFootprint() {
         glowRef.current = sprite;
       }
 
-      glowFnsRef.current = { spawnGlow, destroyGlow };
+      glowFnsRef.current = { spawnGlow, destroyGlow, addFlash };
 
       // ── Inject CSS for HTML city badges ──────────────────────────────
 
@@ -227,6 +228,11 @@ export default function GlobeFootprint() {
             background:#7ee787;
             flex-shrink:0;
             box-shadow:0 0 4px rgba(126,231,135,0.5);
+          }
+          @keyframes globe-flash {
+            0%   { transform:scale(0.5); opacity:0.8; }
+            70%  { transform:scale(2.2);  opacity:0;   }
+            100% { transform:scale(2.2);  opacity:0;   }
           }
         `;
         document.head.appendChild(style);
@@ -275,30 +281,66 @@ export default function GlobeFootprint() {
         .labelDotOrientation(() => 'bottom')
         .labelResolution(8)
 
-        // ── HTML city badges (easier to click) ────────────────────────────
-        .htmlElementsData(LABELS_DATA)
-        .htmlLat((d) => d.lat)
-        .htmlLng((d) => d.lon)
-        .htmlAltitude(() => 0.006)
-        .htmlElement((d) => {
-          const el = document.createElement('div');
-          el.innerHTML = `
-            <div class="globe-city-marker">
-              <span class="globe-city-dot"></span>
-              <span class="globe-city-name">${escapeHtml(d.text)}</span>
-            </div>`;
-          const inner = el.firstElementChild;
-          inner.addEventListener('click', (e) => {
-            e.stopPropagation();
-            if (selectedRef.current) return;
-            selectedRef.current = d;
-            setSelectedCity(d);
-            controlsRef.current.autoRotate = false;
-            spawnGlow(d.lat, d.lon, scene);
-            globe.pointOfView({ lat: d.lat, lng: d.lon, altitude: 0.7 }, 1200);
-          });
-          return inner;
-        })
+        // ── HTML city badges (easier to click) + flash markers ────────────
+
+        function addFlash(lat, lng) {
+          const id = `f${Date.now()}`;
+          const flash = { _kind: 'flash', id, lat, lng };
+          flashRef.current.push(flash);
+          globe.htmlElementsData([...LABELS_DATA, ...flashRef.current]);
+          setTimeout(() => {
+            flashRef.current = flashRef.current.filter((m) => m.id !== id);
+            globe.htmlElementsData([...LABELS_DATA, ...flashRef.current]);
+          }, 700);
+        }
+
+        function onCityClick(d) {
+          if (selectedRef.current) return;
+          selectedRef.current = d;
+          setSelectedCity(d);
+          controlsRef.current.autoRotate = false;
+          spawnGlow(d.lat, d.lon, scene);
+          addFlash(d.lat, d.lon);
+          globe.pointOfView({ lat: d.lat, lng: d.lon, altitude: 0.7 }, 1200);
+        }
+
+        globe
+          .htmlElementsData(LABELS_DATA)
+          .htmlLat((d) => d.lat)
+          .htmlLng((d) => d.lon)
+          .htmlAltitude((d) => (d._kind === 'flash' ? 0 : 0.006))
+          .htmlElement((d) => {
+            const el = document.createElement('div');
+            // Flash ripple
+            if (d._kind === 'flash') {
+              el.style.cssText = 'pointer-events:none;width:0;height:0;';
+              el.innerHTML = `
+                <div style="
+                  position:relative;width:0;height:0;
+                  left:-22px;top:-22px;
+                ">
+                  <div style="
+                    width:44px;height:44px;border-radius:50%;
+                    border:2px solid rgba(255,255,255,0.9);
+                    background:rgba(255,255,255,0.2);
+                    animation:globe-flash 0.7s ease-out forwards;
+                  "></div>
+                </div>`;
+              return el.firstElementChild;
+            }
+            // City badge
+            el.innerHTML = `
+              <div class="globe-city-marker">
+                <span class="globe-city-dot"></span>
+                <span class="globe-city-name">${escapeHtml(d.text)}</span>
+              </div>`;
+            const inner = el.firstElementChild;
+            inner.addEventListener('click', (e) => {
+              e.stopPropagation();
+              onCityClick(d);
+            });
+            return inner;
+          })
 
         // ── Arc (Kingston ↔ Hong Kong) ─────────────────────────────────
         .arcsData(ARC_DATA)
@@ -362,6 +404,28 @@ export default function GlobeFootprint() {
       const cloudMesh = new THREE.Mesh(cloudGeom, cloudMat);
       const scene = globe.scene();
       scene.add(cloudMesh);
+
+      // ── Enhanced atmosphere glow (World Monitor style) ────────────────
+
+      const outerGlowGeo = new THREE.SphereGeometry(2.15, 24, 24);
+      const outerGlowMat = new THREE.MeshBasicMaterial({
+        color: 0x00d4ff, side: THREE.BackSide, transparent: true, opacity: 0.15,
+      });
+      const outerGlow = new THREE.Mesh(outerGlowGeo, outerGlowMat);
+      scene.add(outerGlow);
+
+      const innerGlowGeo = new THREE.SphereGeometry(2.08, 24, 24);
+      const innerGlowMat = new THREE.MeshBasicMaterial({
+        color: 0x00a8cc, side: THREE.BackSide, transparent: true, opacity: 0.1,
+      });
+      const innerGlow = new THREE.Mesh(innerGlowGeo, innerGlowMat);
+      scene.add(innerGlow);
+
+      // ── Cyan hemisphere light ─────────────────────────────────────────
+
+      const cyanLight = new THREE.PointLight(0x00d4ff, 0.3);
+      cyanLight.position.set(-10, -10, -10);
+      scene.add(cyanLight);
 
       // ── Orbital particle field ────────────────────────────────────────
 
@@ -486,22 +550,33 @@ export default function GlobeFootprint() {
         if (autoRotateTimer) { clearTimeout(autoRotateTimer); autoRotateTimer = null; }
       };
       const scheduleResumeAutoRotate = () => {
-        if (selectedRef.current) return; // don't resume while city is focused
+        if (selectedRef.current) return;
         if (autoRotateTimer) clearTimeout(autoRotateTimer);
         autoRotateTimer = setTimeout(() => { controls.autoRotate = true; }, 60_000);
       };
-      container.addEventListener('mousedown', () => { pauseAutoRotate(); });
-      container.addEventListener('touchstart', () => { pauseAutoRotate(); }, { passive: true });
+      container.addEventListener('mousedown', pauseAutoRotate);
+      container.addEventListener('touchstart', pauseAutoRotate, { passive: true });
       container.addEventListener('mouseup', scheduleResumeAutoRotate);
       container.addEventListener('touchend', scheduleResumeAutoRotate);
 
       // ── Pause auto-rotate on pointer hover ──────────────────────────
-      container.addEventListener('pointerenter', () => {
-        if (!selectedRef.current) controls.autoRotate = false;
-      });
-      container.addEventListener('pointerleave', () => {
-        if (!selectedRef.current) controls.autoRotate = true;
-      });
+      const onPointerEnter = () => { if (!selectedRef.current) controls.autoRotate = false; };
+      const onPointerLeave = () => { if (!selectedRef.current) controls.autoRotate = true; };
+      container.addEventListener('pointerenter', onPointerEnter);
+      container.addEventListener('pointerleave', onPointerLeave);
+
+      // ── Background pause (World Monitor style) ───────────────────────
+      // Stop WebGL render when tab hidden to save GPU
+      const onVisibilityChange = () => {
+        if (document.hidden) {
+          try { globe.pauseAnimation?.(); } catch { /* best-effort */ }
+          if (typeof particleAnimId !== 'undefined') cancelAnimationFrame(particleAnimId);
+        } else {
+          try { globe.resumeAnimation?.(); } catch { /* best-effort */ }
+          particleAnimId = requestAnimationFrame(tickParticles);
+        }
+      };
+      document.addEventListener('visibilitychange', onVisibilityChange);
 
       // ── Ensure WebGL canvas is visible ───────────────────────────────
 
@@ -525,6 +600,8 @@ export default function GlobeFootprint() {
 
       cleanupRef.current = () => {
         cancelAnimationFrame(particleAnimId);
+        document.removeEventListener('visibilitychange', onVisibilityChange);
+        if (autoRotateTimer) clearTimeout(autoRotateTimer);
         scene.remove(particleField);
         particleGeom.dispose();
         particleMat.dispose();
@@ -538,12 +615,20 @@ export default function GlobeFootprint() {
         scene.remove(cloudMesh);
         cloudGeom.dispose();
         cloudMat.dispose();
+        scene.remove(outerGlow);
+        outerGlowGeo.dispose();
+        outerGlowMat.dispose();
+        scene.remove(innerGlow);
+        innerGlowGeo.dispose();
+        innerGlowMat.dispose();
+        scene.remove(cyanLight);
         destroyGlow();
         ro.disconnect();
         container.removeEventListener('pointerenter', onPointerEnter);
         container.removeEventListener('pointerleave', onPointerLeave);
         globe.postProcessingComposer().removePass(bloomPass);
         bloomPass.dispose();
+        flashRef.current = [];
         globe._destructor();
       };
 
@@ -582,7 +667,7 @@ export default function GlobeFootprint() {
       const ctrls = controlsRef.current;
       if (!g || !ctrls) return;
 
-      const { spawnGlow: sg, destroyGlow: dg } = glowFnsRef.current;
+      const { spawnGlow: sg, destroyGlow: dg, addFlash: af } = glowFnsRef.current;
       if (e.key === 'Escape' && selectedRef.current) {
         dg();
         selectedRef.current = null;
@@ -596,6 +681,7 @@ export default function GlobeFootprint() {
         setSelectedCity(loc);
         ctrls.autoRotate = false;
         sg(loc.lat, loc.lon, g.scene());
+        af(loc.lat, loc.lon);
         g.pointOfView({ lat: loc.lat, lng: loc.lon, altitude: 0.7 }, 1000);
         e.preventDefault();
       } else if (e.key === '2' && !selectedRef.current) {
@@ -604,6 +690,7 @@ export default function GlobeFootprint() {
         setSelectedCity(loc);
         ctrls.autoRotate = false;
         sg(loc.lat, loc.lon, g.scene());
+        af(loc.lat, loc.lon);
         g.pointOfView({ lat: loc.lat, lng: loc.lon, altitude: 0.7 }, 1000);
         e.preventDefault();
       }
