@@ -1,190 +1,72 @@
 'use client';
 
-import React, { useRef, useMemo, useState, useEffect, Component } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
-import { OrbitControls, Html, Line, useTexture } from '@react-three/drei';
-import * as THREE from 'three';
+import { useEffect, useRef, useState } from 'react';
 import { usePerformance } from './PerformanceManager';
 import { LOCATIONS } from '@/lib/config/locations';
 
-const EARTH_TEXTURE_URL = '/textures/earth-blue-marble.jpg';
-const GLOBE_RADIUS = 2;
+// ─── Arc data: Kingston ↔ Hong Kong ──────────────────────────────────────────
 
-// ─── Helpers ────────────────────────────────────────────────────────────────
+const ARC_DATA = [{
+  startLat: LOCATIONS[0].lat,
+  startLng: LOCATIONS[0].lon,
+  endLat: LOCATIONS[1].lat,
+  endLng: LOCATIONS[1].lon,
+}];
 
-function latLonToPosition(lat, lon, radius = GLOBE_RADIUS) {
-  const phi = (90 - lat) * Math.PI / 180;
-  const theta = (lon + 180) * Math.PI / 180;
-  return new THREE.Vector3(
-    -radius * Math.sin(phi) * Math.cos(theta),
-    radius * Math.cos(phi),
-    radius * Math.sin(phi) * Math.sin(theta),
-  );
+// ─── Pin HTML builder ────────────────────────────────────────────────────────
+
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
 }
 
-// ─── Textured Earth ─────────────────────────────────────────────────────────
+function createPinElement(loc) {
+  const wrapper = document.createElement('div');
+  wrapper.style.cssText =
+    'position:relative;display:flex;align-items:center;justify-content:center;cursor:pointer;width:24px;height:24px;';
 
-function TexturedEarth({ detail, showWireframe }) {
-  const texture = useTexture(EARTH_TEXTURE_URL);
+  // Glow ring
+  const glow = document.createElement('div');
+  glow.style.cssText =
+    'position:absolute;width:18px;height:18px;border-radius:50%;' +
+    'background:rgba(126,231,135,0.15);animation:globe-pulse 2.5s ease-in-out infinite;';
 
-  return (
-    <group>
-      {/* Main textured sphere */}
-      <mesh>
-        <sphereGeometry args={[GLOBE_RADIUS, detail, detail]} />
-        <meshPhongMaterial map={texture} roughness={0.4} metalness={0.1} />
-      </mesh>
+  // Pin dot
+  const dot = document.createElement('div');
+  dot.style.cssText =
+    'width:8px;height:8px;border-radius:50%;background:#7ee787;' +
+    'box-shadow:0 0 12px rgba(126,231,135,0.9);z-index:1;';
 
-      {/* Subtle wireframe overlay (only on higher tiers) */}
-      {showWireframe && (
-        <mesh>
-          <sphereGeometry args={[GLOBE_RADIUS + 0.005, detail, detail]} />
-          <meshBasicMaterial wireframe color="#58a6ff" transparent opacity={0.06} />
-        </mesh>
-      )}
+  wrapper.appendChild(glow);
+  wrapper.appendChild(dot);
 
-      {/* Atmosphere glow */}
-      <mesh scale={[1.025, 1.025, 1.025]}>
-        <sphereGeometry args={[GLOBE_RADIUS, 32, 24]} />
-        <meshBasicMaterial color="#58a6ff" transparent opacity={0.08} side={THREE.BackSide} />
-      </mesh>
-    </group>
-  );
+  // Tooltip
+  const tooltip = document.createElement('div');
+  tooltip.style.cssText = [
+    'position:absolute;bottom:26px;left:50%;transform:translateX(-50%);',
+    'background:rgba(13,17,23,0.95);border:1px solid #7ee787;border-radius:10px;',
+    'padding:10px 14px;font-family:system-ui,sans-serif;font-size:12px;line-height:1.5;',
+    'color:#c9d1d9;box-shadow:0 8px 32px rgba(0,0,0,0.6);backdrop-filter:blur(8px);',
+    'opacity:0;pointer-events:none;transition:opacity 0.2s ease;',
+    'max-width:300px;white-space:normal;z-index:100;',
+  ].join('');
+  tooltip.innerHTML = [
+    `<div style="color:#7ee787;font-weight:700;font-size:13px;margin-bottom:6px;letter-spacing:0.02em;">${escapeHtml(loc.city)}</div>`,
+    ...loc.experiences.map(
+      (e) =>
+        `<div style="padding:2px 0;"><span style="color:#58a6ff;margin-right:6px;">▸</span>${escapeHtml(e)}</div>`,
+    ),
+  ].join('');
+  wrapper.appendChild(tooltip);
+
+  wrapper.addEventListener('mouseenter', () => { tooltip.style.opacity = '1'; });
+  wrapper.addEventListener('mouseleave', () => { tooltip.style.opacity = '0'; });
+
+  return wrapper;
 }
 
-// ─── Location Pins + Experience Tooltips ─────────────────────────────────────
-
-function LocationPins({ radius, hoveredPin, setHoveredPin }) {
-  return (
-    <group>
-      {LOCATIONS.map((loc) => {
-        const pos = latLonToPosition(loc.lat, loc.lon, radius);
-        return (
-          <group key={loc.label}>
-            {/* Hover hit area (larger invisible sphere) */}
-            <mesh
-              position={pos}
-              onPointerOver={(e) => {
-                e.stopPropagation();
-                setHoveredPin(loc.label);
-              }}
-              onPointerOut={() => setHoveredPin(null)}
-            >
-              <sphereGeometry args={[0.25, 8, 8]} />
-              <meshBasicMaterial transparent opacity={0} />
-            </mesh>
-
-            {/* Pin dot */}
-            <mesh position={pos}>
-              <sphereGeometry args={[0.06, 8, 8]} />
-              <meshBasicMaterial color="#7ee787" />
-            </mesh>
-
-            {/* Pin glow */}
-            <mesh position={pos}>
-              <sphereGeometry args={[0.14, 8, 8]} />
-              <meshBasicMaterial color="#7ee787" transparent opacity={0.3} />
-            </mesh>
-
-            {/* Experience tooltip on hover */}
-            <Html
-              center
-              position={[pos.x, pos.y + 0.35, pos.z]}
-              style={{ transition: 'opacity 0.2s', pointerEvents: 'none', opacity: hoveredPin === loc.label ? 1 : 0 }}
-            >
-              <div
-                style={{
-                  background: 'rgba(13, 17, 23, 0.95)',
-                  border: '1px solid #7ee787',
-                  padding: '10px 14px',
-                  borderRadius: '10px',
-                  color: '#fff',
-                  fontSize: '12px',
-                  lineHeight: 1.5,
-                  maxWidth: '280px',
-                  whiteSpace: 'normal',
-                  boxShadow: '0 8px 32px rgba(0,0,0,0.6)',
-                  backdropFilter: 'blur(8px)',
-                }}
-              >
-                <div style={{ color: '#7ee787', fontWeight: 700, fontSize: '13px', marginBottom: '6px', letterSpacing: '0.02em' }}>
-                  {loc.city}
-                </div>
-                {loc.experiences.map((exp, i) => (
-                  <div key={i} style={{ padding: '2px 0', borderBottom: i < loc.experiences.length - 1 ? '1px solid rgba(255,255,255,0.05)' : 'none' }}>
-                    <span style={{ color: '#58a6ff', marginRight: '6px' }}>▸</span>
-                    <span style={{ color: '#c9d1d9' }}>{exp}</span>
-                  </div>
-                ))}
-              </div>
-            </Html>
-          </group>
-        );
-      })}
-    </group>
-  );
-}
-
-// ─── Connection Arcs + Traveling Dots ────────────────────────────────────────
-
-function TravelingDot({ curve, speed = 0.25 }) {
-  const dotRef = useRef();
-  const progress = useRef(Math.random()); // Stagger initial positions
-
-  useFrame((_, delta) => {
-    progress.current += delta * speed;
-    if (progress.current > 1) progress.current -= 1;
-    const pos = curve.getPoint(progress.current);
-    if (dotRef.current) dotRef.current.position.copy(pos);
-  });
-
-  return (
-    <mesh ref={dotRef}>
-      <sphereGeometry args={[0.045, 8, 8]} />
-      <meshBasicMaterial color="#7ee787" />
-    </mesh>
-  );
-}
-
-function ConnectionArcs({ radius }) {
-  const arcData = useMemo(() => {
-    const pairs = [];
-    for (let i = 0; i < LOCATIONS.length; i++) {
-      for (let j = i + 1; j < LOCATIONS.length; j++) {
-        const start = latLonToPosition(LOCATIONS[i].lat, LOCATIONS[i].lon, radius);
-        const end = latLonToPosition(LOCATIONS[j].lat, LOCATIONS[j].lon, radius);
-
-        // Raised midpoint for arc curve
-        const mid = start.clone().add(end).multiplyScalar(0.5);
-        const chordLen = start.distanceTo(end);
-        const arcHeight = radius + Math.max(1.2, chordLen * 0.35);
-        mid.normalize().multiplyScalar(arcHeight);
-
-        const curve = new THREE.CatmullRomCurve3([start, mid, end]);
-        const points = curve.getPoints(64);
-
-        pairs.push({ key: `${LOCATIONS[i].label}-${LOCATIONS[j].label}`, curve, points });
-      }
-    }
-    return pairs;
-  }, []);
-
-  return (
-    <group>
-      {arcData.map((arc) => (
-        <group key={arc.key}>
-          {/* Arc line */}
-          <Line points={arc.points} color="#58a6ff" transparent opacity={0.3} lineWidth={1} />
-
-          {/* Traveling dot */}
-          <TravelingDot curve={arc.curve} speed={0.2 + Math.random() * 0.1} />
-        </group>
-      ))}
-    </group>
-  );
-}
-
-// ─── Economy Fallback ────────────────────────────────────────────────────────
+// ─── Economy fallback ────────────────────────────────────────────────────────
 
 function EconomyFallback() {
   return (
@@ -201,76 +83,137 @@ function EconomyFallback() {
         <div style={{ color: '#58a6ff', fontSize: '14px', fontWeight: 600, textAlign: 'center', padding: '20px' }}>
           Global Engineering Footprint
           <br />
-          <span style={{ fontSize: '12px', color: '#8b949e' }}>Queen's University → Hong Kong</span>
+          <span style={{ fontSize: '12px', color: '#8b949e' }}>Queen&apos;s University → Hong Kong</span>
         </div>
       </div>
     </div>
   );
 }
 
-// ─── Error Boundary ──────────────────────────────────────────────────────────
+// ─── Injection keyframes ────────────────────────────────────────────────────
 
-class GlobeErrorBoundary extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { hasError: false };
-  }
-  static getDerivedStateFromError() {
-    return { hasError: true };
-  }
-  render() {
-    if (this.state.hasError) {
-      return <EconomyFallback />;
+function injectStyles() {
+  const id = 'globe-footprint-styles';
+  if (document.getElementById(id)) return;
+  const style = document.createElement('style');
+  style.id = id;
+  style.textContent = `
+    @keyframes globe-pulse {
+      0%, 100% { transform: scale(1); opacity: 0.25; }
+      50% { transform: scale(1.6); opacity: 0.08; }
     }
-    return this.props.children;
-  }
+  `;
+  document.head.appendChild(style);
 }
 
-// ─── Default Export ──────────────────────────────────────────────────────────
+// ─── Main component ──────────────────────────────────────────────────────────
 
 export default function GlobeFootprint() {
+  const containerRef = useRef(null);
+  const globeRef = useRef(null);
   const { quality } = usePerformance();
   const [isMounted, setIsMounted] = useState(false);
-  const [hoveredPin, setHoveredPin] = useState(null);
 
   useEffect(() => { setIsMounted(true); }, []);
+
+  const isLowPower = quality.targetFPS < 30;
+
+  // Initialise globe.gl when container mounts
+  useEffect(() => {
+    if (isLowPower || !containerRef.current) return;
+
+    let destroyGlobe = () => {};
+
+    // Dynamic import — globe.gl references window at module eval time
+    import('globe.gl').then(({ default: Globe }) => {
+      injectStyles();
+      const container = containerRef.current;
+      if (!container) return;
+
+      const globe = new Globe(container)
+        .globeImageUrl('/textures/earth-blue-marble.jpg')
+        .backgroundColor('#020617')
+        .atmosphereColor('#58a6ff')
+        .atmosphereAltitude(0.12)
+
+        // Fill container
+        .width(container.clientWidth)
+        .height(container.clientHeight)
+
+        // HTML pins
+        .htmlElementsData(LOCATIONS)
+        .htmlLat((d) => d.lat)
+        .htmlLng((d) => d.lon)
+        .htmlElement((d) => createPinElement(d))
+
+        // Arcs
+        .arcsData(ARC_DATA)
+        .arcStartLat((d) => d.startLat)
+        .arcStartLng((d) => d.startLng)
+        .arcEndLat((d) => d.endLat)
+        .arcEndLng((d) => d.endLng)
+        .arcColor(() => ['rgba(126,231,135,0.12)', 'rgba(88,166,255,0.12)'])
+        .arcDashLength(0.6)
+        .arcDashGap(0.15)
+        .arcDashAnimateTime(5000)
+        .arcStroke(0.4);
+
+      // Orbit controls — manual drag only, no auto-rotate
+      const controls = globe.controls();
+      controls.autoRotate = false;
+      controls.autoRotateSpeed = 0;
+      controls.enableZoom = false;
+      controls.enablePan = false;
+      controls.minPolarAngle = Math.PI / 3.5;
+      controls.maxPolarAngle = Math.PI / 1.3;
+
+      // Initial camera: framed so both North America and Asia are visible
+      globe.pointOfView({ lat: 30, lng: -20, altitude: 2.8 });
+
+      globeRef.current = globe;
+
+      // ResizeObserver — keeps globe filling its container
+      const resizeObserver = new ResizeObserver((entries) => {
+        for (const entry of entries) {
+          const { width, height } = entry.contentRect;
+          if (width > 0 && height > 0) {
+            globe.width(width).height(height);
+          }
+        }
+      });
+      resizeObserver.observe(container);
+
+      destroyGlobe = () => {
+        resizeObserver.disconnect();
+        if (globeRef.current) {
+          globeRef.current._destructor();
+          globeRef.current = null;
+        }
+      };
+    });
+
+    return () => {
+      destroyGlobe();
+    };
+  }, [isLowPower]);
 
   // Hydration guard
   if (!isMounted) return null;
 
-  // Economy tier: pure CSS fallback, no WebGL
-  if (quality.targetFPS < 30) {
+  // Economy tier: pure CSS, no WebGL
+  if (isLowPower) {
     return <EconomyFallback />;
   }
 
-  const detail = Math.max(24, Math.round(64 * quality.geometryDetail));
-  const showArcs = quality.geometryDetail >= 0.5 && LOCATIONS.length >= 2;
-  const showWireframe = quality.geometryDetail >= 0.75;
-
   return (
-    <GlobeErrorBoundary>
-      <div style={{
-        position: 'relative', width: '100%', maxWidth: '500px', margin: '0 auto',
-        aspectRatio: '1/1', cursor: 'grab',
-      }}>
-        <Canvas camera={{ position: [0, 0.5, 5.5], fov: 38 }}>
-          <ambientLight intensity={0.6} />
-          <directionalLight position={[5, 8, 5]} intensity={1.5} />
-          <directionalLight position={[-3, -2, 4]} intensity={0.4} color="#58a6ff" />
-
-          <TexturedEarth detail={detail} showWireframe={showWireframe} />
-          <LocationPins radius={GLOBE_RADIUS} hoveredPin={hoveredPin} setHoveredPin={setHoveredPin} />
-          {showArcs && <ConnectionArcs radius={GLOBE_RADIUS} />}
-
-          <OrbitControls
-            enableZoom={false}
-            enablePan={false}
-            autoRotate={false}
-            minPolarAngle={Math.PI / 3}
-            maxPolarAngle={Math.PI / 1.5}
-          />
-        </Canvas>
-      </div>
-    </GlobeErrorBoundary>
+    <div style={{
+      position: 'relative', width: '100%', maxWidth: '500px', margin: '0 auto',
+      aspectRatio: '1/1',
+    }}>
+      <div
+        ref={containerRef}
+        style={{ width: '100%', height: '100%', cursor: 'grab' }}
+      />
+    </div>
   );
 }
