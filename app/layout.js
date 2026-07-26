@@ -1,5 +1,5 @@
 import Navigation from "@/components/Navigation";
-import AOSSetup from "@/components/AOSSetup";
+import ScrollReveal from "@/components/ScrollReveal";
 import ParticleBackground from "@/components/ParticleBackground";
 import ScrollPhysics from "@/components/ScrollPhysics";
 import BlackHoleCursor from "@/components/BlackHoleCursor";
@@ -8,7 +8,6 @@ import IronManHUD from "@/components/IronManHUD";
 import MobileSystemsTray from "@/components/MobileSystemsTray";
 import { PerformanceProvider } from "@/components/PerformanceManager";
 import "./globals.css";
-import "aos/dist/aos.css";
 
 export const metadata = {
   title: "Johnnie Tse",
@@ -55,8 +54,9 @@ export default function RootLayout({ children }) {
       <body suppressHydrationWarning>
 <PerformanceProvider>
       <div className="relative flex flex-col min-h-screen w-full overflow-x-hidden overflow-y-auto">
-        <AOSSetup />
+        <ScrollReveal>
         <Navigation />
+        </ScrollReveal>
         <ParticleBackground />
         <ScrollPhysics />
         <BlackHoleCursor />
