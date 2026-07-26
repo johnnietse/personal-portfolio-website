@@ -26,13 +26,11 @@ function createPinElement(loc) {
   wrapper.style.cssText =
     'position:relative;display:flex;align-items:center;justify-content:center;cursor:pointer;width:24px;height:24px;';
 
-  // Glow ring
   const glow = document.createElement('div');
   glow.style.cssText =
     'position:absolute;width:18px;height:18px;border-radius:50%;' +
     'background:rgba(126,231,135,0.15);animation:globe-pulse 2.5s ease-in-out infinite;';
 
-  // Pin dot
   const dot = document.createElement('div');
   dot.style.cssText =
     'width:8px;height:8px;border-radius:50%;background:#7ee787;' +
@@ -41,7 +39,6 @@ function createPinElement(loc) {
   wrapper.appendChild(glow);
   wrapper.appendChild(dot);
 
-  // Tooltip
   const tooltip = document.createElement('div');
   tooltip.style.cssText = [
     'position:absolute;bottom:26px;left:50%;transform:translateX(-50%);',
@@ -66,30 +63,6 @@ function createPinElement(loc) {
   return wrapper;
 }
 
-// ─── Economy fallback ────────────────────────────────────────────────────────
-
-function EconomyFallback() {
-  return (
-    <div style={{
-      position: 'relative', width: '100%', maxWidth: '500px', margin: '0 auto',
-      aspectRatio: '1/1',
-    }}>
-      <div style={{
-        width: '100%', height: '100%', borderRadius: '50%',
-        background: 'radial-gradient(circle at center, #0f172a 0%, #020617 100%)',
-        border: '1px solid #58a6ff',
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-      }}>
-        <div style={{ color: '#58a6ff', fontSize: '14px', fontWeight: 600, textAlign: 'center', padding: '20px' }}>
-          Global Engineering Footprint
-          <br />
-          <span style={{ fontSize: '12px', color: '#8b949e' }}>Queen&apos;s University → Hong Kong</span>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 // ─── Injection keyframes ────────────────────────────────────────────────────
 
 function injectStyles() {
@@ -106,6 +79,50 @@ function injectStyles() {
   document.head.appendChild(style);
 }
 
+// ─── Economy fallback ────────────────────────────────────────────────────────
+
+function EconomyFallback() {
+  return (
+    <div style={{
+      width: '100%', height: '100%', borderRadius: '50%',
+      background: 'radial-gradient(circle at center, #0f172a 0%, #020617 100%)',
+      border: '1px solid #58a6ff',
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+    }}>
+      <div style={{ color: '#58a6ff', fontSize: '14px', fontWeight: 600, textAlign: 'center', padding: '20px' }}>
+        Global Engineering Footprint
+        <br />
+        <span style={{ fontSize: '12px', color: '#8b949e' }}>Queen&apos;s University → Hong Kong</span>
+      </div>
+    </div>
+  );
+}
+
+// ─── Loading placeholder while globe boots ────────────────────────────────────
+
+function GlobePlaceholder() {
+  return (
+    <div style={{
+      width: '100%', height: '100%', borderRadius: '50%',
+      background: 'radial-gradient(circle at center, #0f172a 0%, #020617 100%)',
+      border: '1px solid rgba(88,166,255,0.3)',
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+    }}>
+      <div style={{
+        width: 32, height: 32, borderRadius: '50%',
+        border: '2px solid rgba(88,166,255,0.2)',
+        borderTopColor: '#58a6ff',
+        animation: 'globe-spin 0.8s linear infinite',
+      }} />
+      <style>{`
+        @keyframes globe-spin {
+          to { transform: rotate(360deg); }
+        }
+      `}</style>
+    </div>
+  );
+}
+
 // ─── Main component ──────────────────────────────────────────────────────────
 
 export default function GlobeFootprint() {
@@ -113,6 +130,7 @@ export default function GlobeFootprint() {
   const globeRef = useRef(null);
   const { quality } = usePerformance();
   const [isMounted, setIsMounted] = useState(false);
+  const [globeReady, setGlobeReady] = useState(false);
 
   useEffect(() => { setIsMounted(true); }, []);
 
@@ -122,31 +140,32 @@ export default function GlobeFootprint() {
   useEffect(() => {
     if (isLowPower || !containerRef.current) return;
 
-    let destroyGlobe = () => {};
+    let destroyed = false;
+    setGlobeReady(false);
 
-    // Dynamic import — globe.gl references window at module eval time
+    injectStyles();
+
     import('globe.gl').then(({ default: Globe }) => {
-      injectStyles();
+      if (destroyed) return;
+
       const container = containerRef.current;
       if (!container) return;
+
+      const rect = container.getBoundingClientRect();
+      const w = rect.width || 400;
+      const h = rect.height || 400;
 
       const globe = new Globe(container)
         .globeImageUrl('/textures/earth-blue-marble.jpg')
         .backgroundColor('#020617')
         .atmosphereColor('#58a6ff')
         .atmosphereAltitude(0.12)
-
-        // Fill container
-        .width(container.clientWidth)
-        .height(container.clientHeight)
-
-        // HTML pins
+        .width(w)
+        .height(h)
         .htmlElementsData(LOCATIONS)
         .htmlLat((d) => d.lat)
         .htmlLng((d) => d.lon)
         .htmlElement((d) => createPinElement(d))
-
-        // Arcs
         .arcsData(ARC_DATA)
         .arcStartLat((d) => d.startLat)
         .arcStartLng((d) => d.startLng)
@@ -158,7 +177,6 @@ export default function GlobeFootprint() {
         .arcDashAnimateTime(5000)
         .arcStroke(0.4);
 
-      // Orbit controls — manual drag only, no auto-rotate
       const controls = globe.controls();
       controls.autoRotate = false;
       controls.autoRotateSpeed = 0;
@@ -167,12 +185,11 @@ export default function GlobeFootprint() {
       controls.minPolarAngle = Math.PI / 3.5;
       controls.maxPolarAngle = Math.PI / 1.3;
 
-      // Initial camera: framed so both North America and Asia are visible
       globe.pointOfView({ lat: 30, lng: -20, altitude: 2.8 });
 
       globeRef.current = globe;
+      setGlobeReady(true);
 
-      // ResizeObserver — keeps globe filling its container
       const resizeObserver = new ResizeObserver((entries) => {
         for (const entry of entries) {
           const { width, height } = entry.contentRect;
@@ -183,36 +200,53 @@ export default function GlobeFootprint() {
       });
       resizeObserver.observe(container);
 
-      destroyGlobe = () => {
-        resizeObserver.disconnect();
-        if (globeRef.current) {
-          globeRef.current._destructor();
-          globeRef.current = null;
+      // Poll for WebGL canvas being present
+      const checkCanvas = setInterval(() => {
+        const canvas = container.querySelector('canvas');
+        if (canvas) {
+          canvas.style.display = 'block';
+          clearInterval(checkCanvas);
         }
+      }, 100);
+      setTimeout(() => clearInterval(checkCanvas), 5000);
+
+      // Store cleanup
+      globeRef.current._cleanup = () => {
+        resizeObserver.disconnect();
+        globe._destructor();
+        globeRef.current = null;
       };
+    }).catch((err) => {
+      console.error('[GlobeFootprint] Failed to load globe.gl:', err);
     });
 
     return () => {
-      destroyGlobe();
+      destroyed = true;
+      if (globeRef.current?._cleanup) {
+        globeRef.current._cleanup();
+      }
     };
   }, [isLowPower]);
 
   // Hydration guard
   if (!isMounted) return null;
 
-  // Economy tier: pure CSS, no WebGL
-  if (isLowPower) {
-    return <EconomyFallback />;
-  }
-
   return (
     <div style={{
       position: 'relative', width: '100%', maxWidth: '500px', margin: '0 auto',
-      aspectRatio: '1/1',
+      aspectRatio: '1 / 1',
     }}>
+      {isLowPower ? (
+        <EconomyFallback />
+      ) : !globeReady ? (
+        <GlobePlaceholder />
+      ) : null}
       <div
         ref={containerRef}
-        style={{ width: '100%', height: '100%', cursor: 'grab' }}
+        style={{
+          position: 'absolute', inset: 0, cursor: 'grab',
+          visibility: globeReady ? 'visible' : 'hidden',
+        }}
       />
     </div>
   );
