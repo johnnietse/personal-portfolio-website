@@ -293,6 +293,7 @@ export default function GlobeFootprint() {
           equatorRing.rotation.x = rotateX;
           cloudMesh.rotation.y = rotateY * 1.15;  // clouds drift faster than globe
           cloudMesh.rotation.x = rotateX * 0.85;
+          globeMaterial.emissiveIntensity = 0.12 + Math.sin(time * 0.0006) * 0.04;
           particleAnimId = requestAnimationFrame(tickParticles);
         }
         particleAnimId = requestAnimationFrame(tickParticles);
@@ -356,6 +357,17 @@ export default function GlobeFootprint() {
 
         globe.pointOfView({ lat: 32, lng: -30, altitude: 2.6 });
 
+        // ── Pause auto-rotate on pointer hover ──────────────────────────
+
+        const onPointerEnter = () => {
+          if (!selectedRef.current) controls.autoRotate = false;
+        };
+        const onPointerLeave = () => {
+          if (!selectedRef.current) controls.autoRotate = true;
+        };
+        container.addEventListener('pointerenter', onPointerEnter);
+        container.addEventListener('pointerleave', onPointerLeave);
+
         // ── Ensure WebGL canvas is visible ───────────────────────────────
 
         const canvas = container.querySelector('canvas');
@@ -392,6 +404,8 @@ export default function GlobeFootprint() {
           cloudGeom.dispose();
           cloudMat.dispose();
           ro.disconnect();
+          container.removeEventListener('pointerenter', onPointerEnter);
+          container.removeEventListener('pointerleave', onPointerLeave);
           globe.postProcessingComposer().removePass(bloomPass);
           bloomPass.dispose();
           globe._destructor();
