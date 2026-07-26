@@ -265,20 +265,41 @@ export default function MiniMDSimulation() {
         return () => clearInterval(interval);
     }, [isOptimized]);
 
-if (quality.targetFPS < 30) {
-      // Render simplified version on economy tier
-      return (
-        <div style={{ position: 'relative', width: '100%', height: '100%', borderRadius: '12px', overflow: 'hidden' }}>
-          <Canvas camera={{ position: [0, 8, 22], fov: 45 }} style={{ cursor: 'grab', background: 'radial-gradient(circle at center, rgba(15, 23, 42, 0.6) 0%, transparent 100%)' }}>
-            <ambientLight intensity={0.8} />
-            <directionalLight position={[10, 20, 10]} intensity={3} color="#ffffff" />
-            <MDSystem simState={simState} count={50} />
-            <OrbitControls enableZoom={false} enablePan={false} autoRotate autoRotateSpeed={0.8} />
-          </Canvas>
-        </div>
-      );
+    // Economy tier: CSS fallback
+    if (renderTier === 'economy') {
+        return (
+            <div style={{ position: 'relative', width: '100%', height: '100%', borderRadius: '12px', overflow: 'hidden' }}>
+                <div style={{
+                    width: '100%', height: '100%',
+                    background: 'radial-gradient(circle at center, rgba(15, 23, 42, 0.6) 0%, transparent 100%)',
+                    border: '1px solid rgba(88, 166, 255, 0.2)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                }}>
+                    <div style={{ color: '#58a6ff', fontSize: '14px', fontWeight: 600, textAlign: 'center' }}>
+                        miniMD Molecular Dynamics<br />
+                        <span style={{ fontSize: '12px', color: '#8b949e' }}>Simulation paused in economy mode</span>
+                    </div>
+                </div>
+            </div>
+        );
     }
 
+    // Low tier: simplified WebGL (fewer particles, no dashboard)
+    if (renderTier === 'low') {
+        const lowCount = Math.round(50 * quality.particleMultiplier);
+        return (
+            <div style={{ position: 'relative', width: '100%', height: '100%', borderRadius: '12px', overflow: 'hidden' }}>
+                <Canvas camera={{ position: [0, 8, 22], fov: 45 }} style={{ cursor: 'grab', background: 'radial-gradient(circle at center, rgba(15, 23, 42, 0.6) 0%, transparent 100%)' }}>
+                    <ambientLight intensity={0.8} />
+                    <directionalLight position={[10, 20, 10]} intensity={3} color="#ffffff" />
+                    <MDSystem simState={simState} count={lowCount} />
+                    <OrbitControls enableZoom={false} enablePan={false} autoRotate autoRotateSpeed={0.8} />
+                </Canvas>
+            </div>
+        );
+    }
+
+    // Ultra/High tier: full WebGL with dashboard
     return (
         <div style={{ position: 'relative', width: '100%', height: '100%', borderRadius: '12px', overflow: 'hidden' }}>
             {/* Real-time Telemetry Dashboard — reads from the SAME ref that controls the physics */}
