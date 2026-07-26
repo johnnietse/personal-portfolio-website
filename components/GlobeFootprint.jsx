@@ -186,6 +186,10 @@ export default function GlobeFootprint() {
               1200,
             );
           })
+          .onLabelHover((label) => {
+            const canvas = container.querySelector('canvas');
+            if (canvas) canvas.style.cursor = label ? 'pointer' : 'grab';
+          })
 
           // ── Arc (Kingston ↔ Hong Kong) ─────────────────────────────────
           .arcsData(ARC_DATA)
