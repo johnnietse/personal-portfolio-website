@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
+import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
 import { feature } from 'topojson-client';
 import { usePerformance } from './PerformanceManager';
 import { LOCATIONS } from '@/lib/config/locations';
@@ -249,6 +250,16 @@ export default function GlobeFootprint() {
         }
         particleAnimId = requestAnimationFrame(tickParticles);
 
+        // ── Bloom post-processing (cinematic glow) ───────────────────────
+
+        const bloomPass = new UnrealBloomPass(
+          new THREE.Vector2(w, h),
+          0.2,   // strength — subtle bloom on bright elements
+          0.4,   // radius
+          0.15,  // threshold — only bloom the bright parts
+        );
+        globe.postProcessingComposer().addPass(bloomPass);
+
         // ── Orbit controls ───────────────────────────────────────────────
 
         const controls = globe.controls();
@@ -273,6 +284,7 @@ export default function GlobeFootprint() {
             const { width: cw, height: ch } = entry.contentRect;
             if (cw > 0 && ch > 0) {
               globe.width(cw).height(ch);
+              bloomPass.resolution.set(cw, ch);
             }
           }
         });
@@ -286,6 +298,8 @@ export default function GlobeFootprint() {
           particleGeom.dispose();
           particleMat.dispose();
           ro.disconnect();
+          globe.postProcessingComposer().removePass(bloomPass);
+          bloomPass.dispose();
           globe._destructor();
         };
 
