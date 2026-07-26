@@ -102,10 +102,14 @@ function GlobeError({ message }) {
 
 export default function GlobeFootprint() {
   const containerRef = useRef(null);
+  const globeRef = useRef(null);
   const cleanupRef = useRef(null);
+  const controlsRef = useRef(null);
+  const selectedRef = useRef(null);
   const { quality } = usePerformance();
   const [isMounted, setIsMounted] = useState(false);
   const [globeState, setGlobeState] = useState({ type: 'loading' });
+  const [selectedCity, setSelectedCity] = useState(null);
 
   useEffect(() => { setIsMounted(true); }, []);
 
@@ -141,7 +145,9 @@ export default function GlobeFootprint() {
         const globe = new Globe(container, {
           animateIn: true,
           rendererConfig: { antialias: true, alpha: true },
-        })
+        });
+        globeRef.current = globe;
+        globe
           .globeImageUrl('/textures/earth-night.jpg')
           .backgroundColor('#000000')
           .backgroundImageUrl('/textures/night-sky.png')
@@ -170,6 +176,16 @@ export default function GlobeFootprint() {
           .labelDotRadius(0.12)
           .labelDotOrientation(() => 'bottom')
           .labelResolution(8)
+          .onLabelClick((label) => {
+            if (selectedRef.current) return; // already focused
+            selectedRef.current = label;
+            setSelectedCity(label);
+            controlsRef.current.autoRotate = false;
+            globe.pointOfView(
+              { lat: label.lat, lng: label.lon, altitude: 0.7 },
+              1200,
+            );
+          })
 
           // ── Arc (Kingston ↔ Hong Kong) ─────────────────────────────────
           .arcsData(ARC_DATA)
@@ -196,7 +212,14 @@ export default function GlobeFootprint() {
           .ringColor(() => ['rgba(126,231,135,0)', 'rgba(126,231,135,0.7)'])
           .ringMaxRadius(2.5)
           .ringPropagationSpeed(1.8)
-          .ringRepeatPeriod(500);
+          .ringRepeatPeriod(500)
+          .onGlobeClick(() => {
+            if (!selectedRef.current) return;
+            selectedRef.current = null;
+            setSelectedCity(null);
+            controlsRef.current.autoRotate = true;
+            globe.pointOfView({ lat: 32, lng: -30, altitude: 2.6 }, 1000);
+          });
 
         // ── Renderer pixel ratio (retina) ───────────────────────────────
 
@@ -305,6 +328,7 @@ export default function GlobeFootprint() {
         // ── Orbit controls ───────────────────────────────────────────────
 
         const controls = globe.controls();
+        controlsRef.current = controls;
         controls.autoRotate = true;
         controls.autoRotateSpeed = 0.4;
         controls.enableZoom = false;
@@ -391,6 +415,80 @@ export default function GlobeFootprint() {
           visibility: globeState.type === 'ready' && !isLowPower ? 'visible' : 'hidden',
         }}
       />
+
+      {selectedCity && globeState.type === 'ready' && !isLowPower && (
+        <div style={{
+          position: 'absolute', left: '12px', right: '12px', bottom: '12px',
+          background: 'rgba(13,17,23,0.92)',
+          border: '1px solid rgba(88,166,255,0.3)',
+          borderRadius: '12px',
+          padding: '16px 18px',
+          backdropFilter: 'blur(12px)',
+          zIndex: 10,
+          animation: 'globe-card-in 0.3s ease-out',
+          maxHeight: '55%', overflowY: 'auto',
+        }}>
+          <style>{`
+            @keyframes globe-card-in {
+              from { opacity: 0; transform: translateY(12px); }
+              to   { opacity: 1; transform: translateY(0); }
+            }
+          `}</style>
+
+          {/* Header */}
+          <div style={{
+            display: 'flex', justifyContent: 'space-between',
+            alignItems: 'flex-start', marginBottom: '10px',
+          }}>
+            <div>
+              <div style={{
+                color: '#7ee787', fontWeight: 700, fontSize: '15px',
+                letterSpacing: '0.02em',
+              }}>
+                {selectedCity.city}
+              </div>
+              <div style={{ color: '#8b949e', fontSize: '11px', marginTop: '2px' }}>
+                {selectedCity.label}
+              </div>
+            </div>
+            <button
+              onClick={() => {
+                if (!selectedRef.current) return;
+                selectedRef.current = null;
+                setSelectedCity(null);
+                if (controlsRef.current) controlsRef.current.autoRotate = true;
+                if (globeRef.current) {
+                  globeRef.current.pointOfView(
+                    { lat: 32, lng: -30, altitude: 2.6 }, 800,
+                  );
+                }
+              }}
+              style={{
+                background: 'rgba(255,255,255,0.06)', border: 'none',
+                color: '#8b949e', borderRadius: '6px', padding: '4px 10px',
+                cursor: 'pointer', fontSize: '12px', flexShrink: 0,
+              }}
+            >
+              ✕
+            </button>
+          </div>
+
+          {/* Experiences */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+            {selectedCity.experiences.map((exp, i) => (
+              <div key={i} style={{
+                display: 'flex', alignItems: 'flex-start', gap: '8px',
+                fontSize: '12px', lineHeight: '1.5', color: '#c9d1d9',
+              }}>
+                <span style={{
+                  color: '#58a6ff', flexShrink: 0, marginTop: '3px',
+                }}>▸</span>
+                <span>{exp}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
