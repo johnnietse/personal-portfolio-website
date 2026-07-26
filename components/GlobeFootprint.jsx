@@ -154,9 +154,6 @@ export default function GlobeFootprint() {
           .atmosphereColor('#58a6ff')
           .atmosphereAltitude(0.22)
           .showGraticules(true)
-          .cloudsImageUrl('/textures/clouds-alpha.png')
-          .cloudsOpacity(0.35)
-          .cloudsColor(() => 'rgba(230,237,243,0.9)')
           .width(w)
           .height(h)
 
@@ -235,6 +232,22 @@ export default function GlobeFootprint() {
         globeMaterial.emissive = new THREE.Color('#111122');
         globeMaterial.emissiveIntensity = 0.15;
 
+        // ── Cloud layer (custom mesh, independently rotated) ──────────────
+
+        const cloudTexture = new THREE.TextureLoader()
+          .load('/textures/clouds-alpha.png');
+        const cloudMat = new THREE.MeshPhongMaterial({
+          map: cloudTexture,
+          transparent: true,
+          opacity: 0.35,
+          depthWrite: false,
+          blending: THREE.AdditiveBlending,
+          side: THREE.DoubleSide,
+        });
+        const cloudGeom = new THREE.SphereGeometry(1.008, 64, 64);
+        const cloudMesh = new THREE.Mesh(cloudGeom, cloudMat);
+        scene.add(cloudMesh);
+
         // ── Orbital particle field ────────────────────────────────────────
 
         const PARTICLE_COUNT = 1200;
@@ -278,6 +291,8 @@ export default function GlobeFootprint() {
           wireframeCage.rotation.x = rotateX;
           equatorRing.rotation.y = rotateY;
           equatorRing.rotation.x = rotateX;
+          cloudMesh.rotation.y = rotateY * 1.15;  // clouds drift faster than globe
+          cloudMesh.rotation.x = rotateX * 0.85;
           particleAnimId = requestAnimationFrame(tickParticles);
         }
         particleAnimId = requestAnimationFrame(tickParticles);
@@ -373,6 +388,9 @@ export default function GlobeFootprint() {
           scene.remove(equatorRing);
           ringGeom.dispose();
           ringMat.dispose();
+          scene.remove(cloudMesh);
+          cloudGeom.dispose();
+          cloudMat.dispose();
           ro.disconnect();
           globe.postProcessingComposer().removePass(bloomPass);
           bloomPass.dispose();
