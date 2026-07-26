@@ -1,9 +1,10 @@
 "use client";
 
 import { useRef, useMemo } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
+import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Float, Box, Cylinder, ContactShadows } from '@react-three/drei';
 import { usePerformance } from './PerformanceManager';
+import { useRAF } from '@/lib/hooks/useRAF';
 
 // A proxy-proof, fully procedural 3D model of a high-end Embedded Microcontroller (Raspberry Pi / ESP32 hybrid)
 const MicrocontrollerBoard = () => {
@@ -11,13 +12,13 @@ const MicrocontrollerBoard = () => {
     const isLowQuality = quality.geometryDetail < 0.75;
     const boardRef = useRef();
 
-    // The board slowly spins to show off all the metallic components
-    useFrame((state, delta) => {
+    // RAF-based rotation animation with input-sensitive yielding
+    useRAF(({ time, delta }) => {
         if (boardRef.current) {
-            boardRef.current.rotation.y += delta * 0.4 * quality.floatIntensity;
-            boardRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.5) * 0.1 + 0.5; // Gentle tilt
+            boardRef.current.rotation.y += delta * 0.0004 * quality.floatIntensity; // delta is in ms
+            boardRef.current.rotation.x = Math.sin(time * 0.0005) * 0.1 + 0.5; // Gentle tilt
         }
-    });
+    }, { budgetMs: 4 });
 
     // Generate deterministic capacitor locations to prevent Next.js SSR hydration mismatches
     const capacitors = useMemo(() => {
@@ -126,13 +127,47 @@ const MicrocontrollerBoard = () => {
 };
 
 export default function EmbeddedController() {
-    const { quality } = usePerformance();
+    const { quality, renderTier } = usePerformance();
     const isLowQuality = quality.geometryDetail < 0.75;
 
+    // Economy tier: CSS fallback
+    if (renderTier === 'economy') {
+        return (
+            <div style={{ position: 'relative', width: '100%', height: '100%', borderRadius: '16px', overflow: 'hidden' }}>
+                <div style={{
+                    width: '100%', height: '100%',
+                    background: 'radial-gradient(circle at center, rgba(15, 23, 42, 0.4) 0%, transparent 70%)',
+                    border: '1px solid rgba(88, 166, 255, 0.2)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                }}>
+                    <div style={{ color: '#58a6ff', fontSize: '14px', fontWeight: 600, textAlign: 'center' }}>
+                        Embedded Microcontroller<br />
+                        <span style={{ fontSize: '12px', color: '#8b949e' }}>Simplified view in economy mode</span>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    // Low tier: simplified WebGL (no shadows, no Float animation)
+    if (renderTier === 'low') {
+        return (
+            <div style={{ position: 'relative', width: '100%', height: '100%', borderRadius: '16px', overflow: 'hidden' }}>
+                <Canvas camera={{ position: [0, 0, 10], fov: 45 }} style={{ cursor: 'grab', borderRadius: '16px', background: 'radial-gradient(circle at center, rgba(15, 23, 42, 0.4) 0%, transparent 100%)' }}>
+                    <ambientLight intensity={0.8} />
+                    <directionalLight position={[10, 20, 10]} intensity={3} color="#ffffff" />
+                    <MicrocontrollerBoard />
+                    <OrbitControls enableZoom={false} enablePan={false} autoRotate autoRotateSpeed={0.8} />
+                </Canvas>
+            </div>
+        );
+    }
+
+    // Ultra/High tier: full WebGL with all effects
     if (quality.targetFPS < 30) {
       // Render simplified version on economy tier
       return (
-        <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+        <div style={{ position: 'relative', width: '100%', height: '100%', borderRadius: '16px', overflow: 'hidden' }}>
           <Canvas camera={{ position: [0, 0, 10], fov: 45 }} style={{ cursor: 'grab', borderRadius: '16px', background: 'radial-gradient(circle at center, rgba(15, 23, 42, 0.4) 0%, transparent 100%)' }}>
             <ambientLight intensity={0.8} />
             <directionalLight position={[10, 20, 10]} intensity={3} color="#ffffff" />

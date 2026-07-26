@@ -5,27 +5,27 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Html, Float } from '@react-three/drei';
 import { usePerformance } from './PerformanceManager';
 import { useRenderBudget } from '@/lib/hooks/useRenderBudget';
+import { useRAF } from '@/lib/hooks/useRAF';
 
 // Orbital mechanics representing high-end engineering skills natively hovering in WebGL Spherical coordinates
 const SkillNode = ({ img, label, radius, angle, speed, index }) => {
     const ref = useRef();
     const { startFrame, consume, isOverBudget } = useRenderBudget(4);
 
-    // Strict mathematical orbital locking generating beautiful intersecting rotational rings
-    useFrame((state) => {
-        startFrame();
+    // RAF-based orbital animation with input-sensitive yielding
+    useRAF(({ time, delta }) => {
         if (!ref.current) return;
-        const time = state.clock.elapsedTime * speed;
+        const t = time * 0.001 * speed; // time is in ms, convert to seconds
         // Orbit equation mapping items spherically based on deterministic indexing (X, Y, Z translations)
-        ref.current.position.x = Math.sin(time + angle) * radius;
-        ref.current.position.z = Math.cos(time + angle) * radius;
-        ref.current.position.y = Math.sin(time * 0.5 + index) * (radius * 0.4);
+        ref.current.position.x = Math.sin(t + angle) * radius;
+        ref.current.position.z = Math.cos(t + angle) * radius;
+        ref.current.position.y = Math.sin(t * 0.5 + index) * (radius * 0.4);
         consume(0.1);
 
         if (isOverBudget()) {
             // Skip non-essential effects this frame
         }
-    });
+    }, { budgetMs: 4 });
 
     return (
         <group ref={ref}>

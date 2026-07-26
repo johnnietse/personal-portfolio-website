@@ -6,6 +6,7 @@ import { OrbitControls, Float, Box, Cylinder, Sphere, MeshDistortMaterial, Conta
 import * as THREE from 'three';
 import { usePerformance } from './PerformanceManager';
 import { useRenderBudget } from '@/lib/hooks/useRenderBudget';
+import { useRAF } from '@/lib/hooks/useRAF';
 
 // 1. DATA/AUDIO WAVEFORM (Dynamic Topographical Ground Shader dependent on Driving State)
 const Topography = ({ isDriving }) => {
@@ -15,27 +16,28 @@ const Topography = ({ isDriving }) => {
     const { quality } = usePerformance();
     const { startFrame, consume, isOverBudget } = useRenderBudget(quality.targetFPS === 60 ? 4 : 8);
 
-    useFrame((state, delta) => {
+    // RAF-based ground scrolling animation with input-sensitive yielding
+    useRAF(({ time, delta }) => {
         startFrame();
 
         // Smoothly accelerate the ground scrolling when driving
-        speedLerp.current = THREE.MathUtils.lerp(speedLerp.current, isDriving ? 4 : 0, delta * 2);
-        scrollOffset.current += delta * speedLerp.current;
+        speedLerp.current = THREE.MathUtils.lerp(speedLerp.current, isDriving ? 4 : 0, delta * 0.002);
+        scrollOffset.current += delta * 0.001 * speedLerp.current;
 
         if (planeRef.current && planeRef.current.attributes && planeRef.current.attributes.position) {
             const pos = planeRef.current.attributes.position;
-            const time = state.clock.elapsedTime;
+            const t = time * 0.001; // time is in ms
 
             for (let i = 0; i < pos.count; i++) {
                 if (isOverBudget()) break;
                 const x = pos.getX(i);
                 const y = pos.getY(i) + scrollOffset.current;
-                pos.setZ(i, Math.sin(x * 0.8 + time * 1.5) * Math.cos(y * 0.8) * 0.3);
+                pos.setZ(i, Math.sin(x * 0.8 + t * 1.5) * Math.cos(y * 0.8) * 0.3);
                 consume(0.02);
             }
             pos.needsUpdate = true;
         }
-    });
+    }, { budgetMs: 4 });
 
     return (
         <mesh position={[0, -0.6, 0]} rotation={[-Math.PI / 2, 0, 0]}>
@@ -66,12 +68,13 @@ const LidarScanner = () => {
         return pos;
     }, []);
 
-    useFrame((state, delta) => {
+    // RAF-based point cloud rotation with input-sensitive yielding
+    useRAF(({ delta }) => {
         startFrame();
-        if (pointsRef.current) pointsRef.current.rotation.y -= delta * 2;
-        if (laserRef.current) laserRef.current.rotation.y -= delta * 4;
+        if (pointsRef.current) pointsRef.current.rotation.y -= delta * 0.002;
+        if (laserRef.current) laserRef.current.rotation.y -= delta * 0.004;
         consume(0.1);
-    });
+    }, { budgetMs: 4 });
 
     return (
         <group>
@@ -101,26 +104,27 @@ const AutonomousWheel = ({ position, isDriving, isFront }) => {
     const steerAngle = useRef(0);
     const { startFrame, consume, isOverBudget } = useRenderBudget(quality.targetFPS === 60 ? 4 : 8);
 
-    useFrame((state, delta) => {
+    // RAF-based wheel physics with input-sensitive yielding
+    useRAF(({ time, delta }) => {
         startFrame();
 
         // Lerp wheel velocity up and down smoothly
-        wheelSpeed.current = THREE.MathUtils.lerp(wheelSpeed.current, isDriving ? 15 : 0, delta * 3);
+        wheelSpeed.current = THREE.MathUtils.lerp(wheelSpeed.current, isDriving ? 15 : 0, delta * 0.003);
 
         // Rolling Spin: In XYZ Euler order, spinning Y on a mesh rotated 90-degrees-X perfectly rolls the axle
         if (wheelRef.current) {
-            wheelRef.current.rotation.y -= delta * wheelSpeed.current;
+            wheelRef.current.rotation.y -= delta * 0.001 * wheelSpeed.current;
         }
 
         // Active Front-Wheel Steering Kinematics
         if (isFront && steeringRef.current) {
             // When driving in the circular loop, the car must physically steer its front tires left (+0.4 radians)
-            steerAngle.current = THREE.MathUtils.lerp(steerAngle.current, isDriving ? +0.4 : 0, delta * 2);
+            steerAngle.current = THREE.MathUtils.lerp(steerAngle.current, isDriving ? +0.4 : 0, delta * 0.002);
             steeringRef.current.rotation.y = steerAngle.current;
         }
 
         consume(0.1);
-    });
+    }, { budgetMs: 4 });
 
     return (
         <group position={position} ref={steeringRef}>
@@ -266,23 +270,24 @@ const VehicleMesh = ({ isDriving }) => {
     const driveProgress = useRef(0);
     const accumulatedDriveTime = useRef(0);
 
-    useFrame((state, delta) => {
+    // RAF-based vehicle physics with input-sensitive yielding
+    useRAF(({ delta }) => {
         startFrame();
 
         // ALWAYS spin sensory payloads (Hardware sensors are active even when parked)
-        if (lidarRef1.current) lidarRef1.current.rotation.y -= delta * 15;
-        if (lidarRef2.current) lidarRef2.current.rotation.y -= delta * 15;
+        if (lidarRef1.current) lidarRef1.current.rotation.y -= delta * 0.015;
+        if (lidarRef2.current) lidarRef2.current.rotation.y -= delta * 0.015;
 
         // SEAMLESS INTERPOLATION PHYSICS: Gliding the vehicle between Origin and Trajectory
         driveProgress.current = THREE.MathUtils.lerp(
             driveProgress.current,
             isDriving ? 1 : 0,
-            delta * 1.5 // Animation speed for gliding back to start
+            delta * 0.0015 // Animation speed for gliding back to start
         );
 
         if (vehicleGroupRef.current) {
             // Only increment autonomous algorithm time when actually driving/speeding up
-            if (isDriving) accumulatedDriveTime.current += delta * 0.8;
+            if (isDriving) accumulatedDriveTime.current += delta * 0.0008;
 
             const time = accumulatedDriveTime.current;
             const driveRadius = 6;
@@ -313,9 +318,9 @@ const VehicleMesh = ({ isDriving }) => {
         }
 
         if (isOverBudget()) {
-            // Skip non-essential effects this frame
+            // Over budget - next frame will be lighter automatically
         }
-    });
+    }, { budgetMs: 4 });
 
     return (
         <group
@@ -410,11 +415,31 @@ const VehicleMesh = ({ isDriving }) => {
 
 // Application Root Overlay
 export default function AutonomousCar() {
-    const { quality } = usePerformance();
+    const { quality, renderTier } = usePerformance();
     const [isDriving, setIsDriving] = useState(false);
 
-    if (quality.targetFPS < 30) {
-      // Render simplified version on economy tier instead of hiding
+    // Economy tier: CSS fallback
+    if (renderTier === 'economy') {
+      return (
+        <div style={{ position: 'relative', width: '100%', height: '100%', borderRadius: '16px', overflow: 'hidden' }}>
+          <div style={{
+            width: '100%', height: '100%',
+            background: 'radial-gradient(circle at center, rgba(15, 23, 42, 0.4) 0%, transparent 100%)',
+            border: '1px solid rgba(88, 166, 255, 0.2)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+          }}>
+            <div style={{ color: '#58a6ff', fontSize: '14px', fontWeight: 600, textAlign: 'center' }}>
+              L4 Autonomous Vehicle<br />
+              <span style={{ fontSize: '12px', color: '#8b949e' }}>Simulation paused in economy mode</span>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // Low tier: simplified WebGL (no topography, no lidar, fewer lights)
+    if (renderTier === 'low' || quality.targetFPS < 30) {
+      // Render simplified version on low tier
       return (
         <div style={{ position: 'relative', width: '100%', height: '100%' }}>
           <Canvas camera={{ position: [12, 8, 12], fov: 50 }} style={{ cursor: 'grab', borderRadius: '16px', background: 'radial-gradient(circle at center, rgba(15, 23, 42, 0.4) 0%, transparent 100%)' }}>
@@ -425,7 +450,7 @@ export default function AutonomousCar() {
           </Canvas>
           <div style={{ position: 'absolute', bottom: '24px', left: '50%', transform: 'translateX(-50%)', zIndex: 10, display: 'flex', gap: '12px' }}>
             <button onClick={() => setIsDriving(!isDriving)} style={{ background: isDriving ? 'rgba(239, 68, 68, 0.2)' : 'rgba(34, 197, 94, 0.2)', border: `1px solid ${isDriving ? '#ef4444' : '#22c55e'}`, color: isDriving ? '#ef4444' : '#22c55e', padding: '12px 24px', borderRadius: '8px', fontFamily: 'monospace', fontSize: '14px', fontWeight: 'bold', backdropFilter: 'blur(8px)', cursor: 'pointer', transition: 'all 0.3s ease', boxShadow: `0 0 15px ${isDriving ? 'rgba(239, 68, 68, 0.4)' : 'rgba(34, 197, 94, 0.4)'}`, textShadow: '0 0 5px currentColor' }}>
-              {isDriving ? '■ HALT L4 SIMULATION' : '▶ INITIATE L4 AUTONOMY'}
+              {isDriving ? '�-� HALT L4 SIMULATION' : '�- INITIATE L4 AUTONOMY'}
             </button>
           </div>
         </div>

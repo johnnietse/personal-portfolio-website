@@ -106,8 +106,8 @@ export const PerformanceProvider = ({ children }) => {
 
         setIsMobile(mobileCheck);
 
-        // 2. Session-Based Performance Defaults (Always start optimized)
-        setIsLowSpec(true);
+        // 2. Session-Based Performance Defaults (Force ultra for local testing)
+        setIsLowSpec(false);
 
         // 3. Load Feature Toggles
         if (typeof window !== 'undefined') {

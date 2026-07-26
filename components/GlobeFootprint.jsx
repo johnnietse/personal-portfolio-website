@@ -100,7 +100,7 @@ export default function GlobeFootprint() {
   const glowFnsRef = useRef({ spawnGlow: () => {}, destroyGlow: () => {} });
   const flashRef = useRef([]);
 
-  const { quality } = usePerformance();
+  const { quality, renderTier } = usePerformance();
   const [isMounted, setIsMounted] = useState(false);
   const [globeState, setGlobeState] = useState({ type: 'loading' });
   const [selectedCity, setSelectedCity] = useState(null);
@@ -108,6 +108,44 @@ export default function GlobeFootprint() {
   useEffect(() => { setIsMounted(true); }, []);
 
   const isLowPower = quality.targetFPS < 30;
+
+  // Economy tier: CSS fallback
+  if (renderTier === 'economy') {
+    return (
+      <div style={{
+        position: 'relative', width: '100%', maxWidth: '500px', margin: '0 auto',
+        aspectRatio: '1 / 1', borderRadius: '50%', overflow: 'hidden',
+        background: 'radial-gradient(circle at center, #0f172a 0%, #020617 100%)',
+        border: '1px solid rgba(88, 166, 255, 0.3)',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+      }}>
+        <div style={{ color: '#58a6ff', fontSize: '14px', fontWeight: 600, textAlign: 'center', padding: '20px' }}>
+          Global Engineering Footprint
+          <br />
+          <span style={{ fontSize: '12px', color: '#8b949e' }}>Queen&apos;s University + Hong Kong</span>
+        </div>
+      </div>
+    );
+  }
+
+  // Low tier: simplified globe (no arcs, no pins, static)
+  if (renderTier === 'low') {
+    return (
+      <div style={{
+        position: 'relative', width: '100%', maxWidth: '500px', margin: '0 auto',
+        aspectRatio: '1 / 1', borderRadius: '50%', overflow: 'hidden',
+        background: 'radial-gradient(circle at center, #0f172a 0%, #020617 100%)',
+        border: '1px solid rgba(88, 166, 255, 0.3)',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+      }}>
+        <div style={{ color: '#58a6ff', fontSize: '14px', fontWeight: 600, textAlign: 'center' }}>
+          Global Engineering Footprint
+          <br />
+          <span style={{ fontSize: '12px', color: '#8b949e' }}>Simplified view</span>
+        </div>
+      </div>
+    );
+  }
 
   // ── Initialise globe.gl ─────────────────────────────────────────────────
 

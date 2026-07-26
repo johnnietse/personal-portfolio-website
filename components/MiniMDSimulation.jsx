@@ -201,7 +201,7 @@ const MDSystem = ({ simState, count }) => {
 };
 
 export default function MiniMDSimulation() {
-    const { quality } = usePerformance();
+    const { quality, renderTier } = usePerformance();
     const [isOptimized, setIsOptimized] = useState(false);
 
     // All hooks must be called before any early return (Rules of Hooks)

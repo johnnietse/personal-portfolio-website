@@ -5,6 +5,7 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import { Points, PointMaterial } from "@react-three/drei";
 import { usePerformance } from "./PerformanceManager";
 import { useRenderBudget } from '@/lib/hooks/useRenderBudget';
+import { useRAF } from '@/lib/hooks/useRAF';
 
 function getSpherePositions(count, radius) {
     const positions = new Float32Array(count * 3);
@@ -29,13 +30,12 @@ const Starfield = () => {
     const [positions] = useState(() => getSpherePositions(count, 1.2));
     const { startFrame, consume, isOverBudget } = useRenderBudget(4);
 
-    useFrame((state, delta) => {
-        startFrame();
-        // Slow, premium architectural rotation + real-time mouse parallax
+    // RAF-based animation loop with input-sensitive yielding
+    useRAF(({ time, delta }) => {
         if (ref.current) {
-            // Parallax offset matching pointer
-            const targetX = (state.pointer.x * Math.PI) / 8;
-            const targetY = (state.pointer.y * Math.PI) / 8;
+            // Parallax offset matching pointer (using stored pointer state)
+            const targetX = (ref.current.userData?.pointerX || 0) * Math.PI / 8;
+            const targetY = (ref.current.userData?.pointerY || 0) * Math.PI / 8;
 
             // Interpolation for buttery-smooth reactive movement
             ref.current.rotation.y += 0.05 * (targetX - ref.current.rotation.y);
@@ -47,11 +47,21 @@ const Starfield = () => {
 
             consume(0.1);
         }
+    }, { budgetMs: 4 });
 
-        if (isOverBudget()) {
-            // Skip non-essential effects this frame
+    // Track pointer for parallax (separate from RAF loop)
+    useFrame((state) => {
+        if (ref.current) {
+            ref.current.userData = {
+                pointerX: state.pointer.x,
+                pointerY: state.pointer.y,
+            };
         }
     });
+
+    if (isOverBudget()) {
+        // Skip non-essential effects this frame
+    }
 
     return (
         <group rotation={[0, 0, Math.PI / 4]}>
