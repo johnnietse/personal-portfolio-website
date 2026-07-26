@@ -1,6 +1,5 @@
 import Navigation from "@/components/Navigation";
 import AOSSetup from "@/components/AOSSetup";
-import ParticleBackground from "@/components/ParticleBackground";
 import ScrollPhysics from "@/components/ScrollPhysics";
 import BlackHoleCursor from "@/components/BlackHoleCursor";
 import PerformanceHUD from "@/components/PerformanceHUD";
@@ -53,19 +52,18 @@ export default function RootLayout({ children }) {
         <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet" />
       </head>
       <body suppressHydrationWarning>
-        <PerformanceProvider>
-          <div className="relative flex flex-col min-h-screen w-full overflow-x-hidden overflow-y-auto">
-            <AOSSetup />
-            <Navigation />
-            <ParticleBackground />
-            <ScrollPhysics />
-            <BlackHoleCursor />
-            <PerformanceHUD />
-            <IronManHUD />
-            <MobileSystemsTray />
-            {children}
-          </div>
-        </PerformanceProvider>
+<PerformanceProvider>
+      <div className="relative flex flex-col min-h-screen w-full overflow-x-hidden overflow-y-auto">
+        <AOSSetup />
+        <Navigation />
+        <ScrollPhysics />
+        <BlackHoleCursor />
+        <PerformanceHUD />
+        <IronManHUD />
+        <MobileSystemsTray />
+        {children}
+      </div>
+    </PerformanceProvider>
       </body>
     </html>
   );
