@@ -84,7 +84,7 @@ function injectStyles() {
 function EconomyFallback() {
   return (
     <div style={{
-      width: '100%', height: '100%', borderRadius: '50%',
+      position: 'absolute', inset: 0, borderRadius: '50%',
       background: 'radial-gradient(circle at center, #0f172a 0%, #020617 100%)',
       border: '1px solid #58a6ff',
       display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -98,12 +98,12 @@ function EconomyFallback() {
   );
 }
 
-// ─── Loading placeholder while globe boots ────────────────────────────────────
+// ─── Loading / error states ──────────────────────────────────────────────────
 
 function GlobePlaceholder() {
   return (
     <div style={{
-      width: '100%', height: '100%', borderRadius: '50%',
+      position: 'absolute', inset: 0, borderRadius: '50%', zIndex: 1,
       background: 'radial-gradient(circle at center, #0f172a 0%, #020617 100%)',
       border: '1px solid rgba(88,166,255,0.3)',
       display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -115,10 +115,24 @@ function GlobePlaceholder() {
         animation: 'globe-spin 0.8s linear infinite',
       }} />
       <style>{`
-        @keyframes globe-spin {
-          to { transform: rotate(360deg); }
-        }
+        @keyframes globe-spin { to { transform: rotate(360deg); } }
       `}</style>
+    </div>
+  );
+}
+
+function GlobeError({ message }) {
+  return (
+    <div style={{
+      position: 'absolute', inset: 0, borderRadius: '50%', zIndex: 1,
+      background: 'radial-gradient(circle at center, #1a0a0a 0%, #020617 100%)',
+      border: '1px solid #ff6b6b',
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+    }}>
+      <div style={{ color: '#ff6b6b', fontSize: '12px', textAlign: 'center', padding: '16px' }}>
+        <div style={{ fontSize: '20px', marginBottom: '4px' }}>⚠</div>
+        {message}
+      </div>
     </div>
   );
 }
@@ -127,125 +141,130 @@ function GlobePlaceholder() {
 
 export default function GlobeFootprint() {
   const containerRef = useRef(null);
-  const globeRef = useRef(null);
+  const cleanupRef = useRef(null);
   const { quality } = usePerformance();
   const [isMounted, setIsMounted] = useState(false);
-  const [globeReady, setGlobeReady] = useState(false);
+  const [uiState, setUiState] = useState({ type: 'loading' }); // 'loading' | 'ready' | 'error'
 
   useEffect(() => { setIsMounted(true); }, []);
 
   const isLowPower = quality.targetFPS < 30;
 
-  // Initialise globe.gl when container mounts
+  // ── Initialise globe.gl once container exists on client ──────────────────
+
   useEffect(() => {
-    if (isLowPower || !containerRef.current) return;
+    // Wait until hydrated AND container DOM is ready
+    if (!isMounted || isLowPower || !containerRef.current) return;
 
     let destroyed = false;
-    setGlobeReady(false);
+    setUiState({ type: 'loading' });
 
     injectStyles();
 
-    import('globe.gl').then(({ default: Globe }) => {
-      if (destroyed) return;
+    import('globe.gl')
+      .then(({ default: Globe }) => {
+        if (destroyed) return;
 
-      const container = containerRef.current;
-      if (!container) return;
+        const container = containerRef.current;
+        if (!container) return;
 
-      const rect = container.getBoundingClientRect();
-      const w = rect.width || 400;
-      const h = rect.height || 400;
+        const rect = container.getBoundingClientRect();
+        const w = rect.width || 400;
+        const h = rect.height || 400;
 
-      const globe = new Globe(container)
-        .globeImageUrl('/textures/earth-blue-marble.jpg')
-        .backgroundColor('#020617')
-        .atmosphereColor('#58a6ff')
-        .atmosphereAltitude(0.12)
-        .width(w)
-        .height(h)
-        .htmlElementsData(LOCATIONS)
-        .htmlLat((d) => d.lat)
-        .htmlLng((d) => d.lon)
-        .htmlElement((d) => createPinElement(d))
-        .arcsData(ARC_DATA)
-        .arcStartLat((d) => d.startLat)
-        .arcStartLng((d) => d.startLng)
-        .arcEndLat((d) => d.endLat)
-        .arcEndLng((d) => d.endLng)
-        .arcColor(() => ['rgba(126,231,135,0.12)', 'rgba(88,166,255,0.12)'])
-        .arcDashLength(0.6)
-        .arcDashGap(0.15)
-        .arcDashAnimateTime(5000)
-        .arcStroke(0.4);
+        const globe = new Globe(container)
+          .globeImageUrl('/textures/earth-blue-marble.jpg')
+          .backgroundColor('#020617')
+          .atmosphereColor('#58a6ff')
+          .atmosphereAltitude(0.12)
+          .width(w)
+          .height(h)
+          .htmlElementsData(LOCATIONS)
+          .htmlLat((d) => d.lat)
+          .htmlLng((d) => d.lon)
+          .htmlElement((d) => createPinElement(d))
+          .arcsData(ARC_DATA)
+          .arcStartLat((d) => d.startLat)
+          .arcStartLng((d) => d.startLng)
+          .arcEndLat((d) => d.endLat)
+          .arcEndLng((d) => d.endLng)
+          .arcColor(() => ['rgba(126,231,135,0.12)', 'rgba(88,166,255,0.12)'])
+          .arcDashLength(0.6)
+          .arcDashGap(0.15)
+          .arcDashAnimateTime(5000)
+          .arcStroke(0.4);
 
-      const controls = globe.controls();
-      controls.autoRotate = false;
-      controls.autoRotateSpeed = 0;
-      controls.enableZoom = false;
-      controls.enablePan = false;
-      controls.minPolarAngle = Math.PI / 3.5;
-      controls.maxPolarAngle = Math.PI / 1.3;
+        const controls = globe.controls();
+        controls.autoRotate = false;
+        controls.autoRotateSpeed = 0;
+        controls.enableZoom = false;
+        controls.enablePan = false;
+        controls.minPolarAngle = Math.PI / 3.5;
+        controls.maxPolarAngle = Math.PI / 1.3;
 
-      globe.pointOfView({ lat: 30, lng: -20, altitude: 2.8 });
+        globe.pointOfView({ lat: 30, lng: -20, altitude: 2.8 });
 
-      globeRef.current = globe;
-      setGlobeReady(true);
-
-      const resizeObserver = new ResizeObserver((entries) => {
-        for (const entry of entries) {
-          const { width, height } = entry.contentRect;
-          if (width > 0 && height > 0) {
-            globe.width(width).height(height);
-          }
-        }
-      });
-      resizeObserver.observe(container);
-
-      // Poll for WebGL canvas being present
-      const checkCanvas = setInterval(() => {
+        // Ensure the WebGL canvas is visible
         const canvas = container.querySelector('canvas');
-        if (canvas) {
-          canvas.style.display = 'block';
-          clearInterval(checkCanvas);
-        }
-      }, 100);
-      setTimeout(() => clearInterval(checkCanvas), 5000);
+        if (canvas) canvas.style.display = 'block';
 
-      // Store cleanup
-      globeRef.current._cleanup = () => {
-        resizeObserver.disconnect();
-        globe._destructor();
-        globeRef.current = null;
-      };
-    }).catch((err) => {
-      console.error('[GlobeFootprint] Failed to load globe.gl:', err);
-    });
+        // ResizeObserver for responsive sizing
+        const ro = new ResizeObserver((entries) => {
+          for (const entry of entries) {
+            const { width, height } = entry.contentRect;
+            if (width > 0 && height > 0) {
+              globe.width(width).height(height);
+            }
+          }
+        });
+        ro.observe(container);
+
+        // Store teardown
+        cleanupRef.current = () => {
+          ro.disconnect();
+          globe._destructor();
+        };
+
+        setUiState({ type: 'ready' });
+      })
+      .catch((err) => {
+        if (destroyed) return;
+        console.error('[GlobeFootprint] globe.gl init failed:', err);
+        setUiState({ type: 'error', message: err.message || 'Failed to load globe' });
+      });
 
     return () => {
       destroyed = true;
-      if (globeRef.current?._cleanup) {
-        globeRef.current._cleanup();
+      if (cleanupRef.current) {
+        cleanupRef.current();
+        cleanupRef.current = null;
       }
     };
-  }, [isLowPower]);
+  }, [isLowPower, isMounted]);
 
-  // Hydration guard
-  if (!isMounted) return null;
+  // ── Render ────────────────────────────────────────────────────────────────
+
+  // Container div is ALWAYS rendered so containerRef.current is always set
+  // after first paint.  Placeholder / fallback sits on top via absolute positioning.
+
+  const showOverlay = isMounted && (uiState.type !== 'ready' || isLowPower);
 
   return (
     <div style={{
       position: 'relative', width: '100%', maxWidth: '500px', margin: '0 auto',
       aspectRatio: '1 / 1',
     }}>
-      {isLowPower ? (
-        <EconomyFallback />
-      ) : !globeReady ? (
-        <GlobePlaceholder />
-      ) : null}
+      {showOverlay && isLowPower && <EconomyFallback />}
+      {showOverlay && !isLowPower && uiState.type === 'loading' && <GlobePlaceholder />}
+      {showOverlay && !isLowPower && uiState.type === 'error' && (
+        <GlobeError message={uiState.message || 'Globe failed to load'} />
+      )}
+
       <div
         ref={containerRef}
         style={{
           position: 'absolute', inset: 0, cursor: 'grab',
-          visibility: globeReady ? 'visible' : 'hidden',
+          visibility: uiState.type === 'ready' && !isLowPower ? 'visible' : 'hidden',
         }}
       />
     </div>
