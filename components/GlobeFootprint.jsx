@@ -982,7 +982,7 @@ globe.renderer().setPixelRatio(targetPR);
 
   return (
     <div style={{
-      position: 'relative', width: '100%', maxWidth: '500px', margin: '0 auto',
+      position: 'relative', width: 'auto', maxWidth: '500px', margin: '0 auto',
       aspectRatio: '1 / 1',
     }}>
       {showOverlay && isLowPower && <EconomyFallback />}
