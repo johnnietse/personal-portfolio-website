@@ -311,12 +311,9 @@ export default function GlobeFootprint() {
         rendererConfig: { antialias: true, alpha: true },
       });
       globeRef.current = globe;
-      globe
+globe
         .globeImageUrl('/textures/earth-night.jpg')
-        .backgroundColor('#000000')
-        .backgroundImageUrl('/textures/night-sky.png')
-.atmosphereColor('#4466cc')
-          .atmosphereAltitude(0.18)
+        // Background handled via custom scene setup (gradient + procedural stars)
         .showGraticules(true)
         .width(w)
         .height(h)
@@ -474,6 +471,99 @@ globe.renderer().setPixelRatio(targetPR);
       const ambientLight = new THREE.AmbientLight(0x223355, 0.5);
       scene.add(ambientLight);
 
+      // ── Gradient background (dark blue center → black) + procedural starfield ──
+      // Radial gradient via large inverted sphere
+      const bgGeo = new THREE.SphereGeometry(100, 32, 32);
+      const bgMat = new THREE.ShaderMaterial({
+        uniforms: {
+          uCenter: { value: new THREE.Color('#0a1628') },  // deep blue center
+          uEdge:   { value: new THREE.Color('#000000') },  // pure black edge
+        },
+        vertexShader: `
+          varying vec3 vNormal;
+          void main() {
+            vNormal = normalize(normalMatrix * normal);
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+          }
+        `,
+        fragmentShader: `
+          uniform vec3 uCenter;
+          uniform vec3 uEdge;
+          varying vec3 vNormal;
+          void main() {
+            float fade = pow(1.0 - abs(vNormal.z), 2.5);
+            gl_FragColor = vec4(mix(uEdge, uCenter, fade), 1.0);
+          }
+        `,
+        side: THREE.BackSide,
+        depthWrite: false,
+      });
+      const bgMesh = new THREE.Mesh(bgGeo, bgMat);
+      scene.add(bgMesh);
+
+      // Procedural starfield (Points, varying size/color/twinkle)
+      const STAR_COUNT = 3000;
+      const starPos = new Float32Array(STAR_COUNT * 3);
+      const starSizes = new Float32Array(STAR_COUNT);
+      const starColors = new Float32Array(STAR_COUNT * 3);
+      const starPhases = new Float32Array(STAR_COUNT);
+      for (let i = 0; i < STAR_COUNT; i++) {
+        const theta = Math.random() * Math.PI * 2;
+        const phi = Math.acos(2 * Math.random() - 1);
+        const r = 90 + Math.random() * 5;  // shell at ~90-95
+        starPos[i * 3] = Math.sin(phi) * Math.cos(theta) * r;
+        starPos[i * 3 + 1] = Math.sin(phi) * Math.sin(theta) * r;
+        starPos[i * 3 + 2] = Math.cos(phi) * r;
+        starSizes[i] = 0.15 + Math.random() * 0.35;
+        // Slight color variation: warm white → cool white → faint blue
+        const c = Math.random();
+        if (c < 0.5) { starColors[i*3]=1.0; starColors[i*3+1]=0.95; starColors[i*3+2]=0.85; }
+        else if (c < 0.8) { starColors[i*3]=0.9; starColors[i*3+1]=0.95; starColors[i*3+2]=1.0; }
+        else { starColors[i*3]=0.7; starColors[i*3+1]=0.8; starColors[i*3+2]=1.0; }
+        starPhases[i] = Math.random() * Math.PI * 2;
+      }
+      const starGeom = new THREE.BufferGeometry();
+      starGeom.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
+      starGeom.setAttribute('aSize', new THREE.BufferAttribute(starSizes, 1));
+      starGeom.setAttribute('aColor', new THREE.BufferAttribute(starColors, 3));
+      starGeom.setAttribute('aPhase', new THREE.BufferAttribute(starPhases, 1));
+      const starMat = new THREE.ShaderMaterial({
+        transparent: true,
+        depthWrite: false,
+        blending: THREE.AdditiveBlending,
+        vertexColors: true,
+        vertexShader: `
+          attribute float aSize;
+          attribute vec3 aColor;
+          attribute float aPhase;
+          uniform float uTime;
+          varying vec3 vColor;
+          void main() {
+            vColor = aColor;
+            float twinkle = 0.7 + 0.3 * sin(uTime * 0.0015 + aPhase);
+            vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+            gl_PointSize = aSize * twinkle * (300.0 / -mvPosition.z);
+            gl_Position = projectionMatrix * mvPosition;
+          }
+        `,
+        fragmentShader: `
+          varying vec3 vColor;
+          void main() {
+            float dist = length(gl_PointCoord - vec2(0.5));
+            if (dist > 0.5) discard;
+            float alpha = 1.0 - smoothstep(0.1, 0.5, dist);
+            gl_FragColor = vec4(vColor, alpha);
+          }
+        `,
+        uniforms: { uTime: { value: 0 } },
+      });
+      const starField = new THREE.Points(starGeom, starMat);
+      scene.add(starField);
+
+      // Store for animation + cleanup
+      const starFieldRef = { current: starField };
+      const starPhasesRef = starPhases;
+
       // ── Cloud layer (custom mesh, independently rotated) ──────────────
 
       const cloudTexture = new THREE.TextureLoader()
@@ -490,18 +580,48 @@ globe.renderer().setPixelRatio(targetPR);
       const cloudMesh = new THREE.Mesh(cloudGeom, cloudMat);
       scene.add(cloudMesh);
 
-      // ── Enhanced atmosphere glow (World Monitor style) ────────────────
+      // ── Enhanced atmosphere glow (World Monitor style: fresnel rim) ────────────
 
-      const outerGlowGeo = new THREE.SphereGeometry(2.15, 24, 24);
-      const outerGlowMat = new THREE.MeshBasicMaterial({
-        color: 0x00d4ff, side: THREE.BackSide, transparent: true, opacity: 0.15,
+      // Outer atmosphere shell with fresnel rim
+      const atmGeo = new THREE.SphereGeometry(2.2, 48, 48);
+      const atmMat = new THREE.ShaderMaterial({
+        uniforms: {
+          uGlowColor: { value: new THREE.Color(0x00d4ff) },
+          uIntensity: { value: 0.35 },
+        },
+        vertexShader: `
+          varying vec3 vNormal;
+          varying vec3 vViewDir;
+          void main() {
+            vNormal = normalize(normalMatrix * normal);
+            vec4 mvPos = modelViewMatrix * vec4(position, 1.0);
+            vViewDir = normalize(-mvPos.xyz);
+            gl_Position = projectionMatrix * mvPos;
+          }
+        `,
+        fragmentShader: `
+          uniform vec3 uGlowColor;
+          uniform float uIntensity;
+          varying vec3 vNormal;
+          varying vec3 vViewDir;
+          void main() {
+            float fresnel = pow(1.0 - max(dot(vNormal, vViewDir), 0.0), 3.0);
+            float fade = smoothstep(0.0, 0.3, fresnel);
+            gl_FragColor = vec4(uGlowColor, uIntensity * fade);
+          }
+        `,
+        side: THREE.BackSide,
+        transparent: true,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false,
       });
-      const outerGlow = new THREE.Mesh(outerGlowGeo, outerGlowMat);
-      scene.add(outerGlow);
+      const atmosphereGlow = new THREE.Mesh(atmGeo, atmMat);
+      scene.add(atmosphereGlow);
 
-      const innerGlowGeo = new THREE.SphereGeometry(2.08, 24, 24);
+      // Inner subtle haze
+      const innerGlowGeo = new THREE.SphereGeometry(2.05, 24, 24);
       const innerGlowMat = new THREE.MeshBasicMaterial({
-        color: 0x00a8cc, side: THREE.BackSide, transparent: true, opacity: 0.1,
+        color: 0x00a8cc, side: THREE.BackSide, transparent: true, opacity: 0.08,
       });
       const innerGlow = new THREE.Mesh(innerGlowGeo, innerGlowMat);
       scene.add(innerGlow);
@@ -558,8 +678,18 @@ globe.renderer().setPixelRatio(targetPR);
           cloudMesh.rotation.y = rotateY * 1.15;
           cloudMesh.rotation.x = rotateX * 0.85;
         }
-        outerGlow.rotation.y += 0.0003;
-        innerGlow.rotation.y += 0.0002;
+        atmosphereGlow.rotation.y += 0.00025;
+        innerGlow.rotation.y += 0.00015;
+
+        // Starfield twinkle (CPU-side size modulation)
+        const starSizesAttr = starFieldRef.current.geometry.getAttribute('aSize');
+        const baseSizes = starSizesAttr.array;
+        const phases = starPhasesRef;
+        for (let i = 0; i < STAR_COUNT; i++) {
+          starSizesAttr.array[i] = baseSizes[i] * (0.7 + 0.3 * Math.sin(time * 0.0015 + phases[i]));
+        }
+        starSizesAttr.needsUpdate = true;
+
         globeMaterial.emissiveIntensity = 0.38 + Math.sin(time * 0.0006) * 0.06;
         if (glowRef.current && glowMatRef.current) {
           const pulse = 1 + Math.sin(time * 0.003) * 0.2;
@@ -610,10 +740,11 @@ globe.renderer().setPixelRatio(targetPR);
 
       const bloomPass = new UnrealBloomPass(
         new THREE.Vector2(w, h),
-        0.2,   // strength — subtle bloom on bright elements
-        0.4,   // radius
-        0.15,  // threshold — only bloom the bright parts
+        0.45,  // strength — stronger cinematic bloom
+        0.6,   // radius — wider glow spread
+        0.08,  // threshold — bloom more elements (city lights, atmosphere)
       );
+      bloomPass.renderToScreen = true;
       globe.postProcessingComposer().addPass(bloomPass);
 
       // ── Orbit controls ───────────────────────────────────────────────
@@ -702,12 +833,12 @@ globe.renderer().setPixelRatio(targetPR);
         scene.remove(cloudMesh);
         cloudGeom.dispose();
         cloudMat.dispose();
-        scene.remove(outerGlow);
-        outerGlowGeo.dispose();
-        outerGlowMat.dispose();
+        scene.remove(atmosphereGlow);
+        atmosphereGlow.geometry.dispose();
+        atmosphereGlow.material.dispose();
         scene.remove(innerGlow);
-        innerGlowGeo.dispose();
-        innerGlowMat.dispose();
+        innerGlow.geometry.dispose();
+        innerGlow.material.dispose();
         scene.remove(cyanLight);
         scene.remove(ambientLight);
         destroyGlow();
@@ -718,6 +849,17 @@ globe.renderer().setPixelRatio(targetPR);
           if (globeMaterial.roughnessMap) globeMaterial.roughnessMap.dispose();
           if (globeMaterial.emissiveMap) globeMaterial.emissiveMap.dispose();
           if (globeMaterial.bumpMap) globeMaterial.bumpMap.dispose();
+        }
+        // Starfield + gradient background cleanup
+        if (starFieldRef.current) {
+          scene.remove(starFieldRef.current);
+          starFieldRef.current.geometry.dispose();
+          starFieldRef.current.material.dispose();
+        }
+        if (bgMesh) {
+          scene.remove(bgMesh);
+          bgMesh.geometry.dispose();
+          bgMesh.material.dispose();
         }
         ro.disconnect();
         container.removeEventListener('pointerenter', onPointerEnter);
