@@ -145,7 +145,7 @@ export default function GlobeFootprint() {
           .backgroundColor('#000000')
           .backgroundImageUrl('/textures/night-sky.png')
           .atmosphereColor('#58a6ff')
-          .atmosphereAltitude(0.15)
+          .atmosphereAltitude(0.22)
           .showGraticules(true)
           .width(w)
           .height(h)
@@ -208,6 +208,47 @@ export default function GlobeFootprint() {
         globeMaterial.emissive = new THREE.Color('#111122');
         globeMaterial.emissiveIntensity = 0.15;
 
+        // ── Orbital particle field ────────────────────────────────────────
+
+        const PARTICLE_COUNT = 1200;
+        const particlePos = new Float32Array(PARTICLE_COUNT * 3);
+        const particleSizes = new Float32Array(PARTICLE_COUNT);
+        for (let i = 0; i < PARTICLE_COUNT; i++) {
+          const theta = Math.random() * Math.PI * 2;
+          const phi = Math.acos(2 * Math.random() - 1);
+          const r = 1.35 + Math.random() * 0.55;
+          particlePos[i * 3] = Math.sin(phi) * Math.cos(theta) * r;
+          particlePos[i * 3 + 1] = Math.sin(phi) * Math.sin(theta) * r;
+          particlePos[i * 3 + 2] = Math.cos(phi) * r;
+          particleSizes[i] = 0.4 + Math.random() * 0.6;
+        }
+
+        const particleGeom = new THREE.BufferGeometry();
+        particleGeom.setAttribute('position', new THREE.BufferAttribute(particlePos, 3));
+        particleGeom.setAttribute('aSize', new THREE.BufferAttribute(particleSizes, 1));
+
+        const particleMat = new THREE.PointsMaterial({
+          color: new THREE.Color('#58a6ff'),
+          size: 0.012,
+          transparent: true,
+          opacity: 0.45,
+          blending: THREE.AdditiveBlending,
+          depthWrite: false,
+          sizeAttenuation: true,
+        });
+
+        const particleField = new THREE.Points(particleGeom, particleMat);
+        const scene = globe.scene();
+        scene.add(particleField);
+
+        let particleAnimId;
+        function tickParticles(time) {
+          particleField.rotation.y = time * 0.00008;
+          particleField.rotation.x = Math.sin(time * 0.00003) * 0.03;
+          particleAnimId = requestAnimationFrame(tickParticles);
+        }
+        particleAnimId = requestAnimationFrame(tickParticles);
+
         // ── Orbit controls ───────────────────────────────────────────────
 
         const controls = globe.controls();
@@ -240,6 +281,10 @@ export default function GlobeFootprint() {
         // ── Store teardown ───────────────────────────────────────────────
 
         cleanupRef.current = () => {
+          cancelAnimationFrame(particleAnimId);
+          scene.remove(particleField);
+          particleGeom.dispose();
+          particleMat.dispose();
           ro.disconnect();
           globe._destructor();
         };
