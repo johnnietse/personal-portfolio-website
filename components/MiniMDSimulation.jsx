@@ -199,20 +199,7 @@ export default function MiniMDSimulation() {
     const { quality } = usePerformance();
     const [isOptimized, setIsOptimized] = useState(false);
 
-    if (quality.targetFPS < 30) {
-      // Render simplified version on economy tier
-      return (
-        <div style={{ position: 'relative', width: '100%', height: '100%', borderRadius: '12px', overflow: 'hidden' }}>
-          <Canvas camera={{ position: [0, 8, 22], fov: 45 }} style={{ cursor: 'grab', background: 'radial-gradient(circle at center, rgba(15, 23, 42, 0.6) 0%, transparent 100%)' }}>
-            <ambientLight intensity={0.8} />
-            <directionalLight position={[10, 20, 10]} intensity={3} color="#ffffff" />
-            <MDSystem simState={simState} count={50} />
-            <OrbitControls enableZoom={false} enablePan={false} autoRotate autoRotateSpeed={0.8} />
-          </Canvas>
-        </div>
-      );
-    }
-
+    // All hooks must be called before any early return (Rules of Hooks)
     const isLowQuality = quality.geometryDetail < 0.75;
     const count = Math.round(300 * quality.particleMultiplier);
 
@@ -272,6 +259,20 @@ export default function MiniMDSimulation() {
 
         return () => clearInterval(interval);
     }, [isOptimized]);
+
+    if (quality.targetFPS < 30) {
+      // Render simplified version on economy tier
+      return (
+        <div style={{ position: 'relative', width: '100%', height: '100%', borderRadius: '12px', overflow: 'hidden' }}>
+          <Canvas camera={{ position: [0, 8, 22], fov: 45 }} style={{ cursor: 'grab', background: 'radial-gradient(circle at center, rgba(15, 23, 42, 0.6) 0%, transparent 100%)' }}>
+            <ambientLight intensity={0.8} />
+            <directionalLight position={[10, 20, 10]} intensity={3} color="#ffffff" />
+            <MDSystem simState={simState} count={50} />
+            <OrbitControls enableZoom={false} enablePan={false} autoRotate autoRotateSpeed={0.8} />
+          </Canvas>
+        </div>
+      );
+    }
 
     return (
         <div style={{ position: 'relative', width: '100%', height: '100%', borderRadius: '12px', overflow: 'hidden' }}>

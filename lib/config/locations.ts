@@ -4,27 +4,39 @@ export interface Location {
   lon: number;
   label: string;
   type: 'education' | 'work' | 'project';
+  experiences: string[];
 }
 
 /**
  * Geographic locations for the WebGL globe.
- * Replace with your own locations — format: { city, lat, lon, label, type }
- * 
- * @example
- * export const LOCATIONS: Location[] = [
- *   { city: 'San Francisco, CA', lat: 37.7749, lon: -122.4194, label: 'Work', type: 'work' },
- *   { city: 'Boston, MA', lat: 42.3601, lon: -71.0589, label: 'University', type: 'education' },
- * ];
- * 
- * @example
- * // Public school info is fine to include:
- * export const LOCATIONS: Location[] = [
- *   { city: 'Kingston, ON', lat: 44.2312, lon: -76.4860, label: "Queen's University", type: 'education' },
- * ];
+ * Each pin links to experiences from that location.
  */
 export const LOCATIONS: Location[] = [
-  // Public education info is fine to include
-  { city: 'Kingston, ON', lat: 44.2312, lon: -76.4860, label: "Queen's University", type: 'education' },
-  // Add your own locations here:
-  // { city: 'City, State', lat: 0.0, lon: 0.0, label: 'Label', type: 'work' },
+  {
+    city: 'Kingston, ON',
+    lat: 44.2312,
+    lon: -76.4860,
+    label: "Queen's University",
+    type: 'education',
+    experiences: [
+      'Computer Engineering (B.A.Sc.)',
+      "AutoDrive Team — CAN Lead, Embedded Systems (SAE Level 4)",
+      'QHPC — Co-Founder & COO (40+ member HPC club)',
+      "EngSoc — Sci '26 Vice-President, Equity Officer, ECE Club Treasurer",
+      'QWeb — Full Stack Developer (e-learning platform)',
+      'FYIC — Webmaster (130+ students, 18+ universities)',
+      'Relectric Car Team — Design Engineer (EV battery enclosure)',
+    ],
+  },
+  {
+    city: 'Hong Kong SAR',
+    lat: 22.3193,
+    lon: 114.1694,
+    label: 'Hong Kong',
+    type: 'work',
+    experiences: [
+      'Arista Networks — Project Financial Management Intern ($2M portfolio analysis)',
+      'Foresoon Engineering — Electrical & Robotics Engineer Assistant (Kinova arm + ROS)',
+    ],
+  },
 ];
