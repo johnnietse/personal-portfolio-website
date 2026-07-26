@@ -1,5 +1,6 @@
 import Navigation from "@/components/Navigation";
 import AOSSetup from "@/components/AOSSetup";
+import ParticleBackground from "@/components/ParticleBackground";
 import ScrollPhysics from "@/components/ScrollPhysics";
 import BlackHoleCursor from "@/components/BlackHoleCursor";
 import PerformanceHUD from "@/components/PerformanceHUD";
@@ -56,6 +57,7 @@ export default function RootLayout({ children }) {
       <div className="relative flex flex-col min-h-screen w-full overflow-x-hidden overflow-y-auto">
         <AOSSetup />
         <Navigation />
+        <ParticleBackground />
         <ScrollPhysics />
         <BlackHoleCursor />
         <PerformanceHUD />
