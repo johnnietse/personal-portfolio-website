@@ -14,6 +14,7 @@ export default function About() {
             role: "Software Engineer Fellow",
             date: "Jun 2026 - Present · 2 mos",
             location: "Remote",
+            logo: "/solana.svg",
             bullets: [
                 "Deployed & stabilized a production-grade Solana Developer Platform — a self-hosted multi-service stack for tokenization, wallet custody, and payments on Solana devnet — bringing 170+ API endpoints across 20+ route families to life entirely offline.",
                 "Architected & ran the full local development environment across 6 Docker services: Node.js API server (Hono/Cloudflare Workers), Next.js dashboard + docs site, PostgreSQL (55 tables, 178 indexes) + Redis, all in Docker; configured self-hosted signing, native SOL fee payment, and public devnet RPC, enabling token minting, wallet creation, and payment transfers without any commercial infrastructure.",
