@@ -10,9 +10,23 @@ import GitHubStats from '@/components/GitHubStats';
 export default function About() {
     const experiences = [
         {
+            company: "Solana",
+            role: "Software Engineer Fellow",
+            date: "Jun 2026 - Present · 2 mos",
+            location: "Remote",
+            bullets: [
+                "Deployed & stabilized a production-grade Solana Developer Platform — a self-hosted multi-service stack for tokenization, wallet custody, and payments on Solana devnet — bringing 170+ API endpoints across 20+ route families to life entirely offline.",
+                "Architected & ran the full local development environment across 6 Docker services: Node.js API server (Hono/Cloudflare Workers), Next.js dashboard + docs site, PostgreSQL (55 tables, 178 indexes) + Redis, all in Docker; configured self-hosted signing, native SOL fee payment, and public devnet RPC, enabling token minting, wallet creation, and payment transfers without any commercial infrastructure.",
+                "Integrated Clerk JWT authentication with custom middleware handling org-scoped permissions across the entire API surface (100K lines); traced a systemic failure through the full webhook chain (Clerk → Svix relay → API → PostgreSQL), identified a zombie relay process dropping organization lifecycle events, and restored platform access by manually reconciling org mapping.",
+                "Built the full analytics data pipeline: 7 scheduled crons (every 1 minute to daily) ingesting on-chain token supply, holder distributions, wallet labels, and token discovery into AWS S3 Delta Lake via Databricks, with automatic token retirement & rug-pull detection across tracked assets.",
+                "Built & verified health monitoring across database, RPC, token ingestion, and analytics pipeline across 449 source files."
+            ],
+            skills: ["Solana", "Blockchain", "TypeScript", "Hono", "Cloudflare Workers", "Next.js", "PostgreSQL", "Redis", "Docker", "Clerk", "Databricks", "AWS S3", "Delta Lake", "Node.js", "RPC", "Webhook Architecture", "System Reliability", "Tokenomics"]
+        },
+        {
             company: "Kubernetes (Official)",
             role: "Open-Source Contributor & Developer, SIG Apps & SIG Cluster Lifecycle",
-            date: "Feb 2026 - Present · 2 mos",
+            date: "Feb 2026 - Present · 6 mos",
             location: "Remote",
             logo: "/kubernetes.png",
             bullets: [
@@ -23,7 +37,7 @@ export default function About() {
         {
             company: "vLLM",
             role: "Open Source Research Contributor | llm-d (vLLM ecosystem)",
-            date: "May 2026 - Present · 2 mos",
+            date: "May 2026 - Present · 3 mos",
             location: "Remote",
             logo: "/vllm.png",
             bullets: [
@@ -40,15 +54,17 @@ export default function About() {
         {
             company: "Deel",
             role: "Machine Learning Research Assistant",
-            date: "Nov 2025 - Present · 5 mos",
+            date: "Nov 2025 - Present · 9 mos",
             location: "Remote",
             logo: "/deel.jpeg",
             bullets: [
-                "Built a scalable legal-data RAG pipeline using Python and Selenium to automate the ingestion of 10,000+ CanLII case law documents into a Pinecone vector database, implementing structure-aware semantic chunking that reduced manual data curation time by 15 hours/week and LLM hallucination rates by 30% over baseline GPT-4 implementation.",
-                "Developed a Random Forest classifier on 1260+ annotated employment-law cases to predict worker classification with 95% accuracy, leveraging Gini feature importance to provide legal interpretability for Sagaz test factors.",
-                "Containerized RAG services and FastAPI using multi-stage Docker builds for deployment on Azure Kubernetes Cluster, ensuring 99.5% uptime through automated GitHub Actions CI/CD and liveness/readiness probes."
+                "Built a legal AI platform combining RAG, ML classification, and MCTS legal reasoning to automate worker classification under Canadian employment law.",
+                "Designed a multi-source research engine querying Pinecone (dense), Elasticsearch (BM25), SearXNG (web), and a legislation DB in parallel, fusing results via RRF with cited answers via Gemini 2.0 Flash. Built the ingestion pipeline (100+ curated docs + CanLII PDFs) with structure-aware chunking and dual-write to Pinecone + Milvus.",
+                "Trained a Random Forest on 700+ annotated employment cases across 11 Sagaz factors achieving 88% accuracy (GridSearchCV), with feature importance mapped to legal factor descriptions. Added an MCTS reasoning agent exploring Employee/Contractor hypotheses via hybrid search, citing Sagaz v. 671122 Ontario (2001 SCC 59). Exposed via FastAPI endpoints with JWT/API-key auth and tiered rate limits.",
+                "Built React 18/TypeScript/Tailwind v4 frontend with real-time search/DeepSearch pages, factor-assessment UI with Recharts, and collapsible MCTS reasoning trees. Zustand + TanStack Query for state.",
+                "Containerized full stack (FastAPI, Elasticsearch, Milvus+etcd+MinIO, SearXNG, Vite) with health checks via Docker Compose. GitHub Actions CI/CD (lint, typecheck, pytest 142 passed). Windows Scheduled Task runs embedder worker with checkpoint resume (11k+ docs processed)."
             ],
-            skills: ["Python", "Machine Learning", "Gemini Embeddings", "RAG (Retrieval-Augmented Generation)", "scikit-learn", "Random Forest Classifier", "Model Evaluation", "Pinecone Vector Database", "Selenium", "BeautifulSoup4", "PyMuPDF", "pdfplumber", "pandas", "numpy", "Synthetic Data Generation", "FastAPI", "Uvicorn", "Python asyncio", "Pydantic", "python-dotenv", "tenacity", "Docker", "Docker Compose", "Kubernetes (K8s/AKS)", "GitHub Actions CI/CD", "Azure", "pytest", "pytest-asyncio", "System Integration Testing", "Canadian Employment Law", "CanLII", "Worker Classification (Sagaz Test)"]
+            skills: ["Python", "Machine Learning", "Gemini Embeddings", "RAG (Retrieval-Augmented Generation)", "scikit-learn", "Random Forest Classifier", "Model Evaluation", "Pinecone Vector Database", "MCTS Reasoning", "Selenium", "BeautifulSoup4", "PyMuPDF", "pdfplumber", "pandas", "numpy", "Synthetic Data Generation", "FastAPI", "Uvicorn", "Python asyncio", "Pydantic", "python-dotenv", "tenacity", "Docker", "Docker Compose", "Kubernetes (K8s/AKS)", "GitHub Actions CI/CD", "Azure", "pytest", "pytest-asyncio", "System Integration Testing", "Canadian Employment Law", "CanLII", "Worker Classification (Sagaz Test)", "Elasticsearch", "Milvus", "SearXNG", "React", "TypeScript", "Tailwind CSS", "Recharts", "Zustand", "TanStack Query"]
         },
         {
             company: "Queen’s AutoDrive Team",
