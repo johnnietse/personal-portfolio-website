@@ -134,11 +134,13 @@ const MDSystem = ({ simState, count, isOptimized }) => {
             if (isOverBudget()) break;
         }
 
-        // 3. Velocity Verlet Integration
+        // 3. Velocity Verlet Integration (O(N) — always completes every frame)
+        // This loop MUST finish so ALL particle transforms are pushed to the GPU.
+        // The O(N²) LJ loop above handles frame-budget pacing; this O(N) loop
+        // is cheap (~0.5ms for 300 particles) and skipping it leaves particles
+        // at identity transforms (invisible at origin).
         const damping = 0.999;
         for (let i = 0; i < count; i++) {
-            if (isOverBudget()) break;
-
             velocities[i * 3] = (velocities[i * 3] + forces[i * 3] * dt) * damping;
             velocities[i * 3 + 1] = (velocities[i * 3 + 1] + forces[i * 3 + 1] * dt) * damping;
             velocities[i * 3 + 2] = (velocities[i * 3 + 2] + forces[i * 3 + 2] * dt) * damping;
@@ -163,8 +165,6 @@ const MDSystem = ({ simState, count, isOptimized }) => {
             const speed = Math.sqrt(velocities[i * 3] ** 2 + velocities[i * 3 + 1] ** 2 + velocities[i * 3 + 2] ** 2);
             color.setHSL(0.6 - Math.min(speed * 0.03, 0.6), 0.9, 0.6);
             meshRef.current.setColorAt(i, color);
-
-            consume(0.02);
         }
 
         // Compute total kinetic energy for bounded history tracking
