@@ -73,21 +73,32 @@ const MDSystem = ({ simState, count, isOptimized }) => {
 
         const s = simState.current;
         const phaseKey = s.phaseKey;
+        const { positions, velocities, forces } = particles;
 
-        // CAPSTONE: If MPI is in a COMM/BLOCKED phase, compute cores are network-blocked.
-        // Freeze math updates matching realistic node synchronizations.
+        // CAPSTONE: MPI communication phases — compute cores are network-blocked.
         if (phaseKey === 'SYNTH_WAIT' || phaseKey === 'COMMUNICATE' || phaseKey === 'EXCHANGE' || phaseKey === 'BORDERS' || phaseKey === 'REVERSE') {
-            // When blocked, particles still jitter slightly (thermal noise from idle cores)
             if (isOptimized) {
-                // Low-power idle: minimal jitter
+                // Phase-Aware DVFS: cores drop to 1.2 GHz low-power idle.
+                // Particles completely freeze — no wasted cycles.
                 return;
             }
-            // Baseline idle: cores still spin-waste at full frequency, generating heat
-            // Particles vibrate but don't move (blocked at MPI_Barrier)
+            // BASELINE: cores spin-waste at 2.4 GHz even when MPI-blocked.
+            // Particles jitter in place from thermal noise — energy wasted.
+            for (let i = 0; i < count; i++) {
+                positions[i * 3]     += (Math.random() - 0.5) * 0.06;
+                positions[i * 3 + 1] += (Math.random() - 0.5) * 0.06;
+                positions[i * 3 + 2] += (Math.random() - 0.5) * 0.06;
+                dummy.position.set(positions[i * 3], positions[i * 3 + 1], positions[i * 3 + 2]);
+                dummy.updateMatrix();
+                meshRef.current.setMatrixAt(i, dummy.matrix);
+                const speed = Math.sqrt(velocities[i * 3] ** 2 + velocities[i * 3 + 1] ** 2 + velocities[i * 3 + 2] ** 2);
+                color.setHSL(0.6 - Math.min(speed * 0.03, 0.6), 0.9, 0.6);
+                meshRef.current.setColorAt(i, color);
+            }
+            meshRef.current.instanceMatrix.needsUpdate = true;
+            meshRef.current.instanceColor.needsUpdate = true;
             return;
         }
-
-        const { positions, velocities, forces } = particles;
 
         // Thermal Throttling: if heat > 85°C, compute speed scales down
         const dt = Math.min(delta, 0.015) * s.multiplier;
