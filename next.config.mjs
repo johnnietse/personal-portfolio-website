@@ -19,6 +19,9 @@ const nextConfig = {
   turbopack: {
     root: process.cwd(),
   },
+  env: {
+    WEB3FORMS_ACCESS_KEY: process.env.WEB3FORMS_ACCESS_KEY,
+  },
   async headers() {
     return [
       {
