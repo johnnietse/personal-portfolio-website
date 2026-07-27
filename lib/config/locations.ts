@@ -18,6 +18,7 @@ export const LOCATIONS: Location[] = [
     lon: -76.4860,
     label: "Queen's University",
     type: 'education',
+    icon: '/globe-kingston.svg',
     experiences: [
       'Computer Engineering (B.A.Sc.)',
       "AutoDrive Team — CAN Lead, Embedded Systems (SAE Level 4)",
@@ -34,6 +35,7 @@ export const LOCATIONS: Location[] = [
     lon: 114.1694,
     label: 'Hong Kong',
     type: 'work',
+    icon: '/globe-hk.svg',
     experiences: [
       'Arista Networks — Project Financial Management Intern ($2M portfolio analysis)',
       'Foresoon Engineering — Electrical & Robotics Engineer Assistant (Kinova arm + ROS)',

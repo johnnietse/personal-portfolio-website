@@ -20,7 +20,7 @@ export default function Home() {
 
   return (
     <main>
-      {/* HERO SECTION */}
+      {/* HERO SECTION - Split layout (text left, WebGL right) */}
       <section id="hero" className="section container" style={{ minHeight: '100dvh', display: 'flex', alignItems: 'center', paddingTop: '6rem' }}>
         <div className="hero-grid" style={{ display: 'grid', gap: '4rem', alignItems: 'center', width: '100%' }}>
 
@@ -49,11 +49,9 @@ export default function Home() {
               transition={{ delay: 0.4, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
             >
               <Typewriter strings={[
-                "Computer Engineering Student @ Queen's University.",
-                "Architecting Level 4 Autonomous Systems.",
-                "Scaling High-Performance Distributed Compute.",
-                "Engineering Advanced RAG Neural Architectures.",
-                "Building Resilient Full-Stack Infrastructure."
+                "Computer Engineering @ Queen's.",
+                "Level 4 Autonomy Architect.",
+                "HPC & Distributed Systems."
               ]} />
             </motion.div>
             <motion.p
@@ -63,7 +61,7 @@ export default function Home() {
               viewport={prefersReducedMotion ? undefined : { once: true, amount: 0.2 }}
               transition={{ delay: 0.5, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
             >
-              I build exceptional digital experiences ΓÇö mobile apps, modern web, and high-performance compute ΓÇö for scalable, user-centric software.
+              I build exceptional digital experiences — mobile apps, modern web, and high-performance compute — for scalable, user-centric software.
             </motion.p>
 
             <motion.div
@@ -139,7 +137,7 @@ export default function Home() {
         </div>
       </motion.section>
 
-      {/* SPATIAL COMPUTING SHOWROOM SECTION */}
+      {/* SPATIAL COMPUTING SHOWROOM SECTION - Full-width WebGL with text overlay */}
       <motion.section
         id="showroom"
         className="section container"
@@ -156,31 +154,12 @@ export default function Home() {
           </p>
         </div>
 
-        <div className="hero-grid" style={{ display: 'grid', gap: '3rem', alignItems: 'center' }}>
-          <motion.div
-            initial={prefersReducedMotion ? false : { opacity: 0, x: -24 }}
-            whileInView={prefersReducedMotion ? undefined : { opacity: 1, x: 0 }}
-            viewport={prefersReducedMotion ? undefined : { once: true, amount: 0.2 }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <h3 style={{ fontSize: '2rem', fontWeight: 700, marginBottom: '1rem', color: 'var(--accent-color)' }}>Level 4 Autonomous Systems</h3>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem', lineHeight: 1.7, marginBottom: '1.5rem' }}>
-              A procedural representation of a sensor-equipped L4 autonomous vehicle. Features computationally active LiDAR arrays, cybernetic chassis rendering, and dynamic emission sensors. Drag to continuously rotate and inspect.
-              <br /><br />
-              <strong style={{ color: '#c9d1d9' }}>Why this matters: </strong>
-              This architecture directly reflects my hands-on professional background in robotics, engineering autonomous vehicle trajectory planners, integrating complex 3D LiDAR point-cloud algorithms, and designing highly concurrent sensor fusion pipelines mounted natively on isolated embedded Linux hardware.
-            </p>
-            <div className="skills-grid" style={{ marginTop: '1rem' }}>
-              {SKILLS.filter(s => ['ROS2', 'Sensor Fusion', 'LiDAR Arrays', 'Computer Vision'].includes(s.name)).map(s => (
-                <div className="skill-tag" key={s.name}>{s.name}</div>
-              ))}
-            </div>
-          </motion.div>
-
+        {/* Full-width WebGL with text overlay */}
+        <div style={{ position: 'relative', width: '100%', maxWidth: '1200px', margin: '0 auto', borderRadius: '16px', overflow: 'hidden' }}>
           <motion.div
             className="glass-card"
-            style={{ position: 'relative', padding: '0', overflow: 'hidden', width: '100%', border: '1px solid var(--border-color)', aspectRatio: '1/1', maxWidth: '400px', margin: '0 auto', display: 'block' }}
-            initial={prefersReducedMotion ? false : { opacity: 0, scale: 0.9 }}
+            style={{ position: 'relative', padding: '0', overflow: 'hidden', width: '100%', border: '1px solid var(--border-color)', aspectRatio: '16/9', maxHeight: '700px', display: 'block' }}
+            initial={prefersReducedMotion ? false : { opacity: 0, scale: 0.95 }}
             whileInView={prefersReducedMotion ? undefined : { opacity: 1, scale: 1 }}
             viewport={prefersReducedMotion ? undefined : { once: true, amount: 0.2 }}
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
@@ -191,10 +170,28 @@ export default function Home() {
               </RenderOnScroll>
             </VisibilityWrapper>
           </motion.div>
+
+          {/* Text overlay on WebGL */}
+          <div style={{ position: 'absolute', inset: 0, padding: '3rem', display: 'flex', flexDirection: 'column', justifyContent: 'center', pointerEvents: 'none' }}>
+            <div style={{ maxWidth: '500px', pointerEvents: 'auto' }}>
+              <h3 style={{ fontSize: '2rem', fontWeight: 700, marginBottom: '1rem', color: 'var(--accent-color)' }}>Level 4 Autonomous Systems</h3>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem', lineHeight: 1.7, marginBottom: '1.5rem' }}>
+                A procedural representation of a sensor-equipped L4 autonomous vehicle. Features computationally active LiDAR arrays, cybernetic chassis rendering, and dynamic emission sensors. Drag to continuously rotate and inspect.
+                <br /><br />
+                <strong style={{ color: '#c9d1d9' }}>Why this matters: </strong>
+                This architecture directly reflects my hands-on professional background in robotics, engineering autonomous vehicle trajectory planners, integrating complex 3D LiDAR point-cloud algorithms, and designing highly concurrent sensor fusion pipelines mounted natively on isolated embedded Linux hardware.
+              </p>
+              <div className="skills-grid" style={{ marginTop: '1rem' }}>
+                {SKILLS.filter(s => ['ROS2', 'Sensor Fusion', 'LiDAR Arrays', 'Computer Vision'].includes(s.name)).map(s => (
+                  <div className="skill-tag" key={s.name}>{s.name}</div>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
       </motion.section>
 
-      {/* EMBEDDED SYSTEMS SHOWROOM SECTION */}
+      {/* EMBEDDED SYSTEMS SHOWROOM SECTION - Flipped layout (WebGL left, text right) */}
       <motion.section
         id="embedded"
         className="section container"
@@ -204,9 +201,17 @@ export default function Home() {
         viewport={prefersReducedMotion ? undefined : { once: true, amount: 0.2 }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
       >
-        <div className="hero-grid" style={{ display: 'grid', gap: '3rem', alignItems: 'center' }}>
+        <div className="text-center mb-8">
+          <h2 className="title" style={{ marginBottom: '1rem' }}>Embedded Systems Showroom</h2>
+          <p className="subtitle" style={{ margin: '0 auto' }}>
+            Photorealistic, mathematically-generated microcontroller architectures running in real-time WebGL.
+          </p>
+        </div>
 
-          {/* Left 3D Embedded Microcontroller Content */}
+        {/* Flipped grid: WebGL left, text right */}
+        <div className="hero-grid" style={{ display: 'grid', gap: '3rem', alignItems: 'center', gridTemplateColumns: '1fr 1fr' }}>
+
+          {/* Left: 3D Embedded Microcontroller Content */}
           <motion.div
             className="glass-card"
             style={{ position: 'relative', padding: '0', overflow: 'hidden', width: '100%', border: '1px solid var(--border-color)', aspectRatio: '1/1', maxWidth: '400px', margin: '0 auto', display: 'block' }}
@@ -222,6 +227,7 @@ export default function Home() {
             </VisibilityWrapper>
           </motion.div>
 
+          {/* Right: Text content */}
           <motion.div
             initial={prefersReducedMotion ? false : { opacity: 0, x: 24 }}
             whileInView={prefersReducedMotion ? undefined : { opacity: 1, x: 0 }}
@@ -245,7 +251,7 @@ export default function Home() {
         </div>
       </motion.section>
 
-      {/* MINIMD HPC PROXY APPLICATION SHOWROOM SECTION */}
+      {/* MINIMD HPC PROXY APPLICATION SHOWROOM SECTION - Split layout (text left, WebGL right) */}
       <motion.section
         id="waveform"
         className="section container"
@@ -294,7 +300,7 @@ export default function Home() {
         </div>
       </motion.section>
 
-      {/* GLOBAL ENGINEERING FOOTPRINT */}
+      {/* GLOBAL ENGINEERING FOOTPRINT - Full-width WebGL with floating badges */}
       <motion.section
         id="footprint"
         className="section container"
@@ -304,39 +310,95 @@ export default function Home() {
         viewport={prefersReducedMotion ? undefined : { once: true, amount: 0.2 }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
       >
-        <div className="hero-grid" style={{ display: 'grid', gap: '3rem', alignItems: 'center' }}>
+        <div className="text-center mb-8">
+          <h2 className="title" style={{ marginBottom: '1rem' }}>Global Engineering Footprint</h2>
+          <p className="subtitle" style={{ margin: '0 auto' }}>
+            Interactive 3D globe mapping my academic and professional journey across North America.
+          </p>
+        </div>
 
-          <motion.div
-            initial={prefersReducedMotion ? false : { opacity: 0, x: -24 }}
-            whileInView={prefersReducedMotion ? undefined : { opacity: 1, x: 0 }}
-            viewport={prefersReducedMotion ? undefined : { once: true, amount: 0.2 }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <h3 style={{ fontSize: '2rem', fontWeight: 700, marginBottom: '1rem', color: 'var(--accent-color)' }}>Global Engineering Footprint</h3>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem', lineHeight: 1.7, marginBottom: '1.5rem' }}>
-              Interactive 3D globe mapping my academic and professional journey across North America.
-              <br /><br />
-              <strong style={{ color: '#c9d1d9' }}>From the Great Lakes to the South China Sea: </strong>
-              Click the city badges to explore the experiences that shaped my engineering journey ΓÇö from embedded systems and HPC at Queen's to finance and robotics in Hong Kong.
-            </p>
-          </motion.div>
-
-          {/* Right Globe Visual */}
+        {/* Full-width Globe with floating badges */}
+        <div style={{ position: 'relative', width: '100%', maxWidth: '1000px', margin: '0 auto', borderRadius: '16px', overflow: 'hidden' }}>
           <motion.div
             className="glass-card"
-            style={{ position: 'relative', padding: '6px', overflow: 'hidden', width: '100%', border: '1px solid var(--border-color)', aspectRatio: '1/1', maxWidth: '400px', margin: '0 auto', display: 'flex', alignItems: 'stretch', justifyContent: 'stretch' }}
+            style={{ position: 'relative', padding: '6px', overflow: 'hidden', width: '100%', border: '1px solid var(--border-color)', aspectRatio: '1/1', maxWidth: '600px', margin: '0 auto', display: 'flex', alignItems: 'stretch', justifyContent: 'stretch' }}
             initial={prefersReducedMotion ? false : { opacity: 0, scale: 0.9 }}
             whileInView={prefersReducedMotion ? undefined : { opacity: 1, scale: 1 }}
             viewport={prefersReducedMotion ? undefined : { once: true, amount: 0.2 }}
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           >
-            <div style={{ width: '100%', height: '100%', borderRadius: '12px', overflow: 'hidden', display: 'flex', alignItems: 'stretch', justifyContent: 'stretch' }}>
+            <div style={{ width: '100%', height: '100%', borderRadius: '12px', overflow: 'hidden', display: 'flex', alignItems: 'stretch', justifyContent: 'stretch', position: 'relative' }}>
               <RenderOnScroll rootMargin="300px" fallback={<div style={{width:'100%',height:'100%',display:'flex',alignItems:'center',justifyContent:'center',color:'#58a6ff',background:'rgba(15,23,42,0.3)',border:'1px dashed rgba(88,166,255,0.3)',borderRadius:'12px'}}>Scroll to render Globe...</div>}>
                 <GlobeFootprint />
               </RenderOnScroll>
             </div>
           </motion.div>
 
+          {/* Floating city badges - positioned absolutely over globe */}
+          <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 10 }}>
+            {/* Kingston badge */}
+            <motion.div
+              style={{ position: 'absolute', top: '15%', left: '12%', pointerEvents: 'auto' }}
+              initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.3, duration: 0.6 }}
+              className="glass-card"
+              onClick={() => document.getElementById('kingston')?.scrollIntoView({ behavior: 'smooth' })}
+            >
+              <div style={{ padding: '0.75rem 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', minWidth: '180px' }}>
+                <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'linear-gradient(135deg, #4da3ff, #7ee787)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.7rem', fontWeight: 700, color: '#0a0d12' }}>K</div>
+                <div>
+                  <div style={{ fontWeight: 600, fontSize: '0.85rem' }}>Kingston</div>
+                  <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>Queen's / AutoDrive / HPC</div>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Hong Kong badge */}
+            <motion.div
+              style={{ position: 'absolute', top: '55%', right: '10%', pointerEvents: 'auto' }}
+              initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.5, duration: 0.6 }}
+              className="glass-card"
+              onClick={() => document.getElementById('hongkong')?.scrollIntoView({ behavior: 'smooth' })}
+            >
+              <div style={{ padding: '0.75rem 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', minWidth: '180px' }}>
+                <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'linear-gradient(135deg, #f472b6, #4da3ff)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.7rem', fontWeight: 700, color: '#0a0d12' }}>HK</div>
+                <div>
+                  <div style={{ fontWeight: 600, fontSize: '0.85rem' }}>Hong Kong</div>
+                  <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>Solana / Arista / Foresoon</div>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Remote badge */}
+            <motion.div
+              style={{ position: 'absolute', bottom: '15%', left: '50%', transform: 'translateX(-50%)', pointerEvents: 'auto' }}
+              initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.7, duration: 0.6 }}
+              className="glass-card"
+            >
+              <div style={{ padding: '0.75rem 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', minWidth: '180px', textAlign: 'center' }}>
+                <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'linear-gradient(135deg, #7ee787, #4da3ff)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.7rem', fontWeight: 700, color: '#0a0d12', margin: '0 auto 0.5rem' }}>🌐</div>
+                <div>
+                  <div style={{ fontWeight: 600, fontSize: '0.85rem' }}>Remote</div>
+                  <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>vLLM / K8s / Deel</div>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+
+        <div className="text-center mt-8" style={{ maxWidth: '800px', margin: '0 auto' }}>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem', lineHeight: 1.7 }}>
+            <strong style={{ color: '#c9d1d9' }}>From the Great Lakes to the South China Sea: </strong>
+            Click the badges above to explore the experiences that shaped my engineering journey — from embedded systems and HPC at Queen's to finance and robotics in Hong Kong.
+          </p>
         </div>
       </motion.section>
 
@@ -353,7 +415,7 @@ export default function Home() {
           <div className="text-center mb-8">
             <h2 className="title" style={{ marginBottom: '1rem' }}>Get in Touch</h2>
             <p className="subtitle" style={{ margin: '0 auto' }}>
-              I'm always excited to discuss technology, mobile and web development, HPC, or anything else you'd like to shareΓÇölet's connect! ≡ƒñ¥
+              I'm always excited to discuss technology, mobile and web development, HPC, or anything else you'd like to share — let's connect!
             </p>
           </div>
 

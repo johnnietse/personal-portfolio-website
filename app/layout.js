@@ -6,6 +6,7 @@ import BlackHoleCursor from "@/components/BlackHoleCursor";
 import PerformanceHUD from "@/components/PerformanceHUD";
 import IronManHUD from "@/components/IronManHUD";
 import MobileSystemsTray from "@/components/MobileSystemsTray";
+import ScrollProgress from "@/components/ScrollProgress";
 import { PerformanceProvider } from "@/components/PerformanceManager";
 import { geist, geistMono } from "@/lib/fonts";
 import "./globals.css";
@@ -54,6 +55,7 @@ export default function RootLayout({ children }) {
 <PerformanceProvider>
       <div className="relative flex flex-col min-h-screen w-full overflow-x-hidden overflow-y-auto">
         <Navigation />
+        <ScrollProgress />
         <ParticleBackground />
         <ScrollPhysics />
         <BlackHoleCursor />
