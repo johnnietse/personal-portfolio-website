@@ -99,6 +99,12 @@ export default function GlobeFootprint() {
   // Stubs populated by init (where THREE is dynamically loaded)
   const glowFnsRef = useRef({ spawnGlow: () => {}, destroyGlow: () => {} });
   const flashRef = useRef([]);
+  const mouseTargetRef = useRef({ x: 0, y: 0 });
+  const mouseCurrentRef = useRef({ x: 0, y: 0 });
+  const hasMouseRef = useRef(false);
+  const tourRef = useRef({ active: false, cancelled: true, done: false });
+  const flowParticlesRef = useRef(null);
+  const flowGeomRef = useRef(null);
 
   const { quality, renderTier } = usePerformance();
   const [isMounted, setIsMounted] = useState(false);
@@ -221,6 +227,30 @@ export default function GlobeFootprint() {
         );
       }
 
+      // ── Arc flow particle helpers ──────────────────────────────────
+
+      const FLOW_COUNT = 50;
+      const flowStart = latLngToVec3(ARC_DATA[0].startLat, ARC_DATA[0].startLng, 1.01);
+      const flowEnd = latLngToVec3(ARC_DATA[0].endLat, ARC_DATA[0].endLng, 1.01);
+      const flowMid = latLngToVec3(
+        (ARC_DATA[0].startLat + ARC_DATA[0].endLat) / 2,
+        (ARC_DATA[0].startLng + ARC_DATA[0].endLng) / 2,
+        1.35,
+      );
+      const flowProgress = new Float32Array(FLOW_COUNT);
+      for (let i = 0; i < FLOW_COUNT; i++) flowProgress[i] = i / FLOW_COUNT;
+      const flowPositions = new Float32Array(FLOW_COUNT * 3);
+
+      function flowBezier(t, start, mid, end) {
+        const a = new THREE.Vector3().lerpVectors(start, mid, t);
+        const b = new THREE.Vector3().lerpVectors(mid, end, t);
+        return new THREE.Vector3().lerpVectors(a, b, t).normalize().multiplyScalar(1.01);
+      }
+
+      function lerp(a, b, t) { return a + (b - a) * t; }
+
+      // ───────────────────────────────────────────────────────────────
+
       function makeGlowTexture() {
         const size = 128;
         const canvas = document.createElement('canvas');
@@ -293,6 +323,10 @@ export default function GlobeFootprint() {
             transition:all 0.2s ease;
             box-shadow:0 2px 8px rgba(0,0,0,0.3);
             user-select:none;
+            animation:globe-badge-enter 0.5s ease-out both;
+          }
+          .globe-city-marker:last-child {
+            animation-delay:0.2s;
           }
           .globe-city-marker:hover {
             border-color:rgba(126,231,135,0.7);
@@ -330,6 +364,10 @@ export default function GlobeFootprint() {
             0%   { transform:scale(0.5); opacity:0.8; }
             70%  { transform:scale(2.2);  opacity:0;   }
             100% { transform:scale(2.2);  opacity:0;   }
+          }
+          @keyframes globe-badge-enter {
+            from { opacity:0; transform:translateY(-8px) scale(0.9); }
+            to   { opacity:1; transform:translateY(0) scale(1);     }
           }
         `;
         document.head.appendChild(style);
@@ -393,6 +431,8 @@ globe
         }
 
         function onCityClick(d) {
+          tourRef.current.cancelled = true;
+          tourRef.current.done = true;
           if (selectedRef.current) return;
           selectedRef.current = d;
           setSelectedCity(d);
@@ -468,6 +508,8 @@ globe
         .ringPropagationSpeed(1.8)
         .ringRepeatPeriod(500)
         .onGlobeClick(() => {
+          tourRef.current.cancelled = true;
+          tourRef.current.done = true;
           if (!selectedRef.current) return;
           destroyGlow();
           selectedRef.current = null;
@@ -702,22 +744,51 @@ globe.renderer().setPixelRatio(targetPR);
       const particleField = new THREE.Points(particleGeom, particleMat);
       scene.add(particleField);
 
+      // ── Arc flow particles ─────────────────────────────────────────
+
+      const flowGeom = new THREE.BufferGeometry();
+      flowGeom.setAttribute('position', new THREE.BufferAttribute(flowPositions, 3));
+      const flowMat = new THREE.PointsMaterial({
+        color: new THREE.Color('#7ee787'),
+        size: 0.045,
+        transparent: true,
+        opacity: 0.8,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false,
+        sizeAttenuation: true,
+      });
+      const flowMesh = new THREE.Points(flowGeom, flowMat);
+      scene.add(flowMesh);
+      flowParticlesRef.current = flowMesh;
+      flowGeomRef.current = flowGeom;
+
       let particleAnimId;
       function tickParticles(time) {
         const rotateY = time * 0.00008;
         const rotateX = Math.sin(time * 0.00003) * 0.03;
-        particleField.rotation.y = rotateY;
-        particleField.rotation.x = rotateX;
-        wireframeCage.rotation.y = rotateY;
-        wireframeCage.rotation.x = rotateX;
-        equatorRing.rotation.y = rotateY;
-        equatorRing.rotation.x = rotateX;
+
+        // Mouse tilt (lerp toward target)
+        const mTarget = mouseTargetRef.current;
+        const mCurr = mouseCurrentRef.current;
+        mCurr.x = lerp(mCurr.x, hasMouseRef.current ? mTarget.x : 0, 0.06);
+        mCurr.y = lerp(mCurr.y, hasMouseRef.current ? mTarget.y : 0, 0.06);
+        const tiltX = mCurr.x;
+        const tiltY = mCurr.y;
+
+        particleField.rotation.y = rotateY + tiltX;
+        particleField.rotation.x = rotateX + tiltY;
+        wireframeCage.rotation.y = rotateY + tiltX;
+        wireframeCage.rotation.x = rotateX + tiltY;
+        equatorRing.rotation.y = rotateY + tiltX;
+        equatorRing.rotation.x = rotateX + tiltY;
         if (cloudMesh.parent) {
-          cloudMesh.rotation.y = rotateY * 1.15;
-          cloudMesh.rotation.x = rotateX * 0.85;
+          cloudMesh.rotation.y = rotateY * 1.15 + tiltX * 1.15;
+          cloudMesh.rotation.x = rotateX * 0.85 + tiltY * 0.85;
         }
-        atmosphereGlow.rotation.y += 0.00025;
-        innerGlow.rotation.y += 0.00015;
+        atmosphereGlow.rotation.x = tiltY * 0.3;
+        atmosphereGlow.rotation.y += 0.00025 + tiltX * 0.0001;
+        innerGlow.rotation.x = tiltY * 0.2;
+        innerGlow.rotation.y += 0.00015 + tiltX * 0.0001;
 
         // Starfield twinkle (CPU-side size modulation)
         const starSizesAttr = starFieldRef.current.geometry.getAttribute('aSize');
@@ -734,6 +805,20 @@ globe.renderer().setPixelRatio(targetPR);
           glowRef.current.scale.set(0.15 * pulse, 0.15 * pulse, 1);
           glowMatRef.current.opacity = 0.5 + Math.sin(time * 0.003 + 1) * 0.3;
         }
+
+        // ── Arc flow particles ──────────────────────────────────────────
+        const flowSpeed = 0.4 / 60;
+        for (let i = 0; i < FLOW_COUNT; i++) {
+          flowProgress[i] += flowSpeed;
+          if (flowProgress[i] > 1) flowProgress[i] -= 1;
+          const t = flowProgress[i];
+          const pos = flowBezier(t, flowStart, flowMid, flowEnd);
+          flowPositions[i * 3] = pos.x;
+          flowPositions[i * 3 + 1] = pos.y;
+          flowPositions[i * 3 + 2] = pos.z;
+        }
+        flowGeom.attributes.position.needsUpdate = true;
+
         particleAnimId = requestAnimationFrame(tickParticles);
       }
       particleAnimId = requestAnimationFrame(tickParticles);
@@ -802,6 +887,8 @@ globe.renderer().setPixelRatio(targetPR);
       // Resume rotation after 60s of inactivity
       let autoRotateTimer = null;
       const pauseAutoRotate = () => {
+        tourRef.current.cancelled = true;
+        tourRef.current.done = true;
         controls.autoRotate = false;
         if (autoRotateTimer) { clearTimeout(autoRotateTimer); autoRotateTimer = null; }
       };
@@ -814,6 +901,24 @@ globe.renderer().setPixelRatio(targetPR);
       container.addEventListener('touchstart', pauseAutoRotate, { passive: true });
       container.addEventListener('mouseup', scheduleResumeAutoRotate);
       container.addEventListener('touchend', scheduleResumeAutoRotate);
+
+      // ── Mouse-tilt parallax ──────────────────────────────────────────
+      const onMouseMove = (e) => {
+        const rect = container.getBoundingClientRect();
+        const cx = rect.left + rect.width / 2;
+        const cy = rect.top + rect.height / 2;
+        mouseTargetRef.current = {
+          x: ((e.clientX - cx) / (rect.width / 2)) * 0.05,
+          y: ((e.clientY - cy) / (rect.height / 2)) * 0.05,
+        };
+        hasMouseRef.current = true;
+      };
+      const onMouseLeaveGlobe = () => {
+        mouseTargetRef.current = { x: 0, y: 0 };
+        hasMouseRef.current = false;
+      };
+      container.addEventListener('mousemove', onMouseMove);
+      container.addEventListener('mouseleave', onMouseLeaveGlobe);
 
       // ── Pause auto-rotate on pointer hover ──────────────────────────
       const onPointerEnter = () => { if (!selectedRef.current) controls.autoRotate = false; };
@@ -902,6 +1007,11 @@ globe.renderer().setPixelRatio(targetPR);
         ro.disconnect();
         container.removeEventListener('pointerenter', onPointerEnter);
         container.removeEventListener('pointerleave', onPointerLeave);
+        container.removeEventListener('mousemove', onMouseMove);
+        container.removeEventListener('mouseleave', onMouseLeaveGlobe);
+        scene.remove(flowMesh);
+        flowGeom.dispose();
+        flowMat.dispose();
         globe.postProcessingComposer().removePass(bloomPass);
         bloomPass.dispose();
         flashRef.current = [];
@@ -909,6 +1019,91 @@ globe.renderer().setPixelRatio(targetPR);
       };
 
       setGlobeState({ type: 'ready' });
+
+      // ── Auto-highlight tour (once per session) ──────────────────────
+      if (!tourRef.current.done) {
+        tourRef.current.active = true;
+        tourRef.current.cancelled = false;
+        let settleTimer;
+        let tourTimeouts = [];
+
+        const cancelTourCheck = () => {
+          if (tourRef.current.cancelled) {
+            tourRef.current.active = false;
+            tourTimeouts.forEach(clearTimeout);
+            tourTimeouts = [];
+            return true;
+          }
+          return false;
+        };
+
+        const runTour = () => {
+          if (cancelTourCheck()) return;
+          const g = globeRef.current;
+          const ctrls = controlsRef.current;
+          if (!g || !ctrls) { tourRef.current.active = false; return; }
+          const locs = LABELS_DATA;
+          if (locs.length < 2) { tourRef.current.done = true; tourRef.current.active = false; return; }
+
+          const flyTo = (loc, cb) => {
+            ctrls.autoRotate = true;
+            g.pointOfView({ lat: loc.lat, lng: loc.lng, altitude: 0.7 }, 2500);
+            const t = setTimeout(() => {
+              if (cancelTourCheck()) return;
+              ctrls.autoRotate = false;
+              selectedRef.current = loc;
+              setSelectedCity(loc);
+              glowFnsRef.current.spawnGlow(loc.lat, loc.lng, g.scene());
+              glowFnsRef.current.addFlash(loc.lat, loc.lng);
+              if (cb) cb();
+            }, 2600);
+            tourTimeouts.push(t);
+          };
+
+          // Step 1: wait 2s → fly to Kingston
+          const t1 = setTimeout(() => {
+            if (cancelTourCheck()) return;
+            flyTo(locs[0], () => {
+              // Step 2: hold 3.5s → fly to Hong Kong
+              const t2 = setTimeout(() => {
+                if (cancelTourCheck()) return;
+                glowFnsRef.current.destroyGlow();
+                selectedRef.current = null;
+                setSelectedCity(null);
+                flyTo(locs[1], () => {
+                  // Step 3: hold 3.5s → return to overview
+                  const t3 = setTimeout(() => {
+                    if (cancelTourCheck()) return;
+                    glowFnsRef.current.destroyGlow();
+                    selectedRef.current = null;
+                    setSelectedCity(null);
+                    ctrls.autoRotate = true;
+                    g.pointOfView({ lat: 32, lng: -30, altitude: 2.6 }, 2500);
+                    tourRef.current.active = false;
+                    tourRef.current.done = true;
+                  }, 3500);
+                  tourTimeouts.push(t3);
+                });
+              }, 3500);
+              tourTimeouts.push(t2);
+            });
+          }, 2000);
+          tourTimeouts.push(t1);
+        };
+
+        // Slight settle delay then start tour
+        settleTimer = setTimeout(runTour, 800);
+        tourTimeouts.push(settleTimer);
+
+        // Wrap cleanup to cancel tour
+        const origCleanup = cleanupRef.current;
+        cleanupRef.current = () => {
+          if (origCleanup) origCleanup();
+          tourRef.current.cancelled = true;
+          tourRef.current.active = false;
+          tourTimeouts.forEach(clearTimeout);
+        };
+      }
     };
 
     init().catch((err) => {
@@ -942,6 +1137,10 @@ globe.renderer().setPixelRatio(targetPR);
       const g = globeRef.current;
       const ctrls = controlsRef.current;
       if (!g || !ctrls) return;
+
+      // Any keyboard interaction cancels the auto-highlight tour
+      tourRef.current.cancelled = true;
+      tourRef.current.done = true;
 
       const { spawnGlow: sg, destroyGlow: dg, addFlash: af } = glowFnsRef.current;
       if (e.key === 'Escape' && selectedRef.current) {
