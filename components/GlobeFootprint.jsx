@@ -1198,6 +1198,40 @@ globe.renderer().setPixelRatio(targetPR);
         }}
       />
 
+      {/* Legend / Key */}
+      {globeState.type === 'ready' && !isLowPower && (
+        <div style={{
+          position: 'absolute', bottom: '12px', left: '12px', right: '12px',
+          display: 'flex', justifyContent: 'center', gap: '8px',
+          flexDirection: 'column', alignItems: 'center',
+          zIndex: 5, pointerEvents: 'none',
+        }}>
+          {LABELS_DATA.map((loc, i) => (
+            <div key={loc.city} style={{
+              display: 'inline-flex', alignItems: 'center', gap: '8px',
+              background: 'rgba(13,17,23,0.85)', border: '1px solid rgba(88,166,255,0.2)',
+              borderRadius: '20px', padding: '8px 14px',
+              backdropFilter: 'blur(8px)', fontSize: '12px',
+              color: '#e6edf3', fontWeight: 500, whiteSpace: 'nowrap',
+              opacity: selectedCity?.city === loc.city ? 1 : 0.8,
+              transition: 'opacity 0.2s, transform 0.2s',
+              transform: selectedCity?.city === loc.city ? 'scale(1.03)' : 'none',
+            }}>
+              <span style={{
+                width: '10px', height: '10px', borderRadius: '50%',
+                background: i === 0 ? '#7ee787' : '#58a6ff',
+                boxShadow: `0 0 8px ${i === 0 ? '#7ee787' : '#58a6ff'}`,
+                flexShrink: 0,
+              }} />
+              <span>{loc.text}</span>
+              <span style={{ color: '#8b949e', fontSize: '10px', marginLeft: '6px' }}>
+                {loc.label}
+              </span>
+            </div>
+          ))}
+        </div>
+      )}
+
       {selectedCity && globeState.type === 'ready' && !isLowPower && (
         <div style={{
           position: 'absolute', left: '12px', right: '12px', bottom: '12px',

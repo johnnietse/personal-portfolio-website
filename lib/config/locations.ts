@@ -4,6 +4,7 @@ export interface Location {
   lon: number;
   label: string;
   type: 'education' | 'work' | 'project';
+  icon: string;
   experiences: string[];
 }
 
@@ -18,6 +19,7 @@ export const LOCATIONS: Location[] = [
     lon: -76.4860,
     label: "Queen's University",
     type: 'education',
+    icon: '/globe-kingston.svg',
     experiences: [
       'Computer Engineering (B.A.Sc.)',
       "AutoDrive Team — CAN Lead, Embedded Systems (SAE Level 4)",
@@ -34,9 +36,23 @@ export const LOCATIONS: Location[] = [
     lon: 114.1694,
     label: 'Hong Kong',
     type: 'work',
+    icon: '/globe-hk.svg',
     experiences: [
       'Arista Networks — Project Financial Management Intern ($2M portfolio analysis)',
       'Foresoon Engineering — Electrical & Robotics Engineer Assistant (Kinova arm + ROS)',
+    ],
+  },
+  {
+    city: 'Remote',
+    lat: 0,
+    lon: 0,
+    label: 'Remote / Distributed',
+    type: 'project',
+    icon: '/globe-remote.svg',
+    experiences: [
+      'vLLM — Open Source Research Contributor (llm-d ecosystem)',
+      'Kubernetes — SIG Apps & SIG Cluster Lifecycle Contributor',
+      'Deel — ML Research Assistant (Legal AI, RAG + MCTS)',
     ],
   },
 ];
