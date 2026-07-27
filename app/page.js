@@ -4,16 +4,18 @@ import Link from 'next/link';
 import { Github, Linkedin, Mail } from 'lucide-react';
 import { motion, useReducedMotion } from 'motion/react';
 import Typewriter from '@/components/Typewriter';
-import HeroModel from '@/components/HeroModel';
-import AutonomousCar from '@/components/AutonomousCar';
-import EmbeddedController from '@/components/EmbeddedController';
-import MiniMDSimulation from '@/components/MiniMDSimulation';
 import TerminalProfile from '@/components/TerminalProfile';
 import SkillTicker from '@/components/SkillTicker';
 import VisibilityWrapper from '@/components/VisibilityWrapper';
-import GlobeFootprint from '@/components/GlobeFootprint';
 import RenderOnScroll from '@/components/RenderOnScroll';
+import dynamic from 'next/dynamic';
 import { SKILLS } from '@/lib/config/skills';
+
+const HeroModel = dynamic(() => import('@/components/HeroModel'), { ssr: false, loading: () => <div style={{width:'100%',aspectRatio:'1/1',background:'rgba(15,23,42,0.3)',borderRadius:'12px'}} /> });
+const AutonomousCar = dynamic(() => import('@/components/AutonomousCar'), { ssr: false, loading: () => <div style={{width:'100%',aspectRatio:'1/1',background:'rgba(15,23,42,0.3)',borderRadius:'12px'}} /> });
+const EmbeddedController = dynamic(() => import('@/components/EmbeddedController'), { ssr: false, loading: () => <div style={{width:'100%',aspectRatio:'1/1',background:'rgba(15,23,42,0.3)',borderRadius:'12px'}} /> });
+const MiniMDSimulation = dynamic(() => import('@/components/MiniMDSimulation'), { ssr: false, loading: () => <div style={{width:'100%',aspectRatio:'1/1',background:'rgba(15,23,42,0.3)',borderRadius:'12px'}} /> });
+const GlobeFootprint = dynamic(() => import('@/components/GlobeFootprint'), { ssr: false, loading: () => <div style={{width:'100%',aspectRatio:'1/1',background:'rgba(15,23,42,0.3)',borderRadius:'12px'}} /> });
 
 export default function Home() {
   const prefersReducedMotion = useReducedMotion();
@@ -140,7 +142,8 @@ export default function Home() {
       </motion.section>
 
       {/* SPATIAL COMPUTING SHOWROOM SECTION */}
-      <motion.section
+      <VisibilityWrapper height="auto" margin="500px">
+        <motion.section
         id="showroom"
         className="section container"
         style={{ minHeight: 'auto', padding: '4rem 0', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}
@@ -186,16 +189,18 @@ export default function Home() {
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           >
             <VisibilityWrapper height="100%" width="100%">
-              <RenderOnScroll rootMargin="300px" fallback={<div style={{width:'100%',height:'100%',display:'flex',alignItems:'center',justifyContent:'center',color:'#58a6ff',background:'rgba(15,23,42,0.3)',border:'1px dashed rgba(88,166,255,0.3)',borderRadius:'12px'}}>Scroll to render Autonomous Car...</div>}>
+              <RenderOnScroll rootMargin="500px" fallback={<div style={{width:'100%',height:'100%',display:'flex',alignItems:'center',justifyContent:'center',color:'#58a6ff',background:'rgba(15,23,42,0.3)',border:'1px dashed rgba(88,166,255,0.3)',borderRadius:'12px'}}>Scroll to render Autonomous Car...</div>}>
                 <AutonomousCar />
               </RenderOnScroll>
             </VisibilityWrapper>
           </motion.div>
         </div>
       </motion.section>
+      </VisibilityWrapper>
 
       {/* EMBEDDED SYSTEMS SHOWROOM SECTION */}
-      <motion.section
+      <VisibilityWrapper height="auto" margin="500px">
+        <motion.section
         id="embedded"
         className="section container"
         style={{ minHeight: 'auto', padding: '4rem 0', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}
@@ -216,7 +221,7 @@ export default function Home() {
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           >
             <VisibilityWrapper height="100%" width="100%">
-              <RenderOnScroll rootMargin="300px" fallback={<div style={{width:'100%',height:'100%',display:'flex',alignItems:'center',justifyContent:'center',color:'#58a6ff',background:'rgba(15,23,42,0.3)',border:'1px dashed rgba(88,166,255,0.3)',borderRadius:'12px'}}>Scroll to render Embedded Controller...</div>}>
+              <RenderOnScroll rootMargin="500px" fallback={<div style={{width:'100%',height:'100%',display:'flex',alignItems:'center',justifyContent:'center',color:'#58a6ff',background:'rgba(15,23,42,0.3)',border:'1px dashed rgba(88,166,255,0.3)',borderRadius:'12px'}}>Scroll to render Embedded Controller...</div>}>
                 <EmbeddedController />
               </RenderOnScroll>
             </VisibilityWrapper>
@@ -244,9 +249,11 @@ export default function Home() {
 
         </div>
       </motion.section>
+      </VisibilityWrapper>
 
       {/* MINIMD HPC PROXY APPLICATION SHOWROOM SECTION */}
-      <motion.section
+      <VisibilityWrapper height="auto" margin="500px">
+        <motion.section
         id="waveform"
         className="section container"
         style={{ minHeight: 'auto', padding: '4rem 0', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}
@@ -286,16 +293,18 @@ export default function Home() {
             viewport={prefersReducedMotion ? undefined : { once: true, amount: 0.2 }}
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           >
-            <RenderOnScroll rootMargin="300px" containerStyle={{ height: 'auto' }} fallback={<div style={{width:'100%',height:'100%',display:'flex',alignItems:'center',justifyContent:'center',color:'#58a6ff',background:'rgba(15,23,42,0.3)',border:'1px dashed rgba(88,166,255,0.3)',borderRadius:'12px',minHeight:'300px'}}>Scroll to render miniMD Simulation...</div>}>
+            <RenderOnScroll rootMargin="500px" containerStyle={{ height: 'auto' }} fallback={<div style={{width:'100%',height:'100%',display:'flex',alignItems:'center',justifyContent:'center',color:'#58a6ff',background:'rgba(15,23,42,0.3)',border:'1px dashed rgba(88,166,255,0.3)',borderRadius:'12px',minHeight:'300px'}}>Scroll to render miniMD Simulation...</div>}>
               <MiniMDSimulation />
             </RenderOnScroll>
           </motion.div>
 
         </div>
       </motion.section>
+      </VisibilityWrapper>
 
       {/* GLOBAL ENGINEERING FOOTPRINT */}
-      <motion.section
+      <VisibilityWrapper height="auto" margin="500px">
+        <motion.section
         id="footprint"
         className="section container"
         style={{ minHeight: 'auto', padding: '4rem 0', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}
@@ -331,7 +340,7 @@ export default function Home() {
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           >
             <div style={{ width: '100%', height: '100%', borderRadius: '12px', overflow: 'hidden', display: 'flex', alignItems: 'stretch', justifyContent: 'stretch' }}>
-              <RenderOnScroll rootMargin="300px" fallback={<div style={{width:'100%',height:'100%',display:'flex',alignItems:'center',justifyContent:'center',color:'#58a6ff',background:'rgba(15,23,42,0.3)',border:'1px dashed rgba(88,166,255,0.3)',borderRadius:'12px'}}>Scroll to render Globe...</div>}>
+              <RenderOnScroll rootMargin="500px" fallback={<div style={{width:'100%',height:'100%',display:'flex',alignItems:'center',justifyContent:'center',color:'#58a6ff',background:'rgba(15,23,42,0.3)',border:'1px dashed rgba(88,166,255,0.3)',borderRadius:'12px'}}>Scroll to render Globe...</div>}>
                 <GlobeFootprint />
               </RenderOnScroll>
             </div>
@@ -339,7 +348,9 @@ export default function Home() {
 
         </div>
       </motion.section>
+      </VisibilityWrapper>
 
+      <VisibilityWrapper height="auto" margin="500px">
       {/* CONTACT SECTION */}
       <motion.section
         id="herocontact"
@@ -405,6 +416,7 @@ export default function Home() {
           </form>
         </div>
       </motion.section>
+      </VisibilityWrapper>
     </main>
   );
 }
