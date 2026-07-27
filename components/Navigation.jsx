@@ -10,7 +10,6 @@ export default function Navigation() {
     const { isMobile } = usePerformance();
     const [theme, setTheme] = useState('dark');
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const [scrolled, setScrolled] = useState(false);
 
     // On mount, read from localstorage or check system preference
     useEffect(() => {
@@ -34,15 +33,6 @@ export default function Navigation() {
         }
     }, [isMenuOpen]);
 
-    // Scroll-aware glass transition
-    useEffect(() => {
-        const handleScroll = () => {
-            setScrolled(window.scrollY > 80);
-        };
-        window.addEventListener('scroll', handleScroll, { passive: true });
-        return () => window.removeEventListener('scroll', handleScroll);
-    }, []);
-
     const toggleTheme = () => {
         const newTheme = theme === 'dark' ? 'light' : 'dark';
         setTheme(newTheme);
@@ -58,10 +48,10 @@ export default function Navigation() {
     ];
 
     return (
-        <header className={`navbar ${scrolled ? 'scrolled' : ''}`}>
-            <div className="container">
+        <header className="navbar">
+            <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', padding: 0 }}>
                 {/* Logo */}
-                <Link href="/" style={{ fontSize: '1.25rem', fontWeight: 800, letterSpacing: '-0.5px', whiteSpace: 'nowrap' }} onClick={() => setIsMenuOpen(false)}>
+                <Link href="/" style={{ fontSize: '1.5rem', fontWeight: 800, letterSpacing: '-0.5px' }} onClick={() => setIsMenuOpen(false)}>
                     JT<span style={{ color: 'var(--accent-color)' }}>.</span>
                 </Link>
 
@@ -75,8 +65,8 @@ export default function Navigation() {
                 </button>
 
                 {/* Desktop Nav */}
-                <nav style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                    <ul className="nav-links">
+                <nav style={{ display: 'flex', alignItems: 'center', gap: '2.5rem' }}>
+                    <ul className="nav-links" style={{ gap: '2rem' }}>
                         {navItems.map(item => (
                             <li key={item.path}>
                                 <Link href={item.path} className={`nav-item ${pathname === item.path ? 'active' : ''}`}>
@@ -86,7 +76,7 @@ export default function Navigation() {
                         ))}
                     </ul>
 
-                    <div className="nav-actions">
+                    <div className="nav-actions" style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
                         <button onClick={toggleTheme} className="theme-switch" aria-label="Toggle Theme">
                             {theme === 'dark' ? (
                                 <svg viewBox="0 0 24 24"><path d="M12 2.25a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-1.5 0V3a.75.75 0 0 1 .75-.75ZM7.5 12a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM18.894 6.166a.75.75 0 0 0-1.06-1.06l-1.591 1.59a.75.75 0 1 0 1.06 1.061l1.591-1.59ZM21.75 12a.75.75 0 0 1-.75.75h-2.25a.75.75 0 0 1 0-1.5H21a.75.75 0 0 1 .75.75ZM17.834 18.894a.75.75 0 0 0 1.06-1.06l-1.59-1.591a.75.75 0 1 0-1.061 1.06l1.59 1.591ZM12 18a.75.75 0 0 1 .75.75V21a.75.75 0 0 1-1.5 0v-2.25A.75.75 0 0 1 12 18ZM7.758 17.303a.75.75 0 0 0-1.061-1.06l-1.591 1.59a.75.75 0 0 0 1.06 1.061l1.591-1.59ZM6 12a.75.75 0 0 1-.75.75H3a.75.75 0 0 1 0-1.5h2.25A.75.75 0 0 1 6 12ZM6.697 7.757a.75.75 0 0 0 1.06-1.06l-1.59-1.591a.75.75 0 0 0-1.061 1.06l1.59 1.591Z" /></svg>
