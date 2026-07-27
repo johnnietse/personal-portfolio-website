@@ -3,6 +3,8 @@
 import Image from 'next/image';
 import SolarSystemBackground from '@/components/SolarSystemBackground';
 import HolographicCard from '@/components/HolographicCard';
+import SkillConstellation from '@/components/SkillConstellation';
+import VisibilityWrapper from '@/components/VisibilityWrapper';
 import GitHubStats from '@/components/GitHubStats';
 
 export default function About() {
@@ -368,6 +370,16 @@ export default function About() {
             </p>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '3rem', margin: '0 auto' }}>
+
+                {/* 0. Skill Constellation Card */}
+                <HolographicCard data-aos="fade-up">
+                    <h3 style={{ fontSize: '1.4rem', fontWeight: 600, marginBottom: '1.5rem', color: 'var(--accent-color)' }}>Skill Constellation</h3>
+                    <div style={{ width: '100%', height: '400px' }}>
+                        <VisibilityWrapper height="100%">
+                            <SkillConstellation />
+                        </VisibilityWrapper>
+                    </div>
+                </HolographicCard>
 
                 {/* 1. Languages, Frameworks, and Libraries */}
                 <HolographicCard data-aos="fade-up">
