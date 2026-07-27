@@ -464,7 +464,7 @@ export default function MiniMDSimulation() {
                     padding: '8px 16px', borderRadius: '20px', fontSize: '0.8rem', fontWeight: 700, cursor: 'pointer', transition: 'all 0.3s ease', backdropFilter: 'blur(4px)', letterSpacing: '0.05em'
                 }}
             >
-                {isOptimized ? "PID DVFS ACTIVE" : "ENABLE PID DVFS"}
+                {isOptimized ? "PHASE-AWARE DVFS" : "ENABLE PHASE-AWARE DVFS"}
             </button>
 
             <Canvas camera={{ position: [0, 8, 22], fov: 45 }} style={{ cursor: 'grab', background: 'radial-gradient(circle at center, rgba(15, 23, 42, 0.6) 0%, transparent 100%)' }}>
