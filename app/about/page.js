@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import Image from 'next/image';
 import SolarSystemBackground from '@/components/SolarSystemBackground';
@@ -10,21 +10,9 @@ import GitHubStats from '@/components/GitHubStats';
 export default function About() {
     const experiences = [
         {
-            company: "Solana",
-            role: "Software Engineer Fellow",
-            date: "Jun 2026 - Present · 2 mos",
-            location: "Remote",
-            bullets: [
-                "Building a universal observability and incident response architecture for Solana's validator fleet, integrating Prometheus, Loki, and Grafana across a multi-cluster Kubernetes deployment spanning 170k+ validators.",
-                "Developing custom error-budget burn-rate alerting policies in Prometheus to detect validator health regressions, correlating SLA compliance with real-time cluster state metrics across multiple active releases.",
-                "Designing automated remediation runbooks via GitHub Actions and Helmfile-driven GitOps to reduce mean time to recovery (MTTR) for common failure modes in the validator lifecycle."
-            ],
-            skills: ["Solana", "Rust", "Kubernetes", "Prometheus", "Loki", "Grafana", "GitOps", "Helmfile", "Observability", "SRE", "Incident Response", "Alerting"]
-        },
-        {
             company: "Kubernetes (Official)",
             role: "Open-Source Contributor & Developer, SIG Apps & SIG Cluster Lifecycle",
-            date: "Feb 2026 - Present · 6 mos",
+            date: "Feb 2026 - Present · 2 mos",
             location: "Remote",
             logo: "/kubernetes.png",
             bullets: [
@@ -35,7 +23,7 @@ export default function About() {
         {
             company: "vLLM",
             role: "Open Source Research Contributor | llm-d (vLLM ecosystem)",
-            date: "May 2026 - Present · 3 mos",
+            date: "May 2026 - Present · 2 mos",
             location: "Remote",
             logo: "/vllm.png",
             bullets: [
@@ -52,56 +40,40 @@ export default function About() {
         {
             company: "Deel",
             role: "Machine Learning Research Assistant",
-            date: "Nov 2025 - Present · 9 mos",
+            date: "Nov 2025 - Present · 5 mos",
             location: "Remote",
             logo: "/deel.jpeg",
             bullets: [
-                "Engineered a scalable legal-tech RAG and ML platform at Deel, automating the Canada Employment Law product for worker classification across 10,000+ CanLII case law documents.",
-                "Designed a Gemini Embeddings ingestion pipeline and a Random Forest classifier with 95% accuracy, deploying via FastAPI to Azure Kubernetes to serve 1260+ annotated employment-law decisions.",
-                "Built a structure-aware semantic chunker for legal judgments, reducing LLM hallucination rates by 30% over baseline GPT-4 implementation while cutting manual data curation by 15 hrs/week.",
-                "Applied MCTS reasoning to adversarial legal queries, generating multi-turn analysis that cross-references Sagaz test factors (control, ownership, chance of profit/risk of loss, integration) across 10,000+ retrieved documents.",
-                "Achieved 99.5% uptime through multi-stage Docker builds with GitHub Actions CI/CD and liveness/readiness probes on AKS."
+                "Built a scalable legal-data RAG pipeline using Python and Selenium to automate the ingestion of 10,000+ CanLII case law documents into a Pinecone vector database, implementing structure-aware semantic chunking that reduced manual data curation time by 15 hours/week and LLM hallucination rates by 30% over baseline GPT-4 implementation.",
+                "Developed a Random Forest classifier on 1260+ annotated employment-law cases to predict worker classification with 95% accuracy, leveraging Gini feature importance to provide legal interpretability for Sagaz test factors.",
+                "Containerized RAG services and FastAPI using multi-stage Docker builds for deployment on Azure Kubernetes Cluster, ensuring 99.5% uptime through automated GitHub Actions CI/CD and liveness/readiness probes."
             ],
-            skills: ["Python", "Machine Learning", "Gemini Embeddings", "RAG (Retrieval-Augmented Generation)", "scikit-learn", "Random Forest Classifier", "Model Evaluation", "Pinecone Vector Database", "MCTS Reasoning", "Selenium", "BeautifulSoup4", "PyMuPDF", "pdfplumber", "pandas", "numpy", "Synthetic Data Generation", "FastAPI", "Uvicorn", "Python asyncio", "Pydantic", "python-dotenv", "tenacity", "Docker", "Docker Compose", "Kubernetes (K8s/AKS)", "GitHub Actions CI/CD", "Azure", "pytest", "pytest-asyncio", "System Integration Testing", "Canadian Employment Law", "CanLII", "Worker Classification (Sagaz Test)"]
+            skills: ["Python", "Machine Learning", "Gemini Embeddings", "RAG (Retrieval-Augmented Generation)", "scikit-learn", "Random Forest Classifier", "Model Evaluation", "Pinecone Vector Database", "Selenium", "BeautifulSoup4", "PyMuPDF", "pdfplumber", "pandas", "numpy", "Synthetic Data Generation", "FastAPI", "Uvicorn", "Python asyncio", "Pydantic", "python-dotenv", "tenacity", "Docker", "Docker Compose", "Kubernetes (K8s/AKS)", "GitHub Actions CI/CD", "Azure", "pytest", "pytest-asyncio", "System Integration Testing", "Canadian Employment Law", "CanLII", "Worker Classification (Sagaz Test)"]
         },
         {
-            company: "Queen's AutoDrive Team",
-            role: "CAN Lead",
-            date: "Sep 2025 - Present · 11 mos",
+            company: "Queen’s AutoDrive Team",
+            role: "CAN Lead & Embedded System Engineer",
+            date: "Aug 2025 - Present · 8 mos",
             location: "Kingston, Ontario, Canada",
             logo: "/autodrive.png",
             bullets: [
+                "Member of the Queen’s AutoDrive Embedded Systems Subteam. Designing an SAE Level-4 autonomous vehicle as part of the SAE & GM AutoDrive Challenge II competition by 2026.",
                 "Architected and implemented a multi-threaded ROS2 C++ node integrating CAN messaging library with DBC parsing on an on-vehicle computing cluster (Raspberry Pi 5 + Central Compute) for an SAE Level 4 Autonomous Vehicle (Chevrolet Bolt), enabling real-time vehicle control commands (steering, braking, propulsion) of 100+ vehicle control signals with 10-50ms cyclic transmission rates across 4 isolated CAN networks (High-Speed, Chassis Expansion, Low-Speed, and Scoring CAN).",
                 "Implemented ISO-TP diagnostic messaging system with XML-driven configuration, reducing diagnostic request setup time by 85% through automated signal encoding and protection value calculation.",
                 "Developed lock-free MPMC queue-based signal routing system supporting 200+ concurrent CAN signals with zero-copy data transfer between ROS topics and vehicle networks, achieving sub-2 ms end-to-end latency.",
-                "Built state machine framework with rolling counter protection and CRC validation for safety-critical messages (0x2CB, 0x315, 0x337), ensuring ISO 26262 ASIL-D compliance.",
-                "Led on-vehicle CAN bus validation and troubleshooting during live test runs at MCity, achieving a speed track record for the team."
+                "Built state machine framework with rolling counter protection and CRC validation for safety-critical messages (0x2CB, 0x315, 0x337), ensuring ISO 26262 ASIL-D compliance."
             ],
             skills: ["Concurrent Programming/Multi-threading", "CI/CD Pipelines", "Engine Control Unit (ECU)", "Docker", "Embedded C/C++", "ROS2 (Robot Operating System)", "Raspberry Pi", "V2X", "RTOS", "SELinux", "Linux Device Driver", "V2V", "Controller Area Network (CAN) Protocol", "Hardware Integration/Interfacing (Intrepid Control Systems APIs, libicsneo)", "Signal Processing", "Signal Encoding/Decoding", "Git", "Git Version Control & Submodules", "Embedded Systems", "Control Systems Design", "Wireshark", "Object-Oriented Design", "Object-Oriented Programming (OOP)", "CMake and Build Systems", "Fast / Asynchronous Systems Logging", "XML Parsing", "DBC (CAN Database) Parsing", "Bit-level Manipulation (Masking, Bit-shifting, Endianness)", "High-Performance Logging & Formatting (spdlog, fmt)", "Unit Testing & Behavior Verification", "Concurrent Data Structures (MPMCQueue)", "Thread-safe, Lock-free Programming"]
         },
         {
-            company: "Queen's AutoDrive Team",
-            role: "Embedded System Engineer",
-            date: "Aug 2025 - Jun 2026 · 11 mos",
-            location: "Kingston, Ontario, Canada",
-            logo: "/autodrive.png",
-            bullets: [
-                "Member of the Queen's AutoDrive Embedded Systems Subteam. Designed an SAE Level-4 autonomous vehicle as part of the SAE & GM AutoDrive Challenge II competition — achieving 3rd Overall and the MCity speed record.",
-                "Developed and maintained ROS2 C++ nodes for sensor fusion, actuator control, and vehicle state estimation on the central compute platform.",
-                "Contributed to hardware-in-the-loop testing and integration of low-level embedded controllers with the ROS2 middleware stack."
-            ],
-            skills: ["Embedded C/C++", "ROS2 (Robot Operating System)", "Raspberry Pi", "Embedded Systems", "Control Systems Design", "Git", "CMake", "Hardware Integration", "Sensor Fusion"]
-        },
-        {
             company: "Engineering Society of Queen's University",
-            role: "Permanent Year Exec VP · Sci '26 VP · Equity Officer · ECE Treasurer",
+            role: "Sci '26 Vice-President, Equity Officer & ECE Discipline Club Treasurer",
             date: "Sep 2024 - Present · 1 yr 7 mos",
             location: "Kingston, Ontario, Canada",
             logo: "/engsoc.png",
             bullets: [
-                "[Perm Year Exec VP]: Lead the Permanent Year Executive team in advocating for student interests within the Engineering Society, coordinating constitutional amendments and governance reforms to benefit the permanent-year engineering cohort.",
                 "[Sci '26 VP]: Co-lead and manage a team of 12 executives for the Class of 2026, overseeing event planning for 800+ students while guiding strategic policy initiatives, advocating for student interests in Faculty Board meetings.",
-                "Represent Sci '26/Class of 2026 as a voting member of the Engineering Society (EngSoc) Council to ensure Sci '26 voices are heard in key governance decisions affecting the 3,000+ engineering student body.",
+                "Represent Sci ’26/Class of 2026 as a voting member of the Engineering Society (EngSoc) Council to ensure Sci ’26 voices are heard in key governance decisions affecting the 3,000+ engineering student body.",
                 "[Equity Officer]: Embedded EDII-AS (Equity, Diversity, Inclusion, Indigeneity, Accessibility, Sustainability) principles into governance frameworks, policy development, and student leadership initiatives to ensure equitable processes across elections, awards, and council operations.",
                 "[ECE Treasurer]: Served as ECE Discipline Treasurer managing a $19,000 operating budget, yielding a 30% increase in utilization efficiency. Managed all financial reporting, banking, reimbursement operations, and attained a balanced budget and a $9,000 net surplus by year-end."
             ],
@@ -109,7 +81,7 @@ export default function About() {
         },
         {
             company: "Queen's High-Performance Computing",
-            role: "Co-Founder, COO · HR Lead · Ratification Exec · Ops/Logistics Lead · Financial/Sponsorships Lead",
+            role: "Co-Founder, COO, HR Lead & Financial Lead",
             date: "Dec 2023 - Present · 2 yrs 4 mos",
             location: "Kingston, Ontario, Canada",
             logo: "/qhpc.png",
@@ -117,11 +89,8 @@ export default function About() {
                 "Co-founded the first-ratified HPC club at Queen's and established its training and internal competition structural framework, helping students prepare for international Student Cluster Competitions (IndySCC/SCC).",
                 "Delivered tutorials and workshops on HPC fundamentals, including cluster architectures (Frontenac), Linux system administration, parallelization (MPI/OpenMP), and benchmarking (HPL, HPCG, LAMMPS, Phasta).",
                 "Implemented a 'Sprint' learning model with 4-week project cycles focused on distributed systems, Linux performance monitoring, and application tuning, creating lasting documentation for 40+ members.",
-                "[Ratification Exec]: Led the club through the Queen's University ratification process, drafting the constitution, securing departmental approvals, and establishing formal recognition within the Engineering Society.",
                 "[HR Lead]: Led end-to-end recruitment cycle for the 2026-27 executive team using Breezy HR, conducting structured interviews and preparing relevant documentation for 20+ shortlisted candidates and ensuring EDII-AS policy compliance.",
-                "[Operations & Logistics Lead]: Coordinated team logistics for SC25/SC26 travel, equipment transport, and competition scheduling, ensuring seamless operations across 40+ members.",
-                "[Financial/Sponsorships Lead]: Managed a $10,000+ operating budget preparing 40+ members to compete at SC25/SC26 and secured $10,000+ in funding from partners like Dell and Queen's Centre for Advanced Computing. Automated purchasing analysis and optimized supply logistics using Excel-based workflow analysis, reducing procurement cycle time by 20% and 15% in overall expenses.",
-                "[Team Member]: Actively participated in HPC sprint projects, cluster assembly, and parallel computing workshops to deepen technical expertise alongside leadership responsibilities.",
+                "[Financial/Sponsorships Lead]: Managed a $10,000+ operating budget preparing 40+ members to compete at SC25/SC26 and secured $10,000+ in funding from partners like Dell and Queen’s Centre for Advanced Computing. Automated purchasing analysis and optimized supply logistics using Excel-based workflow analysis, reducing procurement cycle time by 20% and 15% in overall expenses.",
                 "Orchestrated the assembly and configuration of an 8-node Raspberry Pi cluster, configuring DHCP/TFTP for network boot and NFS for shared scratch disk management.",
                 "Designed and developed 'travelExpenseTracker', an Android finance app with SQLite-backed authentication and real-time spending analytics using MPAndroidChart for competition teams."
             ],
@@ -134,11 +103,11 @@ export default function About() {
             location: "Kingston, Ontario, Canada",
             logo: "/essco.png",
             bullets: [
-                "Spearheaded the end-to-end development, maintenance, optimization, and deployment of the official First Year Integration Conference (FYIC) website for 18+ Ontario engineering universities.",
-                "Built a server-side rendered application using Next.js 15 with App Router and Tailwind CSS, achieving sub-second page loads and a 95+ Lighthouse score while serving as the central digital hub for conference registration, scheduling, and information.",
-                "Architected a GitHub Actions CI/CD pipeline automating type-checking, linting, E2E tests, and zero-downtime Vercel deployments — reducing release cycles by 60% with integrated vulnerability scanning for RSC CVEs.",
-                "Integrated UserWay's AI-powered accessibility widget alongside manual WCAG 2.1 AA audits, ensuring the site met Ontario's AODA compliance standards for public sector digital services.",
-                "Maintained and iterated on the live site throughout the conference lifecycle, rapidly deploying content updates and feature enhancements based on real-time feedback from the ESSCO planning committee."
+                "Spearheaded the end-to-end development, maintenance, optimization, and deployment of the official First Year Integration Conference (FYIC) website for over 18+ universities.",
+                "Built a responsive, server-side rendered application using Next.js 15 and Tailwind CSS, achieving sub-second page load speeds and a 95+ Google Lighthouse performance score.",
+                "Architected a robust GitHub Actions workflow to automate type-checking, linting, and zero-downtime production deployments to Vercel, reducing release cycles by 60%.",
+                "Implemented automated vulnerability scanning within the CI pipeline to detect and patch critical CVEs in React Server Components.",
+                "Integrated UserWay’s AI-powered accessibility widget to ensure WCAG 2.1 AA compliance."
             ],
             skills: ["Next.js 15 (App Router)", "React 18", "TypeScript 5.8", "Client/Server Architecture", "Tailwind CSS 3", "Material Tailwind", "Responsive & Mobile-First Design", "Framer Motion", "GSAP", "Three.js", "React Three Fiber", "Canvas Confetti", "Lucide & Heroicons", "Next.js API Routes", "Nodemailer (SMTP)", "React Hook Form", "Environment Variable Management", "Node.js Scripting (Sharp)", "Image Optimization (WebP)", "Bundle Size Optimization", "GitHub Actions (CI/CD)", "PostCSS & Autoprefixer", "ESLint", "Modular Component Design", "SEO Best Practices", "Software Lifecycle Management", "Git", "npm", "CI/CD Pipelines", "UI/UX Design", "WCAG Accessibility"]
         },
@@ -180,13 +149,12 @@ export default function About() {
             date: "Aug 2023 - Sep 2023 · 2 mos",
             location: "Hong Kong SAR",
             bullets: [
-                "Designed and implemented an assistive robotic feeding system integrating a Kinova Gen3 6-DOF collaborative arm onto a Clearpath Jackal UGV to autonomously transfer spoon-held food to physically disabled users — spanning the full robotics pipeline from perception to manipulation.",
-                "Built a computer vision pipeline using Python OpenCV with ArUco marker detection to estimate 3D poses of food items, computing real-time trajectory offsets for the arm's end-effector.",
-                "Developed a modular ROS state machine that coordinated autonomous feeding workflows while allowing manual joystick overrides for fail-safe operation.",
-                "Implemented a Cartesian impedance controller integrating joint torque sensing from the Kinova's internal sensors, enabling force-limited manipulation to ensure safe human-robot interaction during food transfer.",
-                "Designed and simulated custom 3D-printable end-effector attachments in SOLIDWORKS for spoon gripping and food scooping, iterating on ergonomic constraints for user safety."
+                "Assisted in designing and implementing an assistive robotic feeding system integrating a Kinova Gen3 6-DOF collaborative arm onto a Clearpath Jackal UGV to autonomously transfer spoon-held food to physically disabled users.",
+                "Developed a computer vision pipeline using Python OpenCV and ArUco markers to estimate 3D poses of food items for real-time trajectory offsets.",
+                "Co-designed a modular ROS-based state machine to coordinate autonomous workflows with manual joystick overrides.",
+                "Learned to implement Cartesian impedance controller integrating joint torque sensing for force-limited manipulation."
             ],
-            skills: ["Embedded C/C++", "ROS (Robot Operating System)", "SOLIDWORKS", "Python", "OpenCV", "ArUco Markers", "Kinova Gen3", "Clearpath Jackal", "Cartesian Impedance Control", "3D Printing", "Git", "Embedded Systems", "Control Systems Design"]
+            skills: ["Embedded C/C++", "ROS2", "SOLIDWORKS", "Python", "Git", "Embedded Systems", "Control Systems Design", "Robot Operating System (ROS)"]
         },
         {
             company: "Arista Networks",
@@ -195,12 +163,11 @@ export default function About() {
             location: "Hong Kong SAR",
             logo: "/arista.png",
             bullets: [
-                "Conducted financial modeling and viability analysis using Excel for $2M+ in client pilot and internal automation portfolios, presenting recommendations to project stakeholders.",
-                "Designed real-time tracking dashboards in Power BI connected to SAP S/4HANA, proactively flagging $150K+ in potential overruns across 6 active projects through automated budget-to-actual variance analysis.",
-                "Proposed and prototyped a Power Automate + SharePoint Dataverse workflow to streamline cross-departmental data collection, improving reporting turnaround by 20% and reducing manual entry errors.",
-                "Managed project documentation and milestone tracking in Jira and SharePoint, coordinating weekly status updates across 4 concurrent project workstreams."
+                "Conducted financial modeling & viability analysis using Excel to support data-driven decision-making for $2 million worth of client pilot and internal automation portfolios.",
+                "Designed real-time tracking dashboards in Power BI and flagged $150K+ in potential overruns on 6 active projects in SAP S/4HANA.",
+                "Proposed and prototyped a Power Automate + SharePoint Dataverse workflow to streamline data collection, improving turnaround time by 20%."
             ],
-            skills: ["SAP S/4HANA", "Microsoft Power BI", "Process Optimization", "Microsoft Power Automate", "Budget Management", "Project Management", "SharePoint/Dataverse", "Jira", "Excel Financial Modeling"]
+            skills: ["SAP S/4HANA", "Microsoft Power BI", "Process Optimization", "Microsoft Power Automate", "Budget Management", "Project Management", "SharePoint/Dataverse"]
         },
         {
             company: "Queen's Relectric Car Team",
@@ -272,10 +239,10 @@ export default function About() {
                 <div style={{ flex: '2', minWidth: '300px', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
                     <h1 className="title" style={{ marginBottom: '0' }} data-aos="zoom-in" data-aos-delay="100">About Me.</h1>
                     <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem', lineHeight: '1.7' }} data-aos="fade-up" data-aos-delay="200">
-                        Hello! I'm Johnnie — SWE @ Solana, Computer Engineering student at Queen's University, and prev @ Deel, vLLM, and Arista Networks. I'm an aspiring Applied ML & RAG Engineer who knows Infrastructure — spanning HPC, embedded systems, ROS 2, CAN, and Real-Time Linux.
+                        Hello! I'm Johnnie. I'm a Computer Engineering student at Queen's University with a strong passion for scalable backends, Kubernetes ecosystems, modern high-performance web applications, and autonomous embedded systems (HPC & ROS2). I focus heavily on contributing to monumental open-source architectures while pushing modern scalable limits.
                     </p>
                     <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem', lineHeight: '1.7' }} data-aos="fade-up" data-aos-delay="300">
-                        My work spans blockchain data infrastructure at Solana, building a universal observability framework for 170k+ validators across a multi-cluster deployment; legal AI platforms combining RAG, ML classification, and MCTS reasoning at Deel; and carbon-aware LLM inference systems at vLLM, where I benchmarked model FLOPS across 20M+ token runs across various GPU architectures.
+                        In web execution, I’m focused on engineering distributed robust full-stack applications leveraging architectures within React, Next.js, and Node.js. My experiences span through creating enterprise RAG models deploying containerized infrastructure with Docker and multi-host Azure Kubernetes clusters.
                     </p>
                     <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem', lineHeight: '1.7' }} data-aos="fade-up" data-aos-delay="400">
                         Beyond the web, I architect C++ automotive applications for autonomous embedded systems via Controller Area Networks (CAN) and ROS2, while co-heading the Queen's HPC organization dictating high-performance compute architecture methodologies (MPI, Thread Networking, OpenMP, GPU scaling) for global Student Cluster Competitions.
@@ -666,4 +633,3 @@ export default function About() {
         </main>
     );
 }
-
