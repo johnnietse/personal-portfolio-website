@@ -3,8 +3,6 @@
 import Image from 'next/image';
 import SolarSystemBackground from '@/components/SolarSystemBackground';
 import HolographicCard from '@/components/HolographicCard';
-import SkillConstellation from '@/components/SkillConstellation';
-import VisibilityWrapper from '@/components/VisibilityWrapper';
 import GitHubStats from '@/components/GitHubStats';
 
 export default function About() {
@@ -368,12 +366,6 @@ export default function About() {
             <p className="subtitle" style={{ margin: '0 auto 3rem auto', textAlign: 'center' }} data-aos="fade-up" data-aos-delay="200">
                 A comprehensive overview of the tools, languages, and frameworks that power my workflows.
             </p>
-
-            <div style={{ minHeight: '400px', height: '60vh', maxHeight: '700px', width: '100%', marginBottom: '2rem' }}>
-                <VisibilityWrapper height="100%">
-                    <SkillConstellation />
-                </VisibilityWrapper>
-            </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '3rem', margin: '0 auto' }}>
 
