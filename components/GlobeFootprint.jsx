@@ -466,13 +466,9 @@ globe
                 </div>`;
               return el.firstElementChild;
             }
-            // City badge (with pulsing ring + icon)
-            const iconHtml = d.icon
-              ? `<img src="${d.icon}" style="width:16px;height:16px;border-radius:50%;object-fit:cover;flex-shrink:0;" alt="${escapeHtml(d.text)}" />`
-              : '';
+            // City badge (with pulsing ring)
             el.innerHTML = `
               <div class="globe-city-marker">
-                ${iconHtml}
                 <span class="globe-city-pulse"></span>
                 <span class="globe-city-dot"></span>
                 <span class="globe-city-name">${escapeHtml(d.text)}</span>

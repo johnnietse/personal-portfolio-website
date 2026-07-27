@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from 'react';
 import Image from 'next/image';
 import { motion, useReducedMotion } from 'motion/react';
 import SolarSystemBackground from '@/components/SolarSystemBackground';
@@ -9,81 +8,16 @@ import SkillConstellation from '@/components/SkillConstellation';
 import VisibilityWrapper from '@/components/VisibilityWrapper';
 import GitHubStats from '@/components/GitHubStats';
 import { EXPERIENCES, EDUCATION, CERTIFICATIONS } from '@/lib/config/experience';
-import { skillCategories, getSkillIcon } from '@/lib/config/skillIcons';
-import { ChevronDown, ChevronUp } from 'lucide-react';
+
+const renderSkill = (img, label) => (
+    <div className="skill-tag">
+        <img src={img} alt={label} />
+        <span>{label}</span>
+    </div>
+);
 
 export default function About() {
     const prefersReducedMotion = useReducedMotion();
-    const [expandedCategories, setExpandedCategories] = useState(new Set(['languages']));
-
-    const toggleCategory = (categoryId) => {
-        setExpandedCategories(prev => {
-            const next = new Set(prev);
-            if (next.has(categoryId)) {
-                next.delete(categoryId);
-            } else {
-                next.add(categoryId);
-            }
-            return next;
-        });
-    };
-
-    const renderSkillTag = (skillName) => (
-        <div className="skill-tag" key={skillName}>
-            {getSkillIcon(skillName)}
-            <span>{skillName}</span>
-        </div>
-    );
-
-    const renderSkillCategory = (category, index) => {
-        const isExpanded = expandedCategories.has(category.id);
-        const skillsToShow = isExpanded ? category.skills : category.skills.slice(0, 12);
-
-        return (
-            <motion.div
-                key={category.id}
-                initial={prefersReducedMotion ? false : { opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.2 }}
-                transition={{ delay: index * 0.1, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            >
-                <details className="skill-category">
-                    <summary className="skill-category-header">
-                        <span className="skill-category-icon" style={{ color: 'var(--accent-color)' }}>
-                            {category.icon}
-                        </span>
-                        <span className="skill-category-title">{category.label}</span>
-                        <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-secondary)', fontSize: '0.9rem', fontWeight: 400 }}>
-                            {category.skills.length} skills
-                            {isExpanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
-                        </span>
-                    </summary>
-                    <div className="skill-category-content">
-                        <div className="skill-category-grid">
-                            {skillsToShow.map(skill => renderSkillTag(skill))}
-                        </div>
-
-                        {category.skills.length > 12 && (
-                            <motion.p
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: isExpanded ? 1 : 0 }}
-                                style={{
-                                    textAlign: 'center',
-                                    color: 'var(--text-secondary)',
-                                    fontSize: '0.85rem',
-                                    marginTop: '1rem',
-                                    paddingTop: '1rem',
-                                    borderTop: '1px solid var(--border-color)',
-                                }}
-                            >
-                                Showing {skillsToShow.length} of {category.skills.length} skills
-                            </motion.p>
-                        )}
-                    </div>
-                </details>
-            </motion.div>
-        );
-    };
 
     return (
         <main className="section container" style={{ paddingTop: '8rem', position: 'relative' }}>
@@ -297,7 +231,7 @@ export default function About() {
                         >
                         <HolographicCard style={{ padding: '1.5rem', display: 'flex', alignItems: 'center', gap: '1.5rem', flex: '1 1 300px' }}>
                             <div style={{ width: '50px', height: '50px', borderRadius: '8px', background: 'transparent', display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '2px' }}>
-                                <img src={cert.logo} alt={`${cert.issuer} Logo`} style={{ width: '100%', height: '100%', objectFit: 'contain' }} onError={(e) => { e.currentTarget.style.display = 'none'; }} />
+                                <img src={cert.logo} alt={`${cert.issuer} Logo`} style={{ width: '100%', height: '100%', objectFit: 'contain' }} onError={(e) => { e.target.style.display = 'none'; }} />
                             </div>
                             <div>
                                 <h4 style={{ fontSize: '1.1rem', color: 'var(--text-primary)', margin: '0 0 0.2rem 0', fontWeight: 600 }}>{cert.name}</h4>
@@ -348,10 +282,291 @@ export default function About() {
                 </HolographicCard>
                 </motion.div>
 
-                {/* Collapsible Skill Categories */}
-                {skillCategories.map((category, index) => renderSkillCategory(category, index))}
+                {/* 1. Languages, Frameworks, and Libraries */}
+                <motion.div
+                    initial={prefersReducedMotion ? false : { opacity: 0, y: 24 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 0.2 }}
+                    transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                >
+                <HolographicCard>
+                    <h3 style={{ fontSize: '1.4rem', fontWeight: 600, marginBottom: '1.5rem', color: 'var(--accent-color)' }}>Languages, Frameworks, and Libraries</h3>
+                    <div className="skills-grid">
+                        {renderSkill('/icons8-html.png', 'HTML5')}
+                        {renderSkill('/icons8-css3.png', 'CSS')}
+                        {renderSkill('/icons8-javascript.png', 'JavaScript (JS)')}
+                        {renderSkill('/typescript.svg', 'TypeScript 5.8')}
+                        {renderSkill('/Tailwind_CSS_Logo.svg', 'Tailwind CSS')}
+                        {renderSkill('/bootstrap.png', 'Bootstrap')}
+                        {renderSkill('/material-tailwind.png', 'Material Tailwind')}
+                        {renderSkill('/react-logo.png', 'React.js & React Native')}
+                        {renderSkill('/nextjs.png', 'Next.js')}
+                        {renderSkill('/expo.svg', 'Expo')}
+                        {renderSkill('/icons8-nodejs.png', 'Node.js')}
+                        {renderSkill('/express.png', 'Express.js')}
+                        {renderSkill('/icons8-python.png', 'Python')}
+                        {renderSkill('/icons8-c-programming.png', 'C')}
+                        {renderSkill('/icons8-c.png', 'C++ & Embedded C++')}
+                        {renderSkill('/icons8-java.png', 'Java')}
+                        {renderSkill('/Kotlin_Icon.png', 'Kotlin')}
+                        {renderSkill('/go.svg', 'Go')}
+                        {renderSkill('/perl.svg', 'Perl')}
+                        {renderSkill('/icons8-r-project.png', 'R')}
+                        {renderSkill('/sql.png', 'SQL')}
+                        {renderSkill('/mongodb.png', 'MongoDB')}
+                        {renderSkill('/mongooseodm.png', 'Mongoose')}
+                        {renderSkill('/Database-mysql.png', 'MySQL')}
+                        {renderSkill('/postgresql.svg', 'PostgreSQL')}
+                        {renderSkill('/Django_logo.png', 'Django')}
+                        {renderSkill('/flask.svg', 'Flask')}
+                        {renderSkill('/fastapi.png', 'FastAPI')}
+                        {renderSkill('/springboot.svg', 'Spring Boot')}
+                        {renderSkill('/google-gemini.svg', 'Google Gemini')}
+                        {renderSkill('/langchain.svg', 'LangChain')}
+                        {renderSkill('/langgraph.svg', 'LangGraph')}
+                        {renderSkill('/pinecone.svg', 'Pinecone')}
+                        {renderSkill('/chroma-logo.svg', 'ChromaDB')}
+                        {renderSkill('/Scikit_learn.png', 'scikit-learn')}
+                        {renderSkill('/pytorch.svg', 'PyTorch')}
+                        {renderSkill('/tensorflow.svg', 'TensorFlow & Lite')}
+                        {renderSkill('/huggingface.svg', 'Hugging Face')}
+                        {renderSkill('/llama.svg', 'LLaMA & CTransformers')}
+                        {renderSkill('/Pandas.png', 'pandas')}
+                        {renderSkill('/NumPy.png', 'NumPy')}
+                        {renderSkill('/Matplotlib.png', 'Matplotlib')}
+                        {renderSkill('/seaborn.png', 'Seaborn')}
+                        {renderSkill('/OpenCV.png', 'OpenCV')}
+                        {renderSkill('/cvzone.webp', 'CVZone')}
+                        {renderSkill('/asmlang.png', 'Assembly language')}
+                        {renderSkill('/ros_logo.svg', 'ROS2')}
+                        {renderSkill('/VHDL.png', 'VHDL')}
+                        {renderSkill('/SystemVerilog.svg', 'SystemVerilog/Verilog')}
+                        {renderSkill('/icons8-latex.png', 'LaTeX')}
+                        {renderSkill('/icons8-bash.png', 'Bash/Shell')}
+                        {renderSkill('/framer_motion.png', 'Framer Motion')}
+                        {renderSkill('/gsap.png', 'GSAP')}
+                        {renderSkill('/Three.js.svg', 'Three.js')}
+                        {renderSkill('/canvas-confetti.svg', 'Canvas Confetti')}
+                        {renderSkill('/lucide.svg', 'Lucide & Heroicons')}
+                        {renderSkill('/react-hook-form.svg', 'React Hook Form')}
+                        {renderSkill('/vite.svg', 'Vite')}
+                        {renderSkill('/graphql.svg', 'GraphQL')}
+                        {renderSkill('/webhook.svg', 'Webhooks')}
+                        {renderSkill('/react-logo.png', 'Context API')}
+                        {renderSkill('/redux.svg', 'Redux')}
+                        {renderSkill('/selenium.svg', 'Selenium')}
+                        {renderSkill('/beautiful_soup.png', 'BeautifulSoup')}
+                        {renderSkill('/jest.png', 'Jest')}
+                        {renderSkill('/supertest.png', 'Supertest')}
+                        {renderSkill('/open-mpi-logo.png', 'OpenMPI')}
+                        {renderSkill('/openmp.png', 'OpenMP')}
+                        {renderSkill('/sqlite.svg', 'Room Database')}
+                        {renderSkill('/icons8-java.png', 'Retrofit')}
+                        {renderSkill('/jetpackcompose.svg', 'Android Jetpack Compose')}
+                        {renderSkill('/nextjs.png', 'Next.js API Routes')}
+                        {renderSkill('/nodemailer.svg', 'Nodemailer (SMTP)')}
+                        {renderSkill('/sharp.svg', 'Sharp')}
+                        {renderSkill('/postcss.svg', 'PostCSS')}
+                        {renderSkill('/autoprefixer.svg', 'Autoprefixer')}
+                        {renderSkill('/eslint.svg', 'ESLint')}
+                    </div>
+                </HolographicCard>
+                </motion.div>
 
-                {/* Live Engineering Intelligence */}
+                {/* 2. Developer Tools & Workflows */}
+                <motion.div
+                    initial={prefersReducedMotion ? false : { opacity: 0, y: 24 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 0.2 }}
+                    transition={{ delay: 0.1, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                >
+                <HolographicCard>
+                    <h3 style={{ fontSize: '1.4rem', fontWeight: 600, marginBottom: '1.5rem', color: 'var(--accent-color)' }}>Developer Tools & Workflows</h3>
+                    <div className="skills-grid">
+                        {renderSkill('/kubernetes.png', 'Kubernetes (SIG-Apps)')}
+                        {renderSkill('/kubernetes.png', 'LeaderWorkerSet (LWS)')}
+                        {renderSkill('/kubernetes.png', 'Kubespray & SIG Cluster Lifecycle')}
+                        {renderSkill('/docker-mark-ocean-blue.svg', 'Docker')}
+                        {renderSkill('/helm.svg', 'Helm')}
+                        {renderSkill('/openshift.svg', 'OpenShift Kubernetes')}
+                        {renderSkill('/github.png', 'GitHub Actions CI/CD')}
+                        {renderSkill('/icons8-git.png', 'GitLab CI')}
+                        {renderSkill('/bitbucket.svg', 'Bitbucket')}
+                        {renderSkill('/jira.svg', 'Jira (Scrum)')}
+                        {renderSkill('/confluence.svg', 'Confluence')}
+                        {renderSkill('/jenkins.svg', 'Jenkins')}
+                        {renderSkill('/vscode-ansible.png', 'Ansible')}
+                        {renderSkill('/Terraform_Logo.svg', 'Terraform')}
+                        {renderSkill('/vmware.svg', 'VMware')}
+                        {renderSkill('/Visual_Studio_Code.png', 'VS Code')}
+                        {renderSkill('/Vimlogo.svg', 'Vim')}
+                        {renderSkill('/JetBrains-logo.png', 'JetBrains Suite')}
+                        {renderSkill('/android-studio-icon.png', 'Android Studio')}
+                        {renderSkill('/solidworks.png', 'SolidWorks')}
+                        {renderSkill('/Figma-logo.png', 'Figma')}
+                        {renderSkill('/Fritzing_icon.png', 'Fritzing')}
+                        {renderSkill('/KiCad_logo_square.png', 'KiCad')}
+                        {renderSkill('/LTSpice.jpeg', 'LTspice')}
+                        {renderSkill('/Intel_quartus_prime.png', 'Intel Quartus Prime, Quartus II, ModelSim')}
+                        {/* {renderSkill('/jupyter.png', 'Jupyter')} */}
+                        {renderSkill('/grafana.svg', 'Grafana')}
+                        {renderSkill('/postman.svg', 'Postman')}
+                        {renderSkill('/mysql_workbench.png', 'MySQL Workbench')}
+                        {renderSkill('/Slurm_logo.svg', 'Slurm & Bash')}
+                        {renderSkill('/zephyr_rtos.svg', 'Zephyr RTOS')}
+                        {renderSkill('/CAN_Logo.svg', 'CAN / ISO-TP')}
+                        {renderSkill('/ISO_26262_ASIL_D.png', 'ISO 26262 (ASIL-D)')}
+                        {renderSkill('/gcb.svg', 'Google Cloud Build (GCB)')}
+                        {renderSkill('/kind.svg', 'KIND (Kubernetes in Docker)')}
+                        {renderSkill('/dependabot.svg', 'Dependabot')}
+                        {renderSkill('/vagrant.svg', 'Vagrant')}
+                        {renderSkill('/Google_Lighthouse_logo.svg', 'Google Lighthouse')}
+                        {renderSkill('/wcag-2.1-aa-logo.svg', 'WCAG 2.1 AA')}
+                        {renderSkill('/agile.jpg', 'Agile')}
+                        {renderSkill('/Scrum-icon.jpg', 'Scrum')}
+                        {renderSkill('/sdlc.png', 'SDLC')}
+
+                        {renderSkill('/microsoft-365.png', 'Office 365')}
+                        {renderSkill('/google_colab-logo.png', 'Google Colab')}
+                        {renderSkill('/jupyter_icon.svg', 'Jupyter')}
+
+                    </div>
+                </HolographicCard>
+                </motion.div>
+
+                {/* 3. Databases and Cloud Architectures */}
+                <motion.div
+                    initial={prefersReducedMotion ? false : { opacity: 0, y: 24 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 0.2 }}
+                    transition={{ delay: 0.2, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                >
+                <HolographicCard>
+                    <h3 style={{ fontSize: '1.4rem', fontWeight: 600, marginBottom: '1.5rem', color: 'var(--accent-color)' }}>Databases and Enterprise Cloud Architectures</h3>
+                    <div className="skills-grid">
+                        {renderSkill('/sap_s4hana.png', 'SAP S/4HANA Cloud')}
+                        {renderSkill('/Oracle_database.png', 'ORACLE Database')}
+                        {renderSkill('/New_Power_BI.png', 'Microsoft Power BI')}
+                        {renderSkill('/aws.svg', 'AWS (EC2, S3, Lambda, SQS, SNS)')}
+                        {renderSkill('/aws.svg', 'AWS CloudWatch & Step Function')}
+                        {renderSkill('/azure.svg', 'Azure & Azure Kubernetes Service (AKS)')}
+                        {renderSkill('/gcp.svg', 'Google Cloud Platform (GCP)')}
+                        {renderSkill('/vercel.svg', 'Vercel')}
+                        {renderSkill('/Cloudflare_Logo.svg', 'Cloudflare')}
+                        {renderSkill('/supabase.svg', 'Supabase (PostgreSQL with RLS)')}
+                        {renderSkill('/firebase.svg', 'Firebase')}
+                        {renderSkill('/render.svg', 'Render')}
+                        {renderSkill('/Database-mysql.png', 'MySQL Database')}
+                        {renderSkill('/sqlite.svg', 'PostgreSQL / SQLite')}
+                        {renderSkill('/Redis-Logo.svg', 'Redis')}
+                        {renderSkill('/prisma.svg', 'Prisma')}
+                        {renderSkill('/stripe.svg', 'Stripe')}
+                        {renderSkill('/Fundamental-cell-excel-spreadsheet.png', 'Excel (Dynamic Arrays & Stock Data)')}
+                        {renderSkill('/SharePoint.svg', 'SharePoint')}
+                        {renderSkill('/dataverse.webp', 'Dataverse')}
+                        {renderSkill('/Microsoft_Power_Automate.svg', 'Power Automate')}
+                    </div>
+                </HolographicCard>
+                </motion.div>
+
+                {/* 4. Hardware, Systems & Networking */}
+                <motion.div
+                    initial={prefersReducedMotion ? false : { opacity: 0, y: 24 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 0.2 }}
+                    transition={{ delay: 0.3, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                >
+                <HolographicCard>
+                    <h3 style={{ fontSize: '1.4rem', fontWeight: 600, marginBottom: '1.5rem', color: 'var(--accent-color)' }}>Hardware, Systems & Networking</h3>
+                    <div className="skills-grid">
+                        {renderSkill('/raspberrypi.svg', 'Raspberry Pi 5')}
+                        {renderSkill('/linux.svg', 'PREEMPT_RT Linux')}
+                        {renderSkill('/CAN_Logo.svg', 'ValueCAN 4 & DBC Parsing')}
+                        {renderSkill('/CAN_Logo.svg', 'XML-driven config')}
+                        {renderSkill('/terminal.png', 'MPMC zero-copy ROS–CAN transfer')}
+                        {renderSkill('/CAN_Logo.svg', 'ECU systems & CAN bus')}
+                        {renderSkill('/terminal.png', 'SPI / I2C / UART')}
+                        {renderSkill('/icons8-arduino.png', 'nRF52840 / ESP32 / Arduino / RF')}
+                        {renderSkill('/cyclone-v.png', 'Cyclone V FPGA')}
+                        {renderSkill('/icons8-c-programming.png', 'RISC-V ISA')}
+                        {renderSkill('/zephyr_rtos.svg', 'Thread mesh networking')}
+                        {renderSkill('/google-coral.webp', 'Coral TPU & EfficientDet')}
+                        {renderSkill('/Nvidia_CUDA_logo.jpg', 'CUDA & MPI')}
+                        {renderSkill('/Slurm_logo.svg', 'DVFS & RAPL')}
+                        {renderSkill('/terminal.png', 'OpenConfig')}
+                        {renderSkill('/etcd.svg', 'etcd & CoreDNS')}
+                        {renderSkill('/etcd.svg', 'Linux cgroup v1 deprecation')}
+                        {renderSkill('/terminal.png', 'pod DNS & DPANIC crashes')}
+                    </div>
+                </HolographicCard>
+                </motion.div>
+
+                {/* 5. Software Engineering & MLOps Concepts */}
+                <motion.div
+                    initial={prefersReducedMotion ? false : { opacity: 0, y: 24 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 0.2 }}
+                    transition={{ delay: 0.4, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                >
+                <HolographicCard>
+                    <h3 style={{ fontSize: '1.4rem', fontWeight: 600, marginBottom: '1.5rem', color: 'var(--accent-color)' }}>Data, ML & Software Engineering Concepts</h3>
+                    <div className="skills-grid">
+                        {renderSkill('/icons8-python.png', 'structure-aware semantic chunking')}
+                        {renderSkill('/Scikit_learn.png', 'Random Forest & GridSearchCV')}
+                        {renderSkill('/Scikit_learn.png', 'Gini feature importance')}
+                        {renderSkill('/google-gemini.svg', 'legal interpretability & LLM hallucinations')}
+                        {renderSkill('/google-gemini.svg', 'LLM-powered resume automation SaaS')}
+                        {renderSkill('/pinecone.svg', 'memory-efficient RAG chatbot')}
+                        {renderSkill('/huggingface.svg', 'quantized LLaMA models (.gguf)')}
+                        {renderSkill('/terminal.png', 'context windows & token limits')}
+                        {renderSkill('/cvzone.webp', 'salient object segmentation (U²-Net)')}
+                        {renderSkill('/tensorflow.svg', 'two-level nested U²-Net architecture')}
+                        {renderSkill('/OpenCV.png', 'OpenCV morphological mask refinement')}
+                        {renderSkill('/tensorflow.svg', 'low-power autonomous object detection')}
+                        {renderSkill('/icons8-java.png', 'MVVM Clean Architecture & Repository pattern')}
+                        {renderSkill('/terminal.png', 'RESTful APIs & FAKE STORE REST API')}
+                        {renderSkill('/terminal.png', 'API uptime & rate limiting')}
+                        {renderSkill('/github.png', 'CI/CD & modular codebase')}
+                        {renderSkill('/Redis-Logo.svg', 'Redis rate limiting & caching layer')}
+                        {renderSkill('/icons8-java.png', 'Caffeine & resilience4j')}
+                        {renderSkill('/docker-mark-ocean-blue.svg', 'multi-stage Docker builds & containerizing')}
+                        {renderSkill('/icons8-python.png', 'data preprocessing')}
+                        {renderSkill('/terminal.png', 'offline functionality')}
+                        {renderSkill('/canlii.svg', 'CanLII (Legal Data Retrieval)')}
+                        {renderSkill('/pdfplumber.svg', 'pdfplumber')}
+                    </div>
+                </HolographicCard>
+                </motion.div>
+
+                {/* 6. Open-Source Contributions */}
+                <motion.div
+                    initial={prefersReducedMotion ? false : { opacity: 0, y: 24 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 0.2 }}
+                    transition={{ delay: 0.5, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                >
+                <HolographicCard>
+                    <h3 style={{ fontSize: '1.4rem', fontWeight: 600, marginBottom: '1.5rem', color: 'var(--accent-color)' }}>Open-Source Contributions</h3>
+                    <div className="skills-grid">
+                        {renderSkill('/vllm.png', 'vLLM (llm-d ecosystem)')}
+                        {renderSkill('/vllm.png', 'Energy-Aware Endpoint Picker Plugin (EPP)')}
+                        {renderSkill('/go.svg', 'Multi-Objective Routing Engine')}
+                        {renderSkill('/terminal.png', 'eBPF Telemetry & DCGM / RAPL metrics')}
+                        {renderSkill('/kubernetes.png', 'Kubernetes 1.35 cgroup v1 deprecation')}
+                        {renderSkill('/kubernetes.png', 'SIG Apps upstream maintainers')}
+                        {renderSkill('/kubernetes.png', 'SIG Cluster Lifecycle (kubespray)')}
+                        {renderSkill('/kubernetes.png', 'LeaderWorkerSet (LWS) controller fixes')}
+                        {renderSkill('/go.svg', 'Go controller-runtime patches')}
+                        {renderSkill('/github.png', 'CNCF Open Source Workflow')}
+                        {renderSkill('/terminal.png', 'Kubernetes Enhancement Proposals (KEPs)')}
+                        {renderSkill('/terminal.png', 'Unit / Integration / E2E Testing')}
+                        {renderSkill('/terminal.png', 'Ginkgo & Gomega test frameworks')}
+                        {renderSkill('/github.png', 'Code Review & PR collaboration')}
+                    </div>
+                </HolographicCard>
+                </motion.div>
+
+                {/* 6. Live Engineering Intelligence */}
                 <motion.div
                     initial={prefersReducedMotion ? false : { opacity: 0, y: 24 }}
                     whileInView={{ opacity: 1, y: 0 }}
