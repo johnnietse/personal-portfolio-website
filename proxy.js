@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 // In-process memory (note: this will reset per Vercel edge instance, but still helps throttle aggressive bursts)
 const ipRateLimitMap = new Map();
 
-export function middleware(request) {
+export function proxy(request) {
   const { pathname } = request.nextUrl;
   
   // 1. Basic Bot Detection via User-Agent
