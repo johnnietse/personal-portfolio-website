@@ -1,0 +1,25 @@
+{
+  "id": "portfolio-improvements-18",
+  "seq": "18",
+  "title": "Consolidate RenderOnScroll.jsx — integrate VisibilityWrapper functionality",
+  "status": "pending",
+  "depends_on": ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17"],
+  "parallel": false,
+  "suggested_agent": "CoderAgent",
+  "context_files": [],
+  "reference_files": ["components/RenderOnScroll.jsx", "components/VisibilityWrapper.jsx"],
+  "acceptance_criteria": [
+    "RenderOnScroll and VisibilityWrapper functionality merged into a single component",
+    "Redundant code eliminated",
+    "IntersectionObserver logic deduplicated",
+    "Performance manager integration preserved",
+    "All existing usages updated to import from the consolidated component",
+    "One of the two source files deleted",
+    "Build passes with zero errors"
+  ],
+  "deliverables": ["Updated consolidated component", "Deleted redundant component file"],
+  "agent_id": null,
+  "started_at": null,
+  "completed_at": null,
+  "completion_summary": null
+}

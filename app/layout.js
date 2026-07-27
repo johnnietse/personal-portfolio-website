@@ -1,5 +1,5 @@
 import Navigation from "@/components/Navigation";
-import AOSSetup from "@/components/AOSSetup";
+import Footer from "@/components/Footer";
 import ParticleBackground from "@/components/ParticleBackground";
 import ScrollPhysics from "@/components/ScrollPhysics";
 import BlackHoleCursor from "@/components/BlackHoleCursor";
@@ -7,8 +7,9 @@ import PerformanceHUD from "@/components/PerformanceHUD";
 import IronManHUD from "@/components/IronManHUD";
 import MobileSystemsTray from "@/components/MobileSystemsTray";
 import { PerformanceProvider } from "@/components/PerformanceManager";
+import { geist, geistMono } from "@/lib/fonts";
 import "./globals.css";
-import "aos/dist/aos.css";
+
 
 export const metadata = {
   title: "Johnnie Tse",
@@ -48,14 +49,10 @@ export const viewport = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <head>
-        <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet" />
-      </head>
+    <html lang="en" suppressHydrationWarning className={`${geist.variable} ${geistMono.variable}`}>
       <body suppressHydrationWarning>
 <PerformanceProvider>
       <div className="relative flex flex-col min-h-screen w-full overflow-x-hidden overflow-y-auto">
-        <AOSSetup />
         <Navigation />
         <ParticleBackground />
         <ScrollPhysics />
@@ -64,6 +61,7 @@ export default function RootLayout({ children }) {
         <IronManHUD />
         <MobileSystemsTray />
         {children}
+        <Footer />
       </div>
     </PerformanceProvider>
       </body>

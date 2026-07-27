@@ -1,0 +1,24 @@
+{
+  "id": "portfolio-improvements-12",
+  "seq": "12",
+  "title": "Update project/page.js — replace all data-aos attributes with motion.div whileInView",
+  "status": "pending",
+  "depends_on": ["09"],
+  "parallel": true,
+  "suggested_agent": "CoderAgent",
+  "context_files": [],
+  "reference_files": ["app/project/page.js"],
+  "acceptance_criteria": [
+    "All data-aos attributes removed from project/page.js JSX",
+    "All AOS-animated elements wrapped with motion.div using whileInView",
+    "Animation durations and delays preserved",
+    "prefers-reduced-motion respected",
+    "motion imported appropriately",
+    "All existing content and layout preserved"
+  ],
+  "deliverables": ["Updated app/project/page.js"],
+  "agent_id": null,
+  "started_at": null,
+  "completed_at": null,
+  "completion_summary": null
+}

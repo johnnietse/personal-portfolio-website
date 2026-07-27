@@ -1,0 +1,24 @@
+{
+  "id": "portfolio-improvements-08",
+  "seq": "08",
+  "title": "Update page.js hero — replace inline SVG icons with Phosphor icons for GitHub, LinkedIn, Email",
+  "status": "pending",
+  "depends_on": ["01"],
+  "parallel": true,
+  "suggested_agent": "CoderAgent",
+  "context_files": [],
+  "reference_files": ["app/page.js"],
+  "acceptance_criteria": [
+    "Inline SVG for GitHub replaced with Phosphor GithubLogo icon",
+    "Inline SVG for LinkedIn replaced with Phosphor LinkedinLogo icon",
+    "Inline SVG for Email replaced with Phosphor EnvelopeSimple icon",
+    "All icon imports from @phosphor-icons/react",
+    "Button styling and layout preserved",
+    "aria-labels preserved"
+  ],
+  "deliverables": ["Updated app/page.js"],
+  "agent_id": null,
+  "started_at": null,
+  "completed_at": null,
+  "completion_summary": null
+}

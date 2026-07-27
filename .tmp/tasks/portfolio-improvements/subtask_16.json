@@ -1,0 +1,23 @@
+{
+  "id": "portfolio-improvements-16",
+  "seq": "16",
+  "title": "Create app/loading.js — simple skeleton loading state",
+  "status": "pending",
+  "depends_on": [],
+  "parallel": true,
+  "suggested_agent": "CoderAgent",
+  "context_files": [],
+  "reference_files": [],
+  "acceptance_criteria": [
+    "app/loading.js created as a client component",
+    "Displays a simple loading/skeleton UI matching portfolio theme",
+    "Uses CSS variables for dark/light mode compatibility",
+    "Does not interfere with existing page rendering",
+    "Visible during page transitions and data fetching"
+  ],
+  "deliverables": ["app/loading.js"],
+  "agent_id": null,
+  "started_at": null,
+  "completed_at": null,
+  "completion_summary": null
+}

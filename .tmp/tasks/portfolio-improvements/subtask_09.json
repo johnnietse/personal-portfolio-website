@@ -1,0 +1,23 @@
+{
+  "id": "portfolio-improvements-09",
+  "seq": "09",
+  "title": "Remove AOSSetup component — delete the file and remove its import from layout.js",
+  "status": "pending",
+  "depends_on": ["01"],
+  "parallel": true,
+  "suggested_agent": "CoderAgent",
+  "context_files": [],
+  "reference_files": ["components/AOSSetup.jsx", "app/layout.js"],
+  "acceptance_criteria": [
+    "components/AOSSetup.jsx file is deleted",
+    "AOSSetup import line removed from app/layout.js",
+    "<AOSSetup /> usage removed from layout's return JSX",
+    "No other files import from @/components/AOSSetup",
+    "aos dependency remains in package.json (uninstalled in subtask 13)"
+  ],
+  "deliverables": ["Deleted components/AOSSetup.jsx", "Updated app/layout.js"],
+  "agent_id": null,
+  "started_at": null,
+  "completed_at": null,
+  "completion_summary": null
+}

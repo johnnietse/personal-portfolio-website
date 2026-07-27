@@ -1,0 +1,24 @@
+{
+  "id": "portfolio-improvements-07",
+  "seq": "07",
+  "title": "Update Navigation.jsx — replace emoji icons with Phosphor icons in mobile menu",
+  "status": "pending",
+  "depends_on": ["01"],
+  "parallel": true,
+  "suggested_agent": "CoderAgent",
+  "context_files": [],
+  "reference_files": ["components/Navigation.jsx"],
+  "acceptance_criteria": [
+    "Mobile menu hamburger emoji (☰/✕) replaced with Phosphor List/X icons",
+    "Mobile theme toggle emoji (☀️/🌙) replaced with Phosphor Sun/Moon icons",
+    "Desktop theme toggle SVG sun/moon icons replaced with Phosphor icons",
+    "No emoji characters remain in Navigation component JSX",
+    "All icon imports from @phosphor-icons/react",
+    "Responsive behavior preserved"
+  ],
+  "deliverables": ["Updated components/Navigation.jsx"],
+  "agent_id": null,
+  "started_at": null,
+  "completed_at": null,
+  "completion_summary": null
+}

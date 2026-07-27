@@ -1,0 +1,23 @@
+{
+  "id": "portfolio-improvements-15",
+  "seq": "15",
+  "title": "Update page.js hero section — tighten about paragraph copy from ~45 to ~20 words",
+  "status": "pending",
+  "depends_on": ["01", "10"],
+  "parallel": true,
+  "suggested_agent": "CoderAgent",
+  "context_files": [],
+  "reference_files": ["app/page.js"],
+  "acceptance_criteria": [
+    "Hero about paragraph reduced from ~45 words to ~20 words",
+    "Core message preserved (high-performance computing, web technologies, scalable systems)",
+    "Typing animation (Typewriter) preserved and unchanged",
+    "Call-to-action buttons and social icons preserved",
+    "Motion.div animations preserved from subtask 10 changes"
+  ],
+  "deliverables": ["Updated app/page.js"],
+  "agent_id": null,
+  "started_at": null,
+  "completed_at": null,
+  "completion_summary": null
+}

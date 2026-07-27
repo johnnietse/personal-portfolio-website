@@ -1,0 +1,24 @@
+{
+  "id": "portfolio-improvements-04",
+  "seq": "04",
+  "title": "Update layout.js — remove <link> font loading, import and apply next/font classes",
+  "status": "pending",
+  "depends_on": [],
+  "parallel": true,
+  "suggested_agent": "CoderAgent",
+  "context_files": [],
+  "reference_files": ["app/layout.js", "lib/fonts.js"],
+  "acceptance_criteria": [
+    "<link href='fonts.googleapis.com...'> removed from <head>",
+    "Font classes from lib/fonts.js imported and applied to <body> or <html>",
+    "No Orbitron references in layout.js",
+    "AOSSetup import is retained (will be removed in subtask 14)",
+    "All other imports and components preserved",
+    "Metadata and viewport exports unchanged"
+  ],
+  "deliverables": ["Updated app/layout.js"],
+  "agent_id": null,
+  "started_at": null,
+  "completed_at": null,
+  "completion_summary": null
+}

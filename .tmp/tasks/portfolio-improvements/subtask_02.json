@@ -1,0 +1,22 @@
+{
+  "id": "portfolio-improvements-02",
+  "seq": "02",
+  "title": "Create lib/fonts.js with next/font configuration — load Cabinet Grotesk + Geist Mono, remove Orbitron",
+  "status": "pending",
+  "depends_on": [],
+  "parallel": true,
+  "suggested_agent": "CoderAgent",
+  "context_files": [],
+  "reference_files": ["lib/design/tokens.js", "app/globals.css"],
+  "acceptance_criteria": [
+    "lib/fonts.js exports Cabinet Grotesk and Geist Mono font objects",
+    "Fonts are loaded via next/font (not Google Fonts URL)",
+    "Orbitron is not referenced in the new file",
+    "All font weights used in the project are covered"
+  ],
+  "deliverables": ["lib/fonts.js"],
+  "agent_id": null,
+  "started_at": null,
+  "completed_at": null,
+  "completion_summary": null
+}

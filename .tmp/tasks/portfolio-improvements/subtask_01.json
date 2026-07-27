@@ -1,0 +1,21 @@
+{
+  "id": "portfolio-improvements-01",
+  "seq": "01",
+  "title": "Install @phosphor-icons/react package",
+  "status": "pending",
+  "depends_on": [],
+  "parallel": true,
+  "suggested_agent": "CoderAgent",
+  "context_files": [],
+  "reference_files": ["package.json"],
+  "acceptance_criteria": [
+    "@phosphor-icons/react is listed in package.json dependencies",
+    "npm install completes without errors",
+    "Phosphor icons can be imported in components"
+  ],
+  "deliverables": ["Updated package.json", "package-lock.json"],
+  "agent_id": null,
+  "started_at": null,
+  "completed_at": null,
+  "completion_summary": null
+}

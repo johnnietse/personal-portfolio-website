@@ -1,0 +1,22 @@
+{
+  "id": "portfolio-improvements-06",
+  "seq": "06",
+  "title": "Update layout.js — add Footer component to root layout",
+  "status": "pending",
+  "depends_on": ["05"],
+  "parallel": false,
+  "suggested_agent": "CoderAgent",
+  "context_files": [],
+  "reference_files": ["app/layout.js"],
+  "acceptance_criteria": [
+    "Footer component is imported from @/components/Footer",
+    "Footer is rendered within the layout's div container after {children}",
+    "No duplicate Footer rendering",
+    "AOS CSS import and <link> fonts remain unchanged until subtask 04 and 14"
+  ],
+  "deliverables": ["Updated app/layout.js"],
+  "agent_id": null,
+  "started_at": null,
+  "completed_at": null,
+  "completion_summary": null
+}

@@ -1,0 +1,25 @@
+{
+  "id": "portfolio-improvements-05",
+  "seq": "05",
+  "title": "Create components/Footer.jsx — minimal footer with copyright, social icons, resume link using Phosphor icons",
+  "status": "pending",
+  "depends_on": ["01"],
+  "parallel": true,
+  "suggested_agent": "CoderAgent",
+  "context_files": [],
+  "reference_files": ["app/page.js", "components/Navigation.jsx"],
+  "acceptance_criteria": [
+    "Footer.jsx is a 'use client' component",
+    "Contains copyright notice with current year and 'Johnnie Tse'",
+    "Contains GitHub, LinkedIn, and Email social links using Phosphor icons",
+    "Contains a Resume download link matching the existing Resume PDF path",
+    "Matches portfolio dark/light theme via CSS variables",
+    "Responsive at all breakpoints",
+    "Exported as default"
+  ],
+  "deliverables": ["components/Footer.jsx"],
+  "agent_id": null,
+  "started_at": null,
+  "completed_at": null,
+  "completion_summary": null
+}

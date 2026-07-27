@@ -1,0 +1,24 @@
+{
+  "id": "portfolio-improvements-17",
+  "seq": "17",
+  "title": "Create app/not-found.js — 404 page",
+  "status": "pending",
+  "depends_on": [],
+  "parallel": true,
+  "suggested_agent": "CoderAgent",
+  "context_files": [],
+  "reference_files": [],
+  "acceptance_criteria": [
+    "app/not-found.js created as a client component",
+    "Displays '404 - Page Not Found' message",
+    "Contains a link/button to return to home page",
+    "Uses CSS variables for dark/light mode compatibility",
+    "Styled to match portfolio design system",
+    "Does not interfere with existing routing"
+  ],
+  "deliverables": ["app/not-found.js"],
+  "agent_id": null,
+  "started_at": null,
+  "completed_at": null,
+  "completion_summary": null
+}

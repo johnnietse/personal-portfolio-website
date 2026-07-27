@@ -1,0 +1,22 @@
+{
+  "id": "portfolio-improvements-13",
+  "seq": "13",
+  "title": "npm uninstall aos — remove the AOS dependency",
+  "status": "pending",
+  "depends_on": ["09"],
+  "parallel": true,
+  "suggested_agent": "CoderAgent",
+  "context_files": [],
+  "reference_files": ["package.json"],
+  "acceptance_criteria": [
+    "aos package removed from package.json dependencies",
+    "node_modules/aos directory removed",
+    "No imports from 'aos' remain in any project file",
+    "npm install completes without errors"
+  ],
+  "deliverables": ["Updated package.json", "package-lock.json"],
+  "agent_id": null,
+  "started_at": null,
+  "completed_at": null,
+  "completion_summary": null
+}

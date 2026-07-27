@@ -1,0 +1,25 @@
+{
+  "id": "portfolio-improvements-03",
+  "seq": "03",
+  "title": "Update globals.css — remove Google Fonts @import, swap Fraunces to Cabinet Grotesk, remove Orbitron",
+  "status": "pending",
+  "depends_on": [],
+  "parallel": true,
+  "suggested_agent": "CoderAgent",
+  "context_files": [],
+  "reference_files": ["app/globals.css"],
+  "acceptance_criteria": [
+    "@import url(...fonts.googleapis.com...) is removed",
+    ".title class font-family changed from Fraunces to Cabinet Grotesk",
+    ".project-title class font-family changed from Fraunces to Cabinet Grotesk",
+    "No Orbitron font-family references remain in CSS",
+    "body font-family updated to use next/font class variables",
+    "VisibilityWrapper 'Orbitron' font reference removed",
+    "All existing design tokens and CSS variables preserved"
+  ],
+  "deliverables": ["Updated app/globals.css"],
+  "agent_id": null,
+  "started_at": null,
+  "completed_at": null,
+  "completion_summary": null
+}
