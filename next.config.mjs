@@ -16,6 +16,9 @@ const cspHeader = `
 const nextConfig = {
   /* config options here */
   reactCompiler: true,
+  turbopack: {
+    root: process.cwd(),
+  },
   async headers() {
     return [
       {
