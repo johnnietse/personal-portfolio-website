@@ -34,18 +34,33 @@ function escapeHtml(str) {
 
 // ─── Component states ────────────────────────────────────────────────────────
 
-function EconomyFallback() {
+const GLOBE_IMAGE = '/textures/earth-blue-marble.jpg';
+
+const globeImageStyle = {
+  position: 'absolute', inset: 0, borderRadius: '50%', zIndex: 1,
+  background: `radial-gradient(circle at center, rgba(15,23,42,0.85) 0%, rgba(2,6,23,0.95) 100%), url(${GLOBE_IMAGE}) center / cover`,
+  border: '1px solid rgba(88,166,255,0.3)',
+  display: 'flex', alignItems: 'center', justifyContent: 'center',
+};
+
+const globeImageHighlightStyle = {
+  position: 'absolute', inset: 0, borderRadius: '50%',
+  background: 'radial-gradient(circle at 30% 35%, rgba(88,166,255,0.08) 0%, transparent 50%)',
+  pointerEvents: 'none',
+};
+
+function StaticGlobeFallback({ subtitle = "Queen&apos;s University → Hong Kong" }) {
   return (
-    <div style={{
-      position: 'absolute', inset: 0, borderRadius: '50%', zIndex: 1,
-      background: 'radial-gradient(circle at center, #0f172a 0%, #020617 100%)',
-      border: '1px solid #58a6ff',
-      display: 'flex', alignItems: 'center', justifyContent: 'center',
-    }}>
-      <div style={{ color: '#58a6ff', fontSize: '14px', fontWeight: 600, textAlign: 'center', padding: '20px' }}>
+    <div style={globeImageStyle}>
+      <div style={globeImageHighlightStyle} />
+      <div style={{
+        color: '#58a6ff', fontSize: '14px', fontWeight: 600, textAlign: 'center',
+        padding: '20px', textShadow: '0 2px 16px rgba(0,0,0,0.8)',
+        position: 'relative', zIndex: 2,
+      }}>
         Global Engineering Footprint
         <br />
-        <span style={{ fontSize: '12px', color: '#8b949e' }}>Queen&apos;s University → Hong Kong</span>
+        <span style={{ fontSize: '12px', color: '#8b949e' }}>{subtitle}</span>
       </div>
     </div>
   );
@@ -53,17 +68,14 @@ function EconomyFallback() {
 
 function GlobePlaceholder() {
   return (
-    <div style={{
-      position: 'absolute', inset: 0, borderRadius: '50%', zIndex: 1,
-      background: 'radial-gradient(circle at center, #0f172a 0%, #020617 100%)',
-      border: '1px solid rgba(88,166,255,0.3)',
-      display: 'flex', alignItems: 'center', justifyContent: 'center',
-    }}>
+    <div style={globeImageStyle}>
+      <div style={globeImageHighlightStyle} />
       <div style={{
         width: 32, height: 32, borderRadius: '50%',
         border: '2px solid rgba(88,166,255,0.2)',
         borderTopColor: '#58a6ff',
         animation: 'globe-spin 0.8s linear infinite',
+        position: 'relative', zIndex: 2,
       }} />
       <style>{`@keyframes globe-spin{to{transform:rotate(360deg)}}`}</style>
     </div>
@@ -74,12 +86,14 @@ function GlobeError({ message }) {
   return (
     <div style={{
       position: 'absolute', inset: 0, borderRadius: '50%', zIndex: 1,
-      background: 'radial-gradient(circle at center, #1a0a0a 0%, #020617 100%)',
-      border: '1px solid #ff6b6b',
+      background: `radial-gradient(circle at center, rgba(15,23,42,0.85) 0%, rgba(2,6,23,0.95) 100%), url(${GLOBE_IMAGE}) center / cover`,
+      border: '1px solid rgba(255,107,107,0.3)',
       display: 'flex', alignItems: 'center', justifyContent: 'center',
     }}>
-      <div style={{ color: '#ff6b6b', fontSize: '12px', textAlign: 'center', padding: '16px' }}>
-        <div style={{ fontSize: '20px', marginBottom: '4px' }}>⚠</div>
+      <div style={{
+        color: '#ff7b72', fontSize: '12px', textAlign: 'center', padding: '16px',
+        textShadow: '0 2px 16px rgba(0,0,0,0.8)', position: 'relative', zIndex: 2,
+      }}>
         {message}
       </div>
     </div>
@@ -115,40 +129,26 @@ export default function GlobeFootprint() {
 
   const isLowPower = quality.targetFPS < 30;
 
-  // Economy tier: CSS fallback
+  // Economy tier: static globe image with city labels (no WebGL)
   if (renderTier === 'economy') {
     return (
       <div style={{
         position: 'relative', width: '100%', maxWidth: '500px', margin: '0 auto',
         aspectRatio: '1 / 1', borderRadius: '50%', overflow: 'hidden',
-        background: 'radial-gradient(circle at center, #0f172a 0%, #020617 100%)',
-        border: '1px solid rgba(88, 166, 255, 0.3)',
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
       }}>
-        <div style={{ color: '#58a6ff', fontSize: '14px', fontWeight: 600, textAlign: 'center', padding: '20px' }}>
-          Global Engineering Footprint
-          <br />
-          <span style={{ fontSize: '12px', color: '#8b949e' }}>Queen&apos;s University + Hong Kong</span>
-        </div>
+        <StaticGlobeFallback subtitle="Queen&apos;s University + Hong Kong" />
       </div>
     );
   }
 
-  // Low tier: simplified globe (no arcs, no pins, static)
+  // Low tier: static globe image (no arcs, no pins)
   if (renderTier === 'low') {
     return (
       <div style={{
         position: 'relative', width: '100%', maxWidth: '500px', margin: '0 auto',
         aspectRatio: '1 / 1', borderRadius: '50%', overflow: 'hidden',
-        background: 'radial-gradient(circle at center, #0f172a 0%, #020617 100%)',
-        border: '1px solid rgba(88, 166, 255, 0.3)',
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
       }}>
-        <div style={{ color: '#58a6ff', fontSize: '14px', fontWeight: 600, textAlign: 'center' }}>
-          Global Engineering Footprint
-          <br />
-          <span style={{ fontSize: '12px', color: '#8b949e' }}>Simplified view</span>
-        </div>
+        <StaticGlobeFallback subtitle="Queen&apos;s University + Hong Kong" />
       </div>
     );
   }
@@ -159,6 +159,8 @@ export default function GlobeFootprint() {
     if (!isMounted || isLowPower || !containerRef.current) return;
 
     let destroyed = false;
+    let retries = 0;
+    const MAX_RETRIES = 2;
     setGlobeState({ type: 'loading' });
 
     const init = async () => {
@@ -1106,15 +1108,25 @@ globe.renderer().setPixelRatio(targetPR);
       }
     };
 
-    init().catch((err) => {
-      if (destroyed) return;
-      console.error('[GlobeFootprint] init failed:', err);
-      setGlobeState({
-        type: 'error',
-        message: `${err.name}: ${err.message}`,
-        detail: err.stack?.split('\n').slice(0, 6).join(' | ') || '',
+    const tryInit = () => {
+      init().catch((err) => {
+        if (destroyed) return;
+        retries++;
+        if (retries < MAX_RETRIES) {
+          console.warn(`[GlobeFootprint] init failed (attempt ${retries}/${MAX_RETRIES}), retrying...`, err);
+          setGlobeState({ type: 'loading' });
+          setTimeout(tryInit, 1000 * retries);
+        } else {
+          console.error('[GlobeFootprint] init failed after', MAX_RETRIES, 'attempts:', err);
+          setGlobeState({
+            type: 'error',
+            message: `${err.name}: ${err.message}`,
+            detail: err.stack?.split('\n').slice(0, 6).join(' | ') || '',
+          });
+        }
       });
-    });
+    };
+    tryInit();
 
     return () => {
       destroyed = true;
@@ -1184,7 +1196,7 @@ globe.renderer().setPixelRatio(targetPR);
       position: 'relative', width: 'auto', maxWidth: '500px', margin: '0 auto',
       aspectRatio: '1 / 1',
     }}>
-      {showOverlay && isLowPower && <EconomyFallback />}
+      {showOverlay && isLowPower && <StaticGlobeFallback subtitle="Low power mode" />}
       {showOverlay && !isLowPower && globeState.type === 'loading' && <GlobePlaceholder />}
       {showOverlay && !isLowPower && globeState.type === 'error' && (
         <GlobeError message={globeState.message || 'Globe failed to load'} />
