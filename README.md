@@ -429,6 +429,29 @@ A real-time Lennard-Jones particle system — the portfolio's most computational
 
 **Real-world relevance:** This is a direct WebGL port of the ELEC498 capstone project. The real miniMD application runs on HPC clusters with MPI parallelization. This WebGL version demonstrates the same numerical methods in a browser — complete with DVFS-style quality throttling that mirrors the original project's energy optimization algorithm.
 
+<details>
+<summary><b>Live HPC Telemetry Panel</b> — real-time monitoring data from the actual miniMD cluster runs</summary>
+
+```
+┌──────────────────────────────────────────────┐
+│         ⚡ MINIMD DVFS TELEMETRY              │
+├──────────────────────────────────────────────┤
+│  🌡 CPU Temp:               98°C              │
+│  🔄 MPI Phase:              COMPUTE          │
+│  ⚡ RAPL Power:            186.2 W            │
+│  🎛 CPU Freq:             2.40 GHz            │
+│  📊 Compute Yield:           20%              │
+│  🔋 Total Energy:       22171.2 kJ            │
+│                                              │
+│  ⚠ No DVFS — all cores at max freq           │
+│    in ALL phases                              │
+└──────────────────────────────────────────────┘
+```
+
+*Telemetry captured from Intel RAPL during ELEC498 cluster benchmarking. The portfolio's DVFS-style quality throttling (Ultra → Economy tier) directly mirrors the frequency-scaling logic being measured here.*
+
+</details>
+
 ### 5. Interactive 3D Globe
 
 **File:** `components/GlobeFootprint.jsx`  
