@@ -7,9 +7,10 @@ import VisibilityWrapper from '@/components/VisibilityWrapper';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import { EXPERIENCES, EDUCATION, CERTIFICATIONS } from '@/lib/config/experience';
 
+import GitHubStats from '@/components/GitHubStats';
+
 const SolarSystemBackground = dynamic(() => import('@/components/SolarSystemBackground'), { ssr: false });
 const SkillConstellation = dynamic(() => import('@/components/SkillConstellation'), { ssr: false });
-const GitHubStats = dynamic(() => import('@/components/GitHubStats'), { ssr: false });
 
 const renderSkill = (img, label) => (
     <div className="skill-tag">
@@ -570,15 +571,12 @@ export default function About() {
                 </motion.div>
 
                 {/* 6. Live Engineering Intelligence */}
-                <motion.div
-                    initial={prefersReducedMotion ? false : { opacity: 0, y: 24 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, amount: 0.2 }}
-                    transition={{ delay: 0.5, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-                >
+                {/* Uses a CSS-based scroll animation instead of motion's whileInView
+                    to avoid relying on IntersectionObserver threshold timing on first load */}
+                <div className="live-engineering-section">
                     <h2 className="title" style={{ textAlign: 'center', marginBottom: '3rem', marginTop: '4rem' }}>Live Engineering Intelligence</h2>
                     <GitHubStats />
-                </motion.div>
+                </div>
 
             </div>
         </main>
