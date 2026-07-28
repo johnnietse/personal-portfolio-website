@@ -416,50 +416,81 @@ export default function MiniMDSimulation() {
         );
     }
 
+    // Collapsible telemetry panel state
+    const [telemetryOpen, setTelemetryOpen] = useState(true);
+
     // Ultra/High tier: full WebGL with dashboard
     return (
         <div style={{ position: 'relative', width: '100%', height: '100%', borderRadius: '12px', overflow: 'hidden' }}>
-            {/* Real-time Telemetry Dashboard */}
-            <div style={{ position: 'absolute', top: 15, left: 15, zIndex: 10, background: 'rgba(13, 17, 23, 0.85)', border: '1px solid rgba(48, 54, 61, 0.8)', padding: '1.2rem', borderRadius: '12px', color: '#c9d1d9', fontSize: '0.9rem', backdropFilter: 'blur(8px)', width: 'calc(100% - 30px)', maxWidth: '250px', boxShadow: '0 4px 12px rgba(0,0,0,0.5)' }}>
-                <h4 style={{ margin: '0 0 12px 0', color: '#79c0ff', fontSize: '1.05rem', borderBottom: '1px solid #30363d', paddingBottom: '8px', display: 'flex', justifyContent: 'space-between' }}>
-                    <span>MiniMD Telemetry</span>
-                    <span style={{ color: ui.heat > 85 ? '#ff7b72' : '#8b949e', fontSize: '0.9rem' }}>{ui.heat.toFixed(0)}°C</span>
-                </h4>
-
-                <div style={{ marginBottom: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span style={{ color: '#8b949e' }}>MPI Phase:</span>
-                    <span style={{
-                        color: ui.phaseKey === 'COMPUTE' ? '#7ee787' : '#ff7b72',
-                        fontWeight: 700, fontSize: '0.75rem', letterSpacing: '0.03em'
-                    }}>
-                        {ui.phaseLabel}
+            {/* Real-time Telemetry Dashboard — Collapsible */}
+            <div style={{ position: 'absolute', top: 15, left: 15, zIndex: 10, borderRadius: '12px', width: 'calc(100% - 30px)', maxWidth: '250px' }}>
+                {/* Telemetry Header / Toggle */}
+                <button
+                    onClick={() => setTelemetryOpen(!telemetryOpen)}
+                    style={{
+                        width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                        background: 'rgba(13, 17, 23, 0.85)', border: '1px solid rgba(48, 54, 61, 0.8)',
+                        padding: '10px 14px', borderRadius: telemetryOpen ? '12px 12px 0 0' : '12px',
+                        color: '#79c0ff', fontSize: '0.95rem', fontWeight: 700, cursor: 'pointer',
+                        backdropFilter: 'blur(8px)', transition: 'all 0.3s ease',
+                        letterSpacing: '0.02em', fontFamily: 'inherit',
+                    }}
+                >
+                    <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <span style={{ transform: telemetryOpen ? 'rotate(90deg)' : 'rotate(0deg)', display: 'inline-block', transition: 'transform 0.3s ease', fontSize: '0.8rem' }}>▶</span>
+                        MiniMD Telemetry
                     </span>
-                </div>
-                <div style={{ marginBottom: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span style={{ color: '#8b949e' }}>RAPL Power:</span>
-                    <span style={{ fontWeight: 600, color: '#e6edf3' }}>{ui.power.toFixed(1)} W</span>
-                </div>
-                <div style={{ marginBottom: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span style={{ color: '#8b949e' }}>CPU Freq:</span>
-                    <span style={{ fontWeight: 600, color: '#e6edf3' }}>{ui.freq.toFixed(2)} GHz</span>
-                </div>
-                <div style={{ marginBottom: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span style={{ color: '#8b949e' }}>Compute Yield:</span>
-                    <span style={{ fontWeight: 600, color: ui.multiplier < 0.9 ? '#ff7b72' : '#56d364' }}>{(ui.multiplier * 100).toFixed(0)}%</span>
-                </div>
-                <div style={{ marginBottom: '6px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span style={{ color: '#8b949e' }}>Total Energy:</span>
-                    <span style={{ fontWeight: 600, color: '#e6edf3', fontSize: '0.85rem' }}>{ui.totalEnergy_kJ.toFixed(1)} kJ</span>
-                </div>
-                {isOptimized && (
-                    <div style={{ marginTop: '8px', paddingTop: '10px', borderTop: '1px dashed #30363d', color: '#56d364', fontWeight: 700, fontSize: '0.85rem', display: 'flex', justifyContent: 'space-between' }}>
-                        <span>Energy Saved:</span>
-                        <span>{ui.energySaved.toFixed(1)}% ↓</span>
-                    </div>
-                )}
-                {!isOptimized && (
-                    <div style={{ marginTop: '8px', paddingTop: '10px', borderTop: '1px dashed #30363d', color: '#ff7b72', fontWeight: 700, fontSize: '0.75rem' }}>
-                        ⚠ No DVFS — all cores at max freq in ALL phases
+                    {telemetryOpen && (
+                        <span style={{ color: ui.heat > 85 ? '#ff7b72' : '#8b949e', fontSize: '0.85rem', fontWeight: 600 }}>
+                            {ui.heat.toFixed(0)}°C
+                        </span>
+                    )}
+                </button>
+
+                {/* Collapsible Body */}
+                {telemetryOpen && (
+                    <div style={{
+                        background: 'rgba(13, 17, 23, 0.85)', border: '1px solid rgba(48, 54, 61, 0.8)',
+                        borderTop: 'none', padding: '0 1.2rem 1.2rem 1.2rem',
+                        borderRadius: '0 0 12px 12px', backdropFilter: 'blur(8px)',
+                        animation: telemetryOpen ? 'slideDown 0.2s ease-out' : 'none',
+                    }}>
+                        <div style={{ marginBottom: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '4px' }}>
+                            <span style={{ color: '#8b949e', fontSize: '0.85rem' }}>MPI Phase:</span>
+                            <span style={{
+                                color: ui.phaseKey === 'COMPUTE' ? '#7ee787' : '#ff7b72',
+                                fontWeight: 700, fontSize: '0.75rem', letterSpacing: '0.03em'
+                            }}>
+                                {ui.phaseLabel}
+                            </span>
+                        </div>
+                        <div style={{ marginBottom: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <span style={{ color: '#8b949e', fontSize: '0.85rem' }}>RAPL Power:</span>
+                            <span style={{ fontWeight: 600, color: '#e6edf3', fontSize: '0.85rem' }}>{ui.power.toFixed(1)} W</span>
+                        </div>
+                        <div style={{ marginBottom: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <span style={{ color: '#8b949e', fontSize: '0.85rem' }}>CPU Freq:</span>
+                            <span style={{ fontWeight: 600, color: '#e6edf3', fontSize: '0.85rem' }}>{ui.freq.toFixed(2)} GHz</span>
+                        </div>
+                        <div style={{ marginBottom: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <span style={{ color: '#8b949e', fontSize: '0.85rem' }}>Compute Yield:</span>
+                            <span style={{ fontWeight: 600, color: ui.multiplier < 0.9 ? '#ff7b72' : '#56d364', fontSize: '0.85rem' }}>{(ui.multiplier * 100).toFixed(0)}%</span>
+                        </div>
+                        <div style={{ marginBottom: '6px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <span style={{ color: '#8b949e', fontSize: '0.85rem' }}>Total Energy:</span>
+                            <span style={{ fontWeight: 600, color: '#e6edf3', fontSize: '0.85rem' }}>{ui.totalEnergy_kJ.toFixed(1)} kJ</span>
+                        </div>
+                        {isOptimized && (
+                            <div style={{ marginTop: '8px', paddingTop: '10px', borderTop: '1px dashed #30363d', color: '#56d364', fontWeight: 700, fontSize: '0.85rem', display: 'flex', justifyContent: 'space-between' }}>
+                                <span>Energy Saved:</span>
+                                <span>{ui.energySaved.toFixed(1)}% ↓</span>
+                            </div>
+                        )}
+                        {!isOptimized && (
+                            <div style={{ marginTop: '8px', paddingTop: '10px', borderTop: '1px dashed #30363d', color: '#ff7b72', fontWeight: 700, fontSize: '0.75rem' }}>
+                                ⚠ No DVFS — all cores at max freq in ALL phases
+                            </div>
+                        )}
                     </div>
                 )}
             </div>
