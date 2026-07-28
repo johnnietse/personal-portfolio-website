@@ -1,19 +1,21 @@
 ﻿"use client";
 
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { Github, Linkedin, Mail } from 'lucide-react';
 import { motion, useReducedMotion } from 'motion/react';
 import Typewriter from '@/components/Typewriter';
-import HeroModel from '@/components/HeroModel';
-import AutonomousCar from '@/components/AutonomousCar';
-import EmbeddedController from '@/components/EmbeddedController';
-import MiniMDSimulation from '@/components/MiniMDSimulation';
-import TerminalProfile from '@/components/TerminalProfile';
-import SkillTicker from '@/components/SkillTicker';
 import VisibilityWrapper from '@/components/VisibilityWrapper';
-import GlobeFootprint from '@/components/GlobeFootprint';
 import RenderOnScroll from '@/components/RenderOnScroll';
 import { SKILLS } from '@/lib/config/skills';
+
+const HeroModel = dynamic(() => import('@/components/HeroModel'), { ssr: false });
+const AutonomousCar = dynamic(() => import('@/components/AutonomousCar'), { ssr: false });
+const EmbeddedController = dynamic(() => import('@/components/EmbeddedController'), { ssr: false });
+const MiniMDSimulation = dynamic(() => import('@/components/MiniMDSimulation'), { ssr: false });
+const TerminalProfile = dynamic(() => import('@/components/TerminalProfile'), { ssr: false });
+const SkillTicker = dynamic(() => import('@/components/SkillTicker'), { ssr: false });
+const GlobeFootprint = dynamic(() => import('@/components/GlobeFootprint'), { ssr: false });
 
 export default function Home() {
   const prefersReducedMotion = useReducedMotion();
@@ -109,9 +111,9 @@ export default function Home() {
       </section>
 
       {/* Infinite Edge-to-Edge Hardware Ticker */}
-      <div style={{ width: '100%', overflow: 'hidden' }}>
+      <RenderOnScroll rootMargin="200px" containerStyle={{ height: 'auto', overflow: 'hidden' }}>
         <SkillTicker />
-      </div>
+      </RenderOnScroll>
 
       {/* SYSTEM ARCHITECTURE & DIAGNOSTICS */}
       <motion.section
@@ -135,7 +137,9 @@ export default function Home() {
           </div>
         </div>
         <div style={{ width: '100%', padding: '0 1rem' }}>
-          <TerminalProfile />
+          <RenderOnScroll rootMargin="300px" containerStyle={{ height: 'auto' }}>
+            <TerminalProfile />
+          </RenderOnScroll>
         </div>
       </motion.section>
 

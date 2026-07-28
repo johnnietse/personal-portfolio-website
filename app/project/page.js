@@ -1,11 +1,14 @@
 "use client";
 
+import dynamic from 'next/dynamic';
 import { motion, useReducedMotion } from 'motion/react';
 import Link from 'next/link';
-import SolarSystemBackground from '@/components/SolarSystemBackground';
 import HolographicCard from '@/components/HolographicCard';
-import LiveGithubProjects from '@/components/LiveGithubProjects';
+import RenderOnScroll from '@/components/RenderOnScroll';
 import { PROJECT_LIST } from '@/lib/config/projects';
+
+const SolarSystemBackground = dynamic(() => import('@/components/SolarSystemBackground'), { ssr: false });
+const LiveGithubProjects = dynamic(() => import('@/components/LiveGithubProjects'), { ssr: false });
 
 export default function Project() {
     const prefersReducedMotion = useReducedMotion();
@@ -115,7 +118,26 @@ export default function Project() {
                         Real-time synchronization with my public repositories. This section is powered by the GitHub GraphQL API, showcasing my latest technical iterations and open-source contributions.
                     </p>
                 </div>
-                <LiveGithubProjects />
+                <RenderOnScroll
+                    rootMargin="300px"
+                    containerStyle={{ height: 'auto' }}
+                    fallback={
+                        <div style={{
+                            height: '200px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            color: 'var(--text-secondary)',
+                            fontFamily: 'monospace',
+                            fontSize: '0.85rem',
+                            opacity: 0.6,
+                        }}>
+                            SCROLL_FOR_GITHUB_FEED
+                        </div>
+                    }
+                >
+                    <LiveGithubProjects />
+                </RenderOnScroll>
             </motion.div>
 
         </main>

@@ -4,13 +4,13 @@ import dynamic from 'next/dynamic';
 import { motion, useReducedMotion } from 'motion/react';
 import HolographicCard from '@/components/HolographicCard';
 import VisibilityWrapper from '@/components/VisibilityWrapper';
+import RenderOnScroll from '@/components/RenderOnScroll';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import { EXPERIENCES, EDUCATION, CERTIFICATIONS } from '@/lib/config/experience';
 
-import GitHubStats from '@/components/GitHubStats';
-
 const SolarSystemBackground = dynamic(() => import('@/components/SolarSystemBackground'), { ssr: false });
 const SkillConstellation = dynamic(() => import('@/components/SkillConstellation'), { ssr: false });
+const GitHubStats = dynamic(() => import('@/components/GitHubStats'), { ssr: false });
 
 const renderSkill = (img, label) => (
     <div className="skill-tag">
@@ -81,6 +81,7 @@ export default function About() {
             </HolographicCard>
             </motion.div>
 
+<RenderOnScroll rootMargin="200px" containerStyle={{ height: 'auto' }}>
             {/* EXPERIENCE SECTION */}
             <motion.h2
                 className="title"
@@ -150,7 +151,9 @@ export default function About() {
                     </motion.div>
                 ))}
             </div>
+</RenderOnScroll>
 
+<RenderOnScroll rootMargin="200px" containerStyle={{ height: 'auto' }}>
             {/* EDUCATION SECTION */}
             <motion.h2
                 className="title"
@@ -246,7 +249,9 @@ export default function About() {
                     ))}
                 </div>
             </div>
+</RenderOnScroll>
 
+<RenderOnScroll rootMargin="200px" containerStyle={{ height: 'auto' }}>
             {/* SKILLS SECTION */}
             <motion.h2
                 className="title"
@@ -573,12 +578,34 @@ export default function About() {
                 {/* 6. Live Engineering Intelligence */}
                 {/* Uses a CSS-based scroll animation instead of motion's whileInView
                     to avoid relying on IntersectionObserver threshold timing on first load */}
+                {/* Wrapped in RenderOnScroll so GitHubStats (11 sub-components, ~2200px) only
+                    mounts when scrolled near — critical for mobile memory/performance */}
                 <div className="live-engineering-section">
                     <h2 className="title" style={{ textAlign: 'center', marginBottom: '3rem', marginTop: '4rem' }}>Live Engineering Intelligence</h2>
-                    <GitHubStats />
+                    <RenderOnScroll
+                        rootMargin="300px"
+                        containerStyle={{ height: 'auto' }}
+                        fallback={
+                            <div style={{
+                                height: '200px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                color: 'var(--text-secondary)',
+                                fontFamily: 'monospace',
+                                fontSize: '0.85rem',
+                                opacity: 0.6,
+                            }}>
+                                SCROLL_FOR_GITHUB_TELEMETRY
+                            </div>
+                        }
+                    >
+                        <GitHubStats />
+                    </RenderOnScroll>
                 </div>
 
             </div>
+</RenderOnScroll>
         </main>
         </ErrorBoundary>
     );
