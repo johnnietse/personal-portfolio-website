@@ -17,7 +17,7 @@ export const SKILLS: Skill[] = [
   // HPC
   { name: 'HPC / MPI', category: 'systems' },
   { name: 'Computational Math', category: 'ai' },
-  { name: 'PID Hardware Control', category: 'systems' },
+  { name: 'Phase-Aware DVFS Control', category: 'systems' },
   { name: 'Lennard-Jones', category: 'ai' },
   // Frontend
   { name: 'Next.js 16', category: 'frontend' },

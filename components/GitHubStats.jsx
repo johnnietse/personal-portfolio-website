@@ -38,6 +38,11 @@ export default function GitHubStats() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    // Reset breaker on mount so client-side navigation gets a fresh attempt
+    useEffect(() => {
+        statsBreaker.reset();
+    }, []);
+
     useEffect(() => {
         const fetchStats = async () => {
             try {

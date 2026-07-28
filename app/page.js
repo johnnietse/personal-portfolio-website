@@ -268,10 +268,10 @@ export default function Home() {
               A real-time native WebGL implementation of the <strong style={{ color: '#79c0ff' }}>Mantevo miniMD</strong> proxy application logic. It continuously computes $O(N^2)$ Lennard-Jones forces and mathematical Velocity Verlet bounds for 300 active particles within local RAM executing ~45,000 concurrent integration operations natively every 16ms!
               <br /><br />
               <strong style={{ color: '#c9d1d9' }}>Why this matters: </strong>
-              This live computational grid is a direct visual proxy of my ELEC498 Capstone engineering project mapping MPI synchronizations. I completely architected a PID-controlled power optimization engine tracking the exact Communication Phases of the bare-metal miniMD application. By analyzing RAPL data and MPI wait times natively, my algorithm executes real-time DVFS actuations dynamically shifting processor voltage and core limits natively under heavy 128GB node payloads.
+              This live computational grid is a direct visual proxy of my ELEC498 Capstone engineering project mapping MPI synchronizations. I completely architected a phase-aware DVFS with thermal throttling engine tracking the exact Communication Phases of the bare-metal miniMD application. By analyzing RAPL data and MPI wait times natively, my algorithm executes real-time DVFS actuations dynamically shifting processor voltage and core limits natively under heavy 128GB node payloads.
             </p>
             <div className="skills-grid" style={{ marginTop: '1rem' }}>
-              {SKILLS.filter(s => ['HPC / MPI', 'Computational Math', 'PID Hardware Control', 'Lennard-Jones'].includes(s.name)).map(s => (
+              {SKILLS.filter(s => ['HPC / MPI', 'Computational Math', 'Phase-Aware DVFS Control', 'Lennard-Jones'].includes(s.name)).map(s => (
                 <div className="skill-tag" key={s.name}>{s.name}</div>
               ))}
             </div>
@@ -286,7 +286,7 @@ export default function Home() {
             viewport={prefersReducedMotion ? undefined : { once: true, amount: 0.2 }}
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           >
-            <RenderOnScroll rootMargin="300px" containerStyle={{ height: 'auto' }} fallback={<div style={{width:'100%',height:'100%',display:'flex',alignItems:'center',justifyContent:'center',color:'#58a6ff',background:'rgba(15,23,42,0.3)',border:'1px dashed rgba(88,166,255,0.3)',borderRadius:'12px',minHeight:'300px'}}>Scroll to render miniMD Simulation...</div>}>
+            <RenderOnScroll rootMargin="300px" fallback={<div style={{width:'100%',height:'100%',display:'flex',alignItems:'center',justifyContent:'center',color:'#58a6ff',background:'rgba(15,23,42,0.3)',border:'1px dashed rgba(88,166,255,0.3)',borderRadius:'12px',minHeight:'300px'}}>Scroll to render miniMD Simulation...</div>}>
               <MiniMDSimulation />
             </RenderOnScroll>
           </motion.div>

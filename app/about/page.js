@@ -1,13 +1,15 @@
 "use client";
 
-import Image from 'next/image';
+import dynamic from 'next/dynamic';
 import { motion, useReducedMotion } from 'motion/react';
-import SolarSystemBackground from '@/components/SolarSystemBackground';
 import HolographicCard from '@/components/HolographicCard';
-import SkillConstellation from '@/components/SkillConstellation';
 import VisibilityWrapper from '@/components/VisibilityWrapper';
-import GitHubStats from '@/components/GitHubStats';
+import ErrorBoundary from '@/components/ErrorBoundary';
 import { EXPERIENCES, EDUCATION, CERTIFICATIONS } from '@/lib/config/experience';
+
+const SolarSystemBackground = dynamic(() => import('@/components/SolarSystemBackground'), { ssr: false });
+const SkillConstellation = dynamic(() => import('@/components/SkillConstellation'), { ssr: false });
+const GitHubStats = dynamic(() => import('@/components/GitHubStats'), { ssr: false });
 
 const renderSkill = (img, label) => (
     <div className="skill-tag">
@@ -20,6 +22,7 @@ export default function About() {
     const prefersReducedMotion = useReducedMotion();
 
     return (
+        <ErrorBoundary>
         <main className="section container" style={{ paddingTop: '8rem', position: 'relative' }}>
             <SolarSystemBackground />
 
@@ -579,5 +582,6 @@ export default function About() {
 
             </div>
         </main>
+        </ErrorBoundary>
     );
 }
