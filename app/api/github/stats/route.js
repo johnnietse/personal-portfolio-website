@@ -92,13 +92,21 @@ export async function GET() {
           restrictedContributionsCount
         }
 
-        # Activity Logic (For Terminal Feed)
-        recentActivity: repositories(first: 20, ownerAffiliations: [OWNER, ORGANIZATION_MEMBER], orderBy: {field: UPDATED_AT, direction: DESC}) {
+        # Activity Logic (For Terminal Feed + Live Repos)
+        recentActivity: repositories(first: 24, ownerAffiliations: [OWNER, ORGANIZATION_MEMBER], orderBy: {field: UPDATED_AT, direction: DESC}) {
           nodes {
             name
             isPrivate
+            stargazerCount
+            forkCount
+            primaryLanguage { name }
+            description
+            url
             owner { login }
             updatedAt
+            repositoryTopics(first: 6) {
+              nodes { topic { name } }
+            }
             defaultBranchRef {
               target {
                 ... on Commit {
@@ -274,6 +282,19 @@ export async function GET() {
       contributionCalendar: user.contributionsCollection.contributionCalendar,
       languages: languages,
       topRepos: topRepos,
+      // Full public repo list for Live Github Feed (unfiltered, ordered by recently updated)
+      repoList: user.recentActivity.nodes
+        .filter(repo => !isSensitized(repo))
+        .map(repo => ({
+          name: repo.name,
+          stargazerCount: repo.stargazerCount,
+          forkCount: repo.forkCount,
+          primaryLanguage: repo.primaryLanguage,
+          description: repo.description,
+          url: repo.url,
+          updatedAt: repo.updatedAt,
+          repositoryTopics: repo.repositoryTopics || { nodes: [] },
+        })),
       k8sIntelligence: k8sIntelligence,
       activityLogs: activityLogs.slice(0, 15),
       velocityData: velocityData.slice(-12)
