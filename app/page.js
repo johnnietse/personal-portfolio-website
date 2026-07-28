@@ -63,7 +63,7 @@ export default function Home() {
               viewport={prefersReducedMotion ? undefined : { once: true, amount: 0.2 }}
               transition={{ delay: 0.5, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
             >
-              I build exceptional digital experiences ΓÇö mobile apps, modern web, and high-performance compute ΓÇö for scalable, user-centric software.
+              I build exceptional digital experiences — mobile apps, modern web, and high-performance compute — for scalable, user-centric software.
             </motion.p>
 
             <motion.div
@@ -353,7 +353,7 @@ export default function Home() {
           <div className="text-center mb-8">
             <h2 className="title" style={{ marginBottom: '1rem' }}>Get in Touch</h2>
             <p className="subtitle" style={{ margin: '0 auto' }}>
-              I'm always excited to discuss technology, mobile and web development, HPC, or anything else you'd like to shareΓÇölet's connect! ≡ƒñ¥
+              I'm always excited to discuss technology, mobile and web development, HPC, or anything else you'd like to share — let's connect! 🤝
             </p>
           </div>
 
