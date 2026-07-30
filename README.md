@@ -7,6 +7,7 @@
 [![Framer Motion](https://img.shields.io/badge/Motion_12-0055FF?style=flat&logo=framer&logoColor=white)](https://motion.dev)
 [![WebGL](https://img.shields.io/badge/WebGL_2-990000?style=flat&logo=webgl&logoColor=white)](https://get.webgl.org)
 [![globe.gl](https://img.shields.io/badge/globe.gl_2.46-4DA3FF?style=flat&logo=three.js&logoColor=white)](https://globe.gl)
+[![R3F XR](https://img.shields.io/badge/R3F_XR_6.6-FF4154?style=flat&logo=webxr&logoColor=white)](https://github.com/pmndrs/react-xr)
 [![React Compiler](https://img.shields.io/badge/React_Compiler-1.0-61DAFB?style=flat&logo=react&logoColor=white)](https://react.dev/learn/react-compiler)
 [![Turbopack](https://img.shields.io/badge/Turbopack-000000?style=flat&logo=vercel&logoColor=white)](https://turbo.build)
 [![MIT License](https://img.shields.io/badge/License-MIT-green?style=flat)](LICENSE)
@@ -47,6 +48,7 @@
   - [Responsive Breakpoints](#responsive-breakpoints)
   - [Typography System](#typography-system)
   - [Component Design Patterns](#component-design-patterns)
+  - [Key Interactive Components](#key-interactive-components)
 - [GitHub Integration Layer](#github-integration-layer)
 - [Security Architecture](#security-architecture)
   - [Content Security Policy (Deep Dive)](#content-security-policy-deep-dive)
@@ -133,7 +135,7 @@ flowchart TD
     F --> Q[Monitors: system state]
 ```
 
-The `PerformanceProvider` context is the central nervous system. It runs a device capability detection pipeline on mount, broadcasts the results to all 40 components, and every 3D scene self-configures to match. No hardcoded quality assumptions. No `if (mobile)` scattered across files. One context, one source of truth.
+The `PerformanceProvider` context is the central nervous system. It runs a device capability detection pipeline on mount, broadcasts the results to all 41 components, and every 3D scene self-configures to match. No hardcoded quality assumptions. No `if (mobile)` scattered across files. One context, one source of truth.
 
 ### Why This Matters
 
@@ -151,11 +153,14 @@ The World Monitor system achieves something most portfolios don't attempt: **it 
 | **UI Library** | React | 19.2.4 | Component model, hooks, concurrent features | Latest major; `use()` hook, improved Suspense, React Compiler target |
 | **3D Engine** | Three.js | 0.183.2 | Low-level WebGL abstractions, geometry, materials, post-processing | Most mature WebGL library; r183 introduces WebGPU compatibility layer |
 | **React 3D Bridge** | @react-three/fiber (R3F) | 9.5.0 | Declarative Three.js scene graphs as React components | React lifecycle management for 3D objects; automatic disposal on unmount |
-| **R3D Utilities** | @react-three/drei | 10.7.7 | OrbitControls, environment, shadows, text, performance utils | Industry-standard R3F component library; maintained by Poimandres |
+| **R3F Utilities** | @react-three/drei | 10.7.7 | OrbitControls, environment, shadows, text, performance utils | Industry-standard R3F component library; maintained by Poimandres |
+| **XR / AR** | @react-three/xr | 6.6.29 | WebXR integration for R3F scenes | VR/AR session management; controller input; spatial tracking |
+| **Three.js Extensions** | three-stdlib | 2.36.1 | Additional Three.js helpers and loaders | DRACOLoader, GLTFExporter, BufferGeometryUtils, and 500+ utilities |
 | **Physics** | @react-three/cannon | 6.6.0 | Rigid body dynamics for vehicle suspension | WebGPU-compatible physics engine; declarative API |
 | **Animation** | motion (Framer Motion) | 12.42.2 | Declarative scroll/enter animations, gesture handling, layout animations | Most mature React animation library; `motion/react` export; `useReducedMotion()` hook |
 | **Globe** | globe.gl | 2.46.1 | Three.js-based 3D globe with atmosphere, arcs, hexbin | Lightweight (< 50KB); built on Three.js; supports custom point-of-view animations |
 | **Geodata** | topojson-client | 3.1.0 | Country boundary topology for globe rendering | Standard format for world map data; sub-200KB compressed |
+| **GitHub Data** | GitHub GraphQL API v4 | — | Real-time profile, repos, contributions, activity, organizations | Uses `fetch()` POST to `/graphql` endpoint; no SDK dependency; supports NDA-protected repo filtering |
 | **Icons** | lucide-react | 0.577.0 | Tree-shakeable SVG icon system | Null-runtime; pure ESM; 1000+ icons; no icon font dependencies |
 | **Icons (fallback)** | react-icons | 5.6.0 | Additional icon sets (GitHub, LinkedIn brands) | Covers brand icons Lucide doesn't include |
 | **React Compiler** | babel-plugin-react-compiler | 1.0.0 | Automatic memoization of React components | First-party React compiler; eliminates manual `useMemo`/`useCallback`/`React.memo` |
@@ -169,22 +174,24 @@ The World Monitor system achieves something most portfolios don't attempt: **it 
 
 ```
 personal-portfolio-website/
+├── .env.local                              # Environment variables (GITHUB_TOKEN, WEB3FORMS_ACCESS_KEY)
+├── AGENTS.md                               # Next.js 16 breaking changes warning for AI agents
 ├── app/                                    # Next.js App Router (routes as directories)
 │   ├── about/
-│   │   └── page.js                         # About / résumé page (579 lines)
+│   │   └── page.js                         # About / résumé page (612 lines)
 │   ├── api/
 │   │   └── github/
 │   │       └── stats/
-│   │           └── route.js               # GitHub REST API proxy endpoint (augmented with repoList)
+│   │           └── route.js               # GitHub GraphQL API proxy (NDA-protected, K8s intelligence)
 │   ├── project/
-│   │   └── page.js                         # Projects showcase page (131 lines)
-│   ├── globals.css                         # Global CSS + CSS custom properties (593 lines)
+│   │   └── page.js                         # Projects showcase page (145 lines)
+│   ├── globals.css                         # Global CSS + CSS custom properties (681 lines)
 │   ├── layout.js                           # Root layout: nav, footer, backgrounds, HUDs
 │   ├── loading.js                          # Suspense loading spinner (29 lines)
 │   ├── not-found.js                        # Custom 404 page (50 lines)
-│   └── page.js                             # Home page: all 7 sections (382 lines)
+│   └── page.js                             # Home page: all 7 sections (414 lines)
 │
-├── components/                             # 40 UI + 3D components
+├── components/                             # 41 UI + 3D components
 │   │
 │   │   # --- 3D Scene Components (6) ---
 │   ├── AutonomousCar.jsx                   # L4 vehicle with LiDAR, trajectory arcs
@@ -203,7 +210,7 @@ personal-portfolio-website/
 │   ├── PerformanceManager.jsx              # Adaptive quality context provider
 │   └── ScrollPhysics.jsx                   # Smooth scroll physics controller
 │   │
-│   │   # --- GitHub Visualization Components (12) ---
+│   │   # --- GitHub Visualization Components (13) ---
 │   ├── GitHubStats.jsx                     # Stats orchestrator
 │   ├── GithubAchievements.jsx              # Achievement badges and milestones
 │   ├── GithubProfileHeader.jsx             # Avatar, bio, counts
@@ -218,21 +225,21 @@ personal-portfolio-website/
 │   ├── GithubCityscape.jsx                 # Repo skyline visualization
 │   └── GithubLiveLog.jsx                   # Live activity feed
 │   │
-│   │   # --- Interactive / Utility Components (16) ---
+│   │   # --- Interactive / Utility Components (15) ---
 │   ├── DataWaveform.jsx                    # Animated signal visualization
 │   ├── ErrorBoundary.jsx                   # React error boundary with reset
 │   ├── Footer.jsx                          # Site footer
-│   ├── Header.jsx                          # Site header
+│   ├── Header.jsx                          # Site header (legacy — replaced by Navigation.jsx)
 │   ├── HolographicCard.jsx                 # 3D tilt + glare card wrapper
 │   ├── LiveGithubProjects.jsx              # Live GitHub project cards (with circuit breaker)
-│   ├── MobileNav.jsx                       # Mobile hamburger menu
-│   ├── Navigation.jsx                      # Desktop navigation bar
+│   ├── MobileNav.jsx                       # Mobile hamburger menu (legacy — replaced by Navigation.jsx)
+│   ├── Navigation.jsx                      # Desktop navigation bar (responsive)
 │   ├── RenderOnScroll.jsx                  # IntersectionObserver lazy loader
 │   ├── SkillConstellation.jsx              # Interactive 2D skill graph
 │   ├── SkillTicker.jsx                     # Horizontal scrolling marquee
 │   ├── TerminalProfile.jsx                 # Interactive shell emulator
 │   ├── TimelineLaser.jsx                   # Timeline entry animation
-│   ├── Typewriter.jsx                      # Text rotation animation
+│   ├── Typewriter.jsx                      # Text rotation animation (legacy — replaced by motion-based reveal)
 │   └── VisibilityWrapper.jsx               # Viewport entry lazy hydration
 │
 ├── lib/                                    # Application logic (zero JSX)
@@ -280,9 +287,9 @@ personal-portfolio-website/
 
 | Path | Page | Sections | Total Lines |
 |---|---|---|---|
-| `/` | Home (`page.js`) | Hero → System Diagnostics → Showroom (3 scenes) → Globe → Contact | 382 |
-| `/about` | About (`about/page.js`) | Bio → Experience Timeline → Education → Certifications → Skills → GitHub Stats | 579 |
-| `/project` | Project (`project/page.js`) | Featured projects grid → Live GitHub repositories | 131 |
+| `/` | Home (`page.js`) | Hero → System Diagnostics → Showroom (3 scenes) → Globe → Contact | 414 |
+| `/about` | About (`about/page.js`) | Bio → Experience Timeline → Education → Certifications → Skills → GitHub Stats | 612 |
+| `/project` | Project (`project/page.js`) | Featured projects grid → Live GitHub repositories | 145 |
 | `/*` | 404 (`not-found.js`) | Custom error page with in-universe messaging | 50 |
 
 ### Component Dependency Graph
@@ -303,7 +310,6 @@ flowchart LR
 
     subgraph "Home Page"
         K[page.js] --> L[HeroModel]
-        K --> M[Typewriter]
         K --> N[TerminalProfile]
         K --> O[SkillTicker]
         K --> P[AutonomousCar]
@@ -503,7 +509,7 @@ The performance system is the portfolio's most sophisticated engineering subsyst
 
 **File:** `components/PerformanceManager.jsx` (184 lines)
 
-A React Context provider that classifies the device into one of four tiers and broadcasts quality parameters to all 40 components.
+A React Context provider that classifies the device into one of four tiers and broadcasts quality parameters to all 41 components.
 
 #### Detection Pipeline
 
@@ -785,7 +791,7 @@ Full dual-theme support with no FOUC (Flash of Unstyled Content):
 - **Toggle mechanism:** `data-theme` attribute on `<html>`, toggled via theme switch button
 - **Transition:** `background-color 0.4s ease, color 0.4s ease` on `<body>`
 - **`prefers-color-scheme`:** Not auto-detected — user choice is explicit (avoids flash and respects override intent)
-- **Persistence:** Theme choice stored in IronManHUD state (could be extended to `localStorage`)
+- **Persistence:** Theme choice persisted to `localStorage` on toggle; restored on next visit from Navigation.jsx's `<script>` hydration block
 
 ### Motion System
 
@@ -914,13 +920,49 @@ export const geistMono = Geist_Mono({
 
 ---
 
+### Key Interactive Components
+
+In addition to the glass card and button patterns, several components deserve specific mention:
+
+**ErrorBoundary** (`components/ErrorBoundary.jsx`):
+- Class-based React error boundary (the only class component in the codebase — `getDerivedStateFromError` + `componentDidCatch`)
+- Catches render failures in 3D scenes and HUD elements; displays a branded fallback with "Reload Page" button
+- Used as the outer wrapper for the About page's `<ErrorBoundary>`-wrapped content, ensuring a single scene crash never takes down the entire page
+- Logs errors to `console.error` with component stack trace for debugging
+- Provides a hard reset: `window.location.reload()` clears any corrupted WebGL state
+
+**SkillConstellation** (`components/SkillConstellation.jsx`):
+- Interactive 2D skill visualization using a force-directed graph layout
+- 6 category clusters (Languages, Web, Cloud/DevOps, Data/AI, Embedded, Tools) with 28 skill nodes
+- Physics simulation: nodes repel each other via Coulomb's law, connected nodes attract via Hooke's law spring forces
+- Built on raw Canvas 2D (no Three.js) — lightweight, no WebGL dependency
+- Hover interaction: highlights connected skill clusters; click expands category
+- Adaptive: node count scales with PerformanceProvider tier; reduced detail on mobile
+
+**TerminalProfile** (`components/TerminalProfile.jsx`):
+- Fully interactive shell emulator rendered as a DOM-based terminal (`<pre>` + `<input>`), not a canvas
+- Built-in command set: `whoami` (identity), `ls` (file listing), `cat` (file contents), `help` (command reference), `clear` (reset), `date` (current time), `echo` (echo arguments)
+- Hidden easter egg: `sudo hire johnnie` triggers a special hiring sequence with animated output
+- Readline-style input: left/right arrow navigation, up/down history cycling (10-entry buffer), home/end, Ctrl+U clear
+- Terminal history persisted in component state; new session starts fresh on each mount
+- Themed to match the site's dark mode: green-on-black (`#00ff41`) with amber prompt (`$ `) and CRT scan-line overlay effect via CSS pseudo-elements
+
+**HolographicCard** (`components/HolographicCard.jsx`):
+- 3D tilt card wrapper applied to skill categories, experience entries, and project cards
+- Mouse position to CSS 3D transform mapping: ±4° rotation on X/Y axes with `perspective(1000px)`
+- Dynamic glare overlay: radial gradient follows cursor position as a surface reflection effect
+- Hardware-accelerated: `scale3d(1.01)` on hover for subtle lift; CSS `will-change: transform` hint
+- Automatically disabled on low-spec and touch devices via `usePerformance()` context — no hover state on mobile
+
+---
+
 ## GitHub Integration Layer
 
 **API Route:** `/api/github/stats` → `app/api/github/stats/route.js`
 
-Acts as a proxy between the client-side GitHub statistics components and the GitHub REST API. This is intentionally a client-side fetch (not server-side) to keep data fresh on each page load.
+Acts as a proxy between the client-side GitHub statistics components and the GitHub GraphQL API v4. This is intentionally a client-side fetch (not server-side) to keep data fresh on each page load.
 
-**Data fetched from GitHub API v3 + GraphQL:**
+**Data fetched from GitHub GraphQL API v4:**
 - User profile (login, avatar, bio, followers, following, public repos)
 - Top repositories with stargazerCount, forkCount, primaryLanguage (sorted by stars, limited to 10) — **augmented via GraphQL to include repoList array**
 - Language breakdown (aggregated across all public repos)
@@ -931,7 +973,7 @@ Acts as a proxy between the client-side GitHub statistics components and the Git
 **Resilience layer:** Both `GitHubStats` and `LiveGithubProjects` use a circuit breaker pattern (`lib/utils/circuit-breaker.ts`) with 3-failure threshold and 5-minute cooldown. On mount, each component resets the breaker to ensure fresh data fetches after navigation. The API route also returns a `repoList` array for use as fallback data.
 
 **Visualization Components:**
-The raw API data is transformed and rendered through 11 dedicated visualization components, each handling a different aspect of the GitHub profile. See [Components > GitHub Visualization Components](#github-visualization-components-11) above for the full list.
+The raw API data is transformed and rendered through 13 dedicated visualization components, each handling a different aspect of the GitHub profile. See [Components > GitHub Visualization Components](#github-visualization-components-13) above for the full list.
 
 ---
 
@@ -970,7 +1012,7 @@ font-src 'self'
 
 # Connections
 connect-src 'self'
-  https://api.github.com     # GitHub REST API
+  https://api.github.com     # GitHub GraphQL API
   wss: ws:                   # WebSocket (reserved for future use)
   https://api.web3forms.com; # Contact form submission
 
