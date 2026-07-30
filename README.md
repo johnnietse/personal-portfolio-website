@@ -86,7 +86,7 @@ Every 3D asset is built from **pure mathematics** — no downloaded models, no a
 The codebase follows enterprise patterns throughout:
 - **Single source of truth** for all content (`lib/config/`) and all visual values (`lib/design/tokens.js`)
 - **No mixed concerns** — data, design tokens, and rendering are fully separated
-- **Resilience patterns** — exponential backoff, circuit breakers, error boundaries, graceful degradation
+- **Resilience patterns** — exponential backoff (`lib/utils/backoff.ts`), circuit breakers (`lib/utils/circuit-breaker.ts`), error boundaries (`components/ErrorBoundary.jsx`), graceful degradation via `VisibilityWrapper` + `RenderOnScroll`
 - **Accessibility-first animation** — every `motion.*` element respects `prefers-reduced-motion`
 - **Security-hardened** — strict CSP, HSTS preload, no inline event handlers, hardened form-action policy
 
@@ -171,18 +171,18 @@ The World Monitor system achieves something most portfolios don't attempt: **it 
 personal-portfolio-website/
 ├── app/                                    # Next.js App Router (routes as directories)
 │   ├── about/
-│   │   └── page.js                         # About / résumé page (583 lines)
+│   │   └── page.js                         # About / résumé page (579 lines)
 │   ├── api/
 │   │   └── github/
 │   │       └── stats/
-│   │           └── route.js               # GitHub REST API proxy endpoint
+│   │           └── route.js               # GitHub REST API proxy endpoint (augmented with repoList)
 │   ├── project/
-│   │   └── page.js                         # Projects showcase page (123 lines)
-│   ├── globals.css                         # Global CSS + CSS custom properties (664 lines)
+│   │   └── page.js                         # Projects showcase page (131 lines)
+│   ├── globals.css                         # Global CSS + CSS custom properties (593 lines)
 │   ├── layout.js                           # Root layout: nav, footer, backgrounds, HUDs
 │   ├── loading.js                          # Suspense loading spinner (29 lines)
 │   ├── not-found.js                        # Custom 404 page (50 lines)
-│   └── page.js                             # Home page: all 8 sections (410 lines)
+│   └── page.js                             # Home page: all 7 sections (382 lines)
 │
 ├── components/                             # 40 UI + 3D components
 │   │
@@ -203,8 +203,9 @@ personal-portfolio-website/
 │   ├── PerformanceManager.jsx              # Adaptive quality context provider
 │   └── ScrollPhysics.jsx                   # Smooth scroll physics controller
 │   │
-│   │   # --- GitHub Visualization Components (11) ---
+│   │   # --- GitHub Visualization Components (12) ---
 │   ├── GitHubStats.jsx                     # Stats orchestrator
+│   ├── GithubAchievements.jsx              # Achievement badges and milestones
 │   ├── GithubProfileHeader.jsx             # Avatar, bio, counts
 │   ├── GithubTopRepos.jsx                  # Starred repo cards
 │   ├── GithubContributionGrid.jsx          # Contribution heatmap
@@ -219,10 +220,11 @@ personal-portfolio-website/
 │   │
 │   │   # --- Interactive / Utility Components (16) ---
 │   ├── DataWaveform.jsx                    # Animated signal visualization
+│   ├── ErrorBoundary.jsx                   # React error boundary with reset
 │   ├── Footer.jsx                          # Site footer
 │   ├── Header.jsx                          # Site header
 │   ├── HolographicCard.jsx                 # 3D tilt + glare card wrapper
-│   ├── LiveGithubProjects.jsx              # Live GitHub project cards
+│   ├── LiveGithubProjects.jsx              # Live GitHub project cards (with circuit breaker)
 │   ├── MobileNav.jsx                       # Mobile hamburger menu
 │   ├── Navigation.jsx                      # Desktop navigation bar
 │   ├── RenderOnScroll.jsx                  # IntersectionObserver lazy loader
@@ -278,9 +280,9 @@ personal-portfolio-website/
 
 | Path | Page | Sections | Total Lines |
 |---|---|---|---|
-| `/` | Home (`page.js`) | Hero → Terminal → Skills → Showroom → Embedded → Waveform → Globe → Contact | 410 |
-| `/about` | About (`about/page.js`) | Bio → Experience Timeline → Education → Certifications → Skills → GitHub Stats | 583 |
-| `/project` | Project (`project/page.js`) | Featured projects grid → Live GitHub repositories | 123 |
+| `/` | Home (`page.js`) | Hero → System Diagnostics → Showroom (3 scenes) → Globe → Contact | 382 |
+| `/about` | About (`about/page.js`) | Bio → Experience Timeline → Education → Certifications → Skills → GitHub Stats | 579 |
+| `/project` | Project (`project/page.js`) | Featured projects grid → Live GitHub repositories | 131 |
 | `/*` | 404 (`not-found.js`) | Custom error page with in-universe messaging | 50 |
 
 ### Component Dependency Graph
@@ -313,10 +315,11 @@ flowchart LR
     end
 
     subgraph "About Page"
-        V[about/page.js] --> W[SolarSystemBackground]
-        V --> X[HolographicCard]
-        V --> Y[SkillConstellation]
-        V --> Z[GitHubStats]
+        V[about/page.js] --> V1[ErrorBoundary]
+        V1 --> W[SolarSystemBackground]
+        V1 --> X[HolographicCard]
+        V1 --> Y[SkillConstellation]
+        V1 --> Z[GitHubStats]
     end
 
     subgraph "Shared Dependencies"
@@ -474,6 +477,10 @@ An interactive 3D globe mapping Johnnie's academic and professional journey:
 
 **Data architecture:** Globe pins are driven by `lib/config/locations.ts` — adding a new city requires zero component code changes.
 
+**Reliability & fallback:** The globe uses a two-tier rendering strategy for mobile resilience:
+- **Full WebGL globe** — Rendered via `globe.gl` with atmosphere, arcs, pins, and rotation; wrapped in `RenderOnScroll` + `VisibilityWrapper` for deferred mounting
+- **Static CSS fallback** (`StaticGlobeFallback`) — A pure CSS earth image with inline label and subtitle, used as the default loading state and as a permanent replacement on low-power devices. The fallback is shown immediately (no Three.js load required), ensuring the Footprint section is always visible even when WebGL fails or is unavailable.
+
 ### 6. Solar System Background
 
 **File:** `components/SolarSystemBackground.jsx`  
@@ -595,7 +602,7 @@ Key design decisions:
 
 ### Dynamic Import & Lazy Loading
 
-All 6 WebGL scenes use a three-layer lazy loading strategy:
+All 6 WebGL scenes use a three-layer lazy loading strategy, with additional resilience patterns for mobile stability:
 
 **Layer 1: `next/dynamic`** — Code splitting at the bundler level
 
@@ -627,6 +634,20 @@ Uses `IntersectionObserver` with `once: true` — the component renders exactly 
 ```
 
 This ensures the Three.js canvas is ready and the scene is initialized by the time the user scrolls to it. The 300px margin provides approximately 1 second of pre-load time at average scroll speed.
+
+**Layer 4: `ErrorBoundary`** — Crash recovery for 3D components
+
+```javascript
+<ErrorBoundary>
+  <section id="about-hero">
+    <HolographicCard>
+      <HeroModel />   {/* If Three.js crashes, ErrorBoundary catches it */}
+    </HolographicCard>
+  </section>
+</ErrorBoundary>
+```
+
+A class-based React error boundary wraps the About page's top-level render. If any 3D component throws during mount (e.g., WebGL context loss, out-of-memory), the boundary catches the error, logs it, and displays a fallback UI with a "Try Again" button that resets the error state. This prevents the entire page from going blank due to a single scene failure.
 
 ### Render Budget Management
 
@@ -899,13 +920,15 @@ export const geistMono = Geist_Mono({
 
 Acts as a proxy between the client-side GitHub statistics components and the GitHub REST API. This is intentionally a client-side fetch (not server-side) to keep data fresh on each page load.
 
-**Data fetched from GitHub API v3:**
+**Data fetched from GitHub API v3 + GraphQL:**
 - User profile (login, avatar, bio, followers, following, public repos)
-- Top repositories (sorted by stars, limited to 10)
+- Top repositories with stargazerCount, forkCount, primaryLanguage (sorted by stars, limited to 10) — **augmented via GraphQL to include repoList array**
 - Language breakdown (aggregated across all public repos)
 - Contribution calendar (52-week heatmap data)
 - Activity events (recent pushes, PRs, issues)
 - Organization memberships (Kubernetes, vLLM, etc.)
+
+**Resilience layer:** Both `GitHubStats` and `LiveGithubProjects` use a circuit breaker pattern (`lib/utils/circuit-breaker.ts`) with 3-failure threshold and 5-minute cooldown. On mount, each component resets the breaker to ensure fresh data fetches after navigation. The API route also returns a `repoList` array for use as fallback data.
 
 **Visualization Components:**
 The raw API data is transformed and rendered through 11 dedicated visualization components, each handling a different aspect of the GitHub profile. See [Components > GitHub Visualization Components](#github-visualization-components-11) above for the full list.
